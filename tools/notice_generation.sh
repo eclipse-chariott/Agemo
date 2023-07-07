@@ -10,13 +10,13 @@ cd "$(dirname "$0")/.."
 if ! command -v gh &> /dev/null
 then
     echo "GitHub CLI not found. Please install before running the script."
-    exit
+    exit 1
 fi
 
 if [ -z "$GITHUB_TOKEN" ]
 then
-      echo "Missing \$GITHUB_TOKEN environment variable. Please set it before running the script."
-      exit 1
+    echo "Missing \$GITHUB_TOKEN environment variable. Please set it before running the script."
+    exit 1
 fi
 
 if ! command -v cargo-about &> /dev/null
@@ -38,13 +38,14 @@ cargo about generate --workspace devops/cg/about.hbs --config devops/cg/about.to
 
 if [ -z "$(git diff --name-only $NOTICE_FILENAME)" ]
 then
-      echo "File not changed"
+    echo "File not changed"
 else
-      echo "File changed. Checking out a new branch and creating a PR"
-      BRANCH_NAME="fix/notice-file-update-$(date +%s)"
-      git checkout -b "$BRANCH_NAME"
-      git add $NOTICE_FILENAME
-      git commit -m "New notice file"
-      git push -f --set-upstream origin "$BRANCH_NAME"
-      gh pr create -B main -H "$BRANCH_NAME" --title "$PR_TITLE" --body 'This PR is merging latest changes related to notice file. Please review them before approving.'
+    echo "File changed. Checking out a new branch and creating a PR"
+    BRANCH_NAME="fix/notice-file-update-$(date +%s)"
+    git checkout -b "$BRANCH_NAME"
+    git add $NOTICE_FILENAME
+    git commit -m "New notice file"
+    git push -f --set-upstream origin "$BRANCH_NAME"
+    gh pr create -B main -H "$BRANCH_NAME" --title "$PR_TITLE" --body 'This PR is merging latest changes related to notice file. Please review them before approving.'
+    exit 0
 fi
