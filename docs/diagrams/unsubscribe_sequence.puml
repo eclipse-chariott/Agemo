@@ -15,13 +15,12 @@ Broker --> PS_Service : PubSubAction::UNSUBSCRIBE(topic)
 deactivate Broker
 destroy Subscriber
 activate PS_Service
-PS_Service -> PS_Service : topic subs == 0?
-activate PS_Service
-PS_Service -> Publisher : ManagementCB(topic, TopicAction::STOP) if yes
-deactivate PS_Service
-activate Publisher
-Publisher ->x Broker : data
-deactivate Publisher
+alt topic subs == 0
+    PS_Service -> Publisher : ManagementCB(topic, TopicAction::STOP)
+    activate Publisher
+    Publisher ->x Broker : data
+    deactivate Publisher
+end
 loop while topic exists
     PS_Service -> PS_Service : topic timeout?
     activate PS_Service

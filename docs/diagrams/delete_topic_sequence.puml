@@ -11,15 +11,14 @@ Broker -> Subscriber : data
 Publisher ->x Broker : data
 Publisher -> PS_Service : DeleteTopic(topic)
 activate PS_Service
-PS_Service -> PS_Service : topic subs == 0?
-activate PS_Service
-PS_Service -> Broker : publish PubSubAction::DELETE(topic) if any
-deactivate PS_Service
+alt topic subs > 0
+    PS_Service -> Broker : publish PubSubAction::DELETE(topic)
+    Broker -> Subscriber : TOPIC DELETED on topic
+    Subscriber -->x Broker : disconnect/unsubscribe(topic)
+    deactivate Subscriber
+end
 PS_Service --> Publisher : ack
 deactivate PS_Service
-Broker -> Subscriber : TOPIC DELETED on topic
 destroy Publisher
-Subscriber -->x Broker : disconnect/unsubscribe(topic)
-deactivate Subscriber
 
 @enduml
