@@ -1,0 +1,28 @@
+@startuml subscribe sequence diagram
+title Subscribe Sequence Diagram
+autonumber
+participant Publisher
+participant PS_Service
+participant Broker
+activate Subscriber
+
+Subscriber -> Publisher : GetSubscriptionInfo(subject)
+activate Publisher
+Publisher -> PS_Service : CreateTopic(management metadata)
+activate PS_Service
+PS_Service -> PS_Service : Generate Topic
+PS_Service --> Publisher : CreateTopicResponse(topic, broker metadata)
+deactivate PS_Service
+Publisher --> Subscriber : SubscriptionInfoResponse(protocol, subscription metadata)
+deactivate Publisher
+Subscriber -> Broker : Subscribe(topic)
+activate Broker
+Broker --> PS_Service : PubSubAction::SUBSCRIBE(topic)
+activate PS_Service
+PS_Service -> Publisher : ManagementCB(topic, TopicAction::START)
+deactivate PS_Service
+activate Publisher
+Publisher -> Broker : data
+Broker -> Subscriber : data
+
+@enduml

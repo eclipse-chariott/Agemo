@@ -1,0 +1,29 @@
+@startuml pubsub component diagram with broker interface
+component "Publisher gRPC" as pub {
+    [Publisher] --> pub.broker
+    pub.broker - [PubConnector]
+}
+
+pub -up- publisher.proto
+pub --> pubsub.proto
+
+component "PubSub Service gRPC" as ps_service {
+    [Topic Mgmt] --> broker.monitor
+    broker.monitor - [BrokerMonitor]
+}
+
+ps_service -- pubsub.proto
+ps_service -up-> publisher.proto
+
+component "Subscriber gRPC" as sub {
+    [Subscriber] --> sub.broker
+    sub.broker - [SubConnector]
+}
+
+sub --> publisher.proto
+
+[PubConnector] -down-> [Broker]
+[BrokerMonitor] <-down-> [Broker]
+[Broker] -> [SubConnector]
+
+@enduml

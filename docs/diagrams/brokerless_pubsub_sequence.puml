@@ -1,0 +1,56 @@
+@startuml pubsub sequence diagram
+title Brokerless pubsub sequence diagram
+==Subscribe==
+participant Publisher
+participant PS_Service
+participant Monitor
+
+activate Subscriber
+
+activate Monitor
+Subscriber -> Publisher : GetSubscriptionInfo(subject)
+activate Publisher
+
+Publisher -> PS_Service : CreateTopic(subject, managementCB)
+activate PS_Service
+
+PS_Service -> PS_Service : generate topic name
+
+PS_Service --> Publisher : Return topic + subscription metadata
+deactivate PS_Service
+
+Publisher ->o] : Initialize publish process
+
+Publisher --> Subscriber : Return topic + subscription metadata
+
+Subscriber -> Publisher : Subscribe(topic)
+
+Monitor -> PS_Service : SubscriptionEvent
+activate PS_Service
+
+PS_Service -> Publisher : managementCB(topic, start)
+deactivate PS_Service
+
+Publisher ->o] : Publish(data)
+
+[o--> Subscriber : data
+
+==Unsubscribe==
+
+Subscriber ->x? : Unsubscribe('Unregister')
+destroy Subscriber
+
+[o-->x Subscriber : data
+
+Monitor -> PS_Service : UnsubscribeEvent
+activate PS_Service
+
+PS_Service -> PS_Service : If TopicSub = 0
+
+PS_Service -> Publisher : managementCB(topic, stop)
+deactivate PS_Service
+
+Publisher ->x] : Publish(data)
+deactivate Publisher
+
+@enduml
