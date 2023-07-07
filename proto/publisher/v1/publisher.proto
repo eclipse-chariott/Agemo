@@ -16,6 +16,7 @@ service Publisher {
     // Method used by a subscriber to get topic and messaging broker
     // information.
     rpc GetSubscriptionInfo (SubscriptionInfoRequest) returns (SubscriptionInfoResponse);
+
     // Method used by the Pub Sub Service to provide the publisher with topic
     // information so the publisher can make informed choices with topic
     // management.
@@ -36,8 +37,10 @@ message SubscriptionInfoResponse {
     // Protocol used for subscription messages.
     // An example protocol: "mqtt"
     string protocolKind = 1;
+
     // Endpoint that a subscriber will connect to for a subscription.
     string subscriptionEndpoint = 2;
+
     // In addition to providing the topic to connect to, this can in the future
     // can provide other information for how to connect to a topic in the
     // broker, like a connection token, etc.
@@ -49,6 +52,7 @@ message SubscriptionInfoResponse {
 message ManageTopicRequest {
     // The name of the dynamically generated topic.
     string topic = 1;
+
     // Context informing publisher of actions to take on a topic.
     string action = 2;
 }

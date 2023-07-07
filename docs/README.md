@@ -32,7 +32,7 @@ the service (see [Bring Your Own Broker](#bring-your-own-broker)).
 | --- | --- |
 | Application | An application is defined as any software component. |
 | Broker or Messaging Broker | A messaging broker is a service that provides publish/subscribe functionality and handles the routing of messages from a publisher and a subscriber. |
-| Provider or Chariott Provider | A Provider is an application that registers its capabilities with Chariott's service registry for other applications to consume. |
+| Provider or Service Provider | A Provider is an application that registers its capabilities with Chariott's service registry for other applications to consume. |
 | Publisher | A publisher is also an application that provides some form of data through publishing to a topic. |
 | Subscriber | A subscriber is an application that consumes data by subscribing to a topic. |
 > **Note**: "provider", "publisher", or "subscriber" are just roles for an application. Specifically, an application can be any or all of these roles.
@@ -209,7 +209,7 @@ Below is a diagram showing the lifetime of a topic:
 ## Chariott Integration
 
 The Pub Sub Service connects to [Eclipse Chariott](https://github.com/eclipse-chariott/chariott) as
-a Chariott Provider. This means that the service becomes discoverable through the Chariott service
+a Service Provider. This means that the service becomes discoverable through the Chariott service
 discovery mechanism. Applications that want to utlize a publish/subscribe service can call Chariott
 to return the gRPC endpoint for the Pub Sub Service. Publishers are the only applications that need
 to communicate directly with the Pub Sub Service to manage topic lifetimes and get any broker
