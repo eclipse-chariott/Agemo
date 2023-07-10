@@ -72,7 +72,7 @@ proto files for Chariott integration. To ensure that these files are included, p
 following command when cloning the repo:
 
 ```shell
-git clone --recurse-submodules https://github.com/eclipse-chariott/pub_sub_service
+git clone --recurse-submodules https://github.com/eclipse-chariott/Agemo
 ```
 
 ### Building
@@ -119,11 +119,11 @@ cargo run --bin pub-sub-service
 
 ### Interacting with the service
 
-The service implements two gRPC methods defined in [pubsub.proto](./proto/pubsub.proto). To create
-a topic, execute the below command in another terminal window:
+The service implements two gRPC methods defined in [pubsub.proto](./proto/pubsub/v1/pubsub.proto).
+To create a topic, execute the below command in another terminal window:
 
 ```shell
-grpcurl -proto ./proto/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/CreateTopic <<EOF
+grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/CreateTopic <<EOF
 {
   "publisherId": "simple_publisher_call",
   "managementCallback": "https://example_management.address",
@@ -148,7 +148,7 @@ An example of an expected response would look like:
 This created topic could then be deleted with the following command:
 
 ```shell
-grpcurl -proto ./proto/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/DeleteTopic <<EOF
+grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/DeleteTopic <<EOF
 {
   "topic": "09285f6c-9a86-49db-9159-0d91f8f4d3bb"
 }

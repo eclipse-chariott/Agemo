@@ -1,0 +1,35 @@
+@startuml Topic Lifecycle State Diagram
+title Topic Lifecycle State Diagram
+state "NotifyOfSub" as NotifyOfSub <<sdlreceive>>
+state "Subs == 0" as NoSubs
+state "Subs > 0" as SomeSubs
+state "is Subs == 0?" as CheckSubs <<choice>>
+state "NotifyOfZeroSubs" as NotifyZeroSubs <<sdlreceive>>
+state "NotifySubscribersOfDeletion" as NotifySubs <<sdlreceive>>
+
+[*] -right-> NoSubs : CreateTopic
+note on link
+    Topic request
+    from publisher
+end note
+NoSubs -right-> NotifyOfSub : Subscribe(topic)
+NotifyOfSub -right-> SomeSubs : Subs + 1
+SomeSubs --> CheckSubs : Unsubscribe(topic)
+CheckSubs -up-> SomeSubs : Subs - 1 > 0
+CheckSubs -left-> NotifyZeroSubs : Subs - 1 == 0
+NotifyZeroSubs -up-> NoSubs
+NoSubs --> NotifyZeroSubs : reminder timeout
+NoSubs -up-> NotifySubs : DeleteTopic(topic)
+note on link
+    Deletion request
+    from publisher
+end note
+SomeSubs -up-> NotifySubs : DeleteTopic(topic)
+note on link
+    Deletion request
+    from publisher
+end note
+NotifySubs -up-> [*]
+
+note right of CheckSubs : Is Subs to topic = 0?
+@enduml

@@ -1,0 +1,30 @@
+@startuml unsubscribe sequence diagram
+title Unsubscribe Sequence Diagram
+autonumber
+activate Publisher
+participant PS_Service
+activate Broker
+activate Subscriber
+
+Publisher -> Broker : data
+Broker -> Subscriber : data
+Subscriber -> Broker : Unsubscribe(topic)
+activate Broker
+Broker ->x Subscriber: data
+Broker --> PS_Service : PubSubAction::UNSUBSCRIBE(topic)
+deactivate Broker
+destroy Subscriber
+activate PS_Service
+alt topic subs == 0
+    PS_Service -> Publisher : ManagementCB(topic, TopicAction::STOP)
+    activate Publisher
+    Publisher ->x Broker : data
+    deactivate Publisher
+end
+loop while topic exists
+    PS_Service -> PS_Service : topic timeout?
+    activate PS_Service
+    PS_Service -> Publisher : ManagementCB(topic, TopicAction::STOP)
+    deactivate PS_Service
+end
+@enduml

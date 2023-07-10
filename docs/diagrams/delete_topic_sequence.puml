@@ -1,0 +1,24 @@
+@startuml delete topic sequence diagram
+title Delete Topic Sequence Diagram
+autonumber
+activate Publisher
+participant PS_Service
+activate Broker
+activate Subscriber
+
+Publisher -> Broker : data
+Broker -> Subscriber : data
+Publisher ->x Broker : data
+Publisher -> PS_Service : DeleteTopic(topic)
+activate PS_Service
+alt topic subs > 0
+    PS_Service -> Broker : publish PubSubAction::DELETE(topic)
+    Broker -> Subscriber : TOPIC DELETED on topic
+    Subscriber -->x Broker : disconnect/unsubscribe(topic)
+    deactivate Subscriber
+end
+PS_Service --> Publisher : ack
+deactivate PS_Service
+destroy Publisher
+
+@enduml

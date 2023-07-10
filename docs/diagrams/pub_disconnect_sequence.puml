@@ -1,0 +1,26 @@
+@startuml pub disconnect sequence diagram
+title Publisher Disconnect Sequence Diagram
+autonumber
+activate Publisher
+participant PS_Service
+activate Broker
+activate Subscriber
+
+Publisher -> Broker : data
+Broker -> Subscriber : data
+destroy Publisher
+Broker --> PS_Service : LWT on 'publisher/disconnect' with id
+activate PS_Service
+PS_Service -> PS_Service : Get topics by publisher
+activate PS_Service
+loop for each topic
+    alt topic subs > 0
+        PS_Service -> Broker : publish PubSubAction::DELETE(topic)
+        Broker -> Subscriber : TOPIC DELETED on topic
+        Subscriber -->x Broker : disconnect/unsubscribe(topic)
+    end
+    deactivate PS_Service
+end
+deactivate PS_Service
+deactivate Subscriber
+@enduml

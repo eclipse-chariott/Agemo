@@ -1,0 +1,20 @@
+@startuml pubsub component diagram
+component "Publisher" as pub
+
+pub -up- publisher.proto
+pub -> pubsub.proto
+
+component "Pub Sub Service" as ps_service
+
+ps_service -left- pubsub.proto
+ps_service -up-> publisher.proto
+
+component "Subscriber" as sub
+
+sub -up-> publisher.proto
+
+[pub] -down-> [Broker]
+[ps_service] <-down-> [Broker]
+[sub] <-down- [Broker]
+
+@enduml
