@@ -14,7 +14,6 @@
   - [Publisher Disconnect](#publisher-disconnect)
 - [Topic Lifetime](#topic-lifetime)
 - [Chariott Integration](#chariott-integration)
-- [Brokerless Pub Sub Functionality](#brokerless-pub-sub-functionality)
 
 ## Introduction
 
@@ -224,14 +223,3 @@ Below is a diagram showing what interfaces are used to enable Chariott connectio
             implement the provider.proto gRPC interface found in the Chariott repo. This may change
             in the future. Subscribers are expected to get a publisher's endpoint from the
             Chariott discovery service as well.
-
-## Brokerless Pub Sub Functionality
-
-While most publish/subscribe implementations rely on a messaging broker to serve the data from
-topics, there are implementations that are defined as 'brokerless'. Below is a diagram that shows
-how the Pub Sub Service might work in conjuction with a 'brokerless' implementation to handle
-subscribe and unsubscribe events:
-
-![brokerless sequence](../docs/diagrams/brokerless_pubsub_sequence.svg)
-> **NOTE**: The main differences from the broker implementation are that the monitor is collecting
-            topic information from an external logger rather than from the messaging broker itself.
