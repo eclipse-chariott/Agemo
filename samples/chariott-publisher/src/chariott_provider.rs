@@ -47,6 +47,11 @@ impl ChariottProvider {
 
 #[async_trait]
 impl ProviderService for ChariottProvider {
+    /// Fulfills request from a service calling through Chariott.
+    ///
+    /// # Arguments
+    ///
+    /// * `request` - The type of request to fulfill for the calling service.
     async fn fulfill(
         &self,
         request: Request<FulfillRequest>,

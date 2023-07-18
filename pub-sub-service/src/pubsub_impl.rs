@@ -38,7 +38,7 @@ impl PubSub for PubSubImpl {
     ///
     /// # Arguments
     ///
-    /// * `request` - A [`CreateTopicRequest`] wrapped by a [`tonic::Request`].
+    /// * `request` - The information needed to create a new topic.
     async fn create_topic(
         &self,
         request: Request<CreateTopicRequest>,
@@ -77,7 +77,7 @@ impl PubSub for PubSubImpl {
     ///
     /// # Arguments
     ///
-    /// * `request` - A [`DeleteTopicRequest`] wrapped by a [`tonic::Request`].
+    /// * `request` - The information needed to delete a topic.
     async fn delete_topic(
         &self,
         request: Request<DeleteTopicRequest>,

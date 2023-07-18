@@ -78,6 +78,7 @@ pub trait PubSubConnector {
     /// * `client_id` - Id to be used to create the broker client.
     /// * `endpoint` - The endpoint of the broker that the client is connecting to.
     fn new(client_id: String, endpoint: String) -> Self;
+
     /// Function that monitors the messaging broker for changes and forwards those changes back
     /// over the callback channel.
     ///
@@ -94,6 +95,7 @@ pub trait PubSubConnector {
         &mut self,
         cb_channel: mpsc::Sender<MonitorMessage>,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
+
     /// Function that deletes a topic from the messaging broker.
     ///
     /// This function deletes a topic from the messaging broker. In addition, it sends a topic

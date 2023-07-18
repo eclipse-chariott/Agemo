@@ -304,6 +304,13 @@ impl TopicManager {
         Ok(action_metadata)
     }
 
+    /// Internal function that periodically handles deletion of inactive topics.
+    ///
+    /// # Arguments
+    ///
+    /// * `active_topics_handle` - A handle to a shared memory HashMap containing list of topics
+    ///                            and associated metadata.
+    /// * `drop_sender` - The sender used to communicate a delete action request.
     async fn cleanup_topics(
         active_topics_handle: Arc<Mutex<ActiveTopicsMap>>,
         drop_sender: mpsc::Sender<MonitorMessage>,

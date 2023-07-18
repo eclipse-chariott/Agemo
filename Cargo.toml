@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: MIT
 
 [workspace]
-
 members = [
   "pub-sub-service",
   "samples/chariott-publisher",

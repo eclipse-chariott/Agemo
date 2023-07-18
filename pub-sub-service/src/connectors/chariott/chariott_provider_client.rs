@@ -45,6 +45,12 @@ pub struct ChariottProviderClient {
 }
 
 impl ChariottProviderClient {
+    /// Handles connection to the Chariott service.
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - the client used to handle the Chariott connection.
+    /// * `chariott_url` - the url where the Chariott service is hosted.
     async fn connect_chariott_client(
         client: &mut Option<ChariottServiceClient<Channel>>,
         chariott_url: String,
@@ -61,6 +67,12 @@ impl ChariottProviderClient {
         Ok(())
     }
 
+    /// Attempts to register and announce the passed in service with Chariott.
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - The client used to communicate with Chariott.
+    /// * `reg_params` - The information about a service needed for the registration process.
     async fn register_and_announce_once(
         client: &mut Option<ChariottServiceClient<Channel>>,
         reg_params: RegisterParams,
