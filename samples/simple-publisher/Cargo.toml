@@ -1,0 +1,19 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "simple-publisher"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+async-trait = { workspace = true }
+env_logger = { workspace = true }
+log = { workspace = true }
+proto = { path = "../../proto-build" }
+samples-common = { path = "../common" }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tonic = { workspace = true }
+uuid = { workspace = true, features = [ "v4", "fast-rng", "macro-diagnostics"] }
