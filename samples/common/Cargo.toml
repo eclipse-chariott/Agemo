@@ -1,0 +1,22 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "samples-common"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+async-std = { workspace = true }
+async-trait = { workspace = true }
+ctrlc = { workspace = true }
+log = { workspace = true }
+proto = { path = "../../proto-build" }
+sample-mqtt-connector = { path = "../connectors/mqtt-five" }
+serde_json = { workspace = true }
+strum = { workspace = true }
+strum_macros = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tonic = { workspace = true }
