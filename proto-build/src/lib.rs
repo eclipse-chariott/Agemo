@@ -18,26 +18,8 @@ pub mod publisher {
     }
 }
 
-pub mod chariott {
-    pub mod common {
-        pub mod v1 {
-            tonic::include_proto!("chariott.common.v1");
-        }
-    }
-
-    pub mod provider {
-        pub mod v1 {
-            tonic::include_proto!("chariott.provider.v1");
-        }
-    }
-
-    pub mod runtime {
-        pub mod v1 {
-            tonic::include_proto!("chariott.runtime.v1");
-        }
+pub mod service_registry {
+    pub mod v1 {
+        tonic::include_proto!("service_registry");
     }
 }
-
-pub use chariott::common::v1 as chariott_common;
-pub use chariott::provider::v1 as chariott_provider;
-pub use chariott::runtime::v1 as chariott_runtime;

@@ -6,18 +6,19 @@
 //! topic following the Pub Sub Service model. Calls Chariott's service discovery to get publisher
 //! endpoint information.
 
-use std::{env, sync::Arc, thread, time::Duration};
+use std::{env, sync::Arc};
 
 use async_std::sync::Mutex;
 use env_logger::{Builder, Target};
-use log::{info, warn, LevelFilter};
+use log::{info, LevelFilter};
 use proto::publisher;
-use sample_chariott_connector::chariott_client::ChariottClient;
+
 use samples_common::{
+    chariott_helper::{self, ChariottClient},
     constants,
     subscriber_helper::{self, BrokerRef, TopicRef, EMPTY_TOPIC, SHUTDOWN},
 };
-use tonic::{Code, Status};
+use tonic::Status;
 use uuid::Uuid;
 
 /// Gets the publisher endpoint from Chariott.
@@ -26,32 +27,21 @@ use uuid::Uuid;
 ///
 /// * `chariott_url` - The Chariott url.
 /// * `namespace` - The namespace to get publisher information about.
-async fn get_publisher_url(chariott_url: &str, namespace: &str) -> Result<Option<String>, Status> {
-    // Check if publisher exists.
-    let mut chariott_client = ChariottClient::new(chariott_url.to_string()).await?;
+async fn get_publisher_url_with_retry(
+    chariott_client: &mut ChariottClient,
+    namespace: &str,
+    retry_interval_secs: u64,
+) -> Result<String, Status> {
+    let service = chariott_helper::get_service_metadata_with_retry(
+        chariott_client,
+        namespace,
+        retry_interval_secs,
+        publisher::v1::SCHEMA_KIND,
+        publisher::v1::SCHEMA_REFERENCE,
+    )
+    .await?;
 
-    let result = chariott_client
-        .discover(namespace)
-        .await
-        .or_else(|status| {
-            if status.code() == Code::NotFound || status.code() == Code::Unavailable {
-                Ok(None)
-            } else {
-                Err(status)
-            }
-        })?
-        .and_then(|services| {
-            for service in services {
-                if service.schema_kind == publisher::v1::SCHEMA_KIND
-                    && service.schema_reference == publisher::v1::SCHEMA_REFERENCE
-                {
-                    return Some(service.url);
-                }
-            }
-            None
-        });
-
-    Ok(result)
+    Ok(service.uri)
 }
 
 #[tokio::main]
@@ -78,42 +68,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Get publisher endpoint from Chariott.
     let namespace = "sdv.chariott.publisher";
+    let retry_interval_secs = 5;
+
+    // Attempt to connect to Chariott.
+    let mut chariott_client = chariott_helper::connect_to_chariott_with_retry(
+        constants::CHARIOTT_ENDPOINT,
+        retry_interval_secs,
+    )
+    .await?;
 
     // Wait for publisher service to register with Chariott.
-    let mut publisher_url = None;
-
-    while publisher_url.is_none() {
-        let mut reason = String::new();
-
-        publisher_url = get_publisher_url(constants::CHARIOTT_ENDPOINT, namespace)
-            .await
-            .transpose()
-            .or_else(|| {
-                reason = format!("No publisher service found at '{namespace}'");
-                None
-            })
-            .and_then(|res| match res {
-                Ok(val) => Some(val),
-                Err(e) => {
-                    if e.code() == Code::Unavailable {
-                        reason = String::from("No chariott service found");
-                    } else {
-                        reason = format!("Chariott request failed with '{e:?}'");
-                    }
-                    None
-                }
-            })
-            .or_else(|| {
-                let secs = 5;
-                warn!("{reason}, retrying in {secs} seconds...");
-                thread::sleep(Duration::from_secs(secs));
-                None
-            });
-    }
+    let publisher_url =
+        get_publisher_url_with_retry(&mut chariott_client, namespace, retry_interval_secs).await?;
 
     // Get subscription information.
-    let info =
-        subscriber_helper::get_subscription_info(&publisher_url.unwrap(), &subject, "mqtt").await?;
+    let info = subscriber_helper::get_subscription_info(&publisher_url, &subject, "mqtt").await?;
     {
         let mut topic = topic_handle.lock().await;
         topic.topic = info.topic.clone();

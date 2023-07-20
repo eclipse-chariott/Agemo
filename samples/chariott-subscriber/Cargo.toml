@@ -14,7 +14,6 @@ env_logger = { workspace = true }
 log = { workspace = true }
 proto = { path = "../../proto-build" }
 samples-common = { path = "../common" }
-sample-chariott-connector = { path = "../connectors/chariott" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }
 uuid = { workspace = true, features = [ "v4", "fast-rng", "macro-diagnostics"] }
