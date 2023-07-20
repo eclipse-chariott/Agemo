@@ -4,5 +4,5 @@
 
 //! Connectors to external services, like Chariott or Mosquitto MQTT broker.
 
-pub mod chariott;
+pub mod chariott_connector;
 pub mod mosquitto_connector;

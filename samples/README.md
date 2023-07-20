@@ -48,7 +48,7 @@ To run the Chariott samples, take the following steps.
    folder, run:
 
     ```shell
-    cargo run -p chariott
+    cargo run -p service_discovery
     ```
 
 All services should then recognize that Chariott has been started:
@@ -72,7 +72,9 @@ ways.
    no more subscribers on the topic. Eventually (~30 secs), the Publisher will send a DELETE
    command to the pub-sub-service to remove the dynamic topic.
 1. If you stop the Publisher with Ctrl+C while there is a Subscriber on a topic, the Subscriber
-   will get a TOPIC DELETED notification on the topic and cleanly disconnect from the broker.
+   will get a TOPIC DELETED notification on the topic and cleanly disconnect from the broker. Note
+   that once the Publisher is stopped, an error will surface if the Chariott service is not stopped
+   as this simple example does not unregister itself with Chariott.
 
 In addition, you will see the subject requested (ie. gps) and the dynamically created topic in the
 data print outs on the subscriber window.
