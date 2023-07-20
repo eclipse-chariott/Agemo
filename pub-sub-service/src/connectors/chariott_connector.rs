@@ -18,7 +18,7 @@ use proto::{
 type ChariottClient = ServiceRegistryClient<Channel>;
 
 /// Object that contains the necessary information for identifying a specific service.
-pub struct ServiceIdentifiers {
+pub struct ServiceIdentifier {
     /// The namespace that a service is under in Chariott.
     pub namespace: String,
     /// The name of the service in Chariott.
@@ -70,18 +70,18 @@ pub async fn connect_to_chariott_with_retry(
 ///
 /// * `chariott_client` - The gRPC client for interacting with the Chariott service.
 /// * `provider_endpoint` - The endpoint where the provider service hosts the gRPC server.
-/// * `service_identifiers` - Information needed for uniquely identifying the service in Chariott.
+/// * `service_identifier` - Information needed for uniquely identifying the service in Chariott.
 pub async fn register_with_chariott(
     chariott_client: &mut ChariottClient,
     provider_endpoint: &str,
-    service_identifiers: ServiceIdentifiers,
+    service_identifier: ServiceIdentifier,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let provider_url_str = format!("http://{provider_endpoint}");
 
     let service_metadata = ServiceMetadata {
-        namespace: service_identifiers.namespace,
-        name: service_identifiers.name,
-        version: service_identifiers.version,
+        namespace: service_identifier.namespace,
+        name: service_identifier.name,
+        version: service_identifier.version,
         uri: provider_url_str.clone(),
         communication_kind: pubsub::v1::SCHEMA_KIND.to_string(),
         communication_reference: pubsub::v1::SCHEMA_REFERENCE.to_string(),

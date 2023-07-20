@@ -24,7 +24,7 @@ use topic_manager::TopicManager;
 use proto::pubsub::v1::pub_sub_server::PubSubServer;
 
 use crate::{
-    connectors::chariott_connector::{self, ServiceIdentifiers},
+    connectors::chariott_connector::{self, ServiceIdentifier},
     pubsub_connector::{MonitorMessage, TOPIC_DELETED_MSG},
 };
 
@@ -110,7 +110,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // If Chariott flag is used then connect to Chariott and register the service.
     if use_chariott {
         // Create service identifiers used to uniquely identify the service.
-        let service_identifiers = ServiceIdentifiers {
+        let service_identifier = ServiceIdentifier {
             namespace: SERVICE_NAMESPACE.to_string(),
             name: SERVICE_NAME.to_string(),
             version: "0.0.1".to_string(),
@@ -123,7 +123,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         chariott_connector::register_with_chariott(
             &mut chariott_client,
             SERVICE_ENDPOINT,
-            service_identifiers,
+            service_identifier,
         )
         .await?;
     }
