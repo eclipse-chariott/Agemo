@@ -1,0 +1,23 @@
+#
+# Pub Sub Service Settings
+#
+
+# The IP address and port number that the Pub Sub service listens on for requests.
+# Example: "0.0.0.0:80"
+pub_sub_authority: <<value>>
+
+# The URL of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://localhost:1883"
+messaging_url: <<value>>
+
+# The URL that the Chariott service listens on for requests.
+# Example: "http://0.0.0.0:4243"
+chariott_url: <<value>>
+
+# The namespace of the Pub Sub service.
+# Example: "sdv.pubsub"
+namespace: <<value>>
+
+# The name of the Pub Sub service.
+# Example: "dynamic.pubsub"
+name: <<value>>

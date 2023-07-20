@@ -1,0 +1,23 @@
+#
+# Publisher Settings
+#
+
+# The IP address and port number that the Pub Sub service listens on for requests.
+# Only needed for the simple publisher example.
+# Example: "0.0.0.0:80"
+pub_sub_authority: <<value>>
+
+# The URL that the Chariott service listens on for requests.
+# Only needed for the chariott publisher example.
+# Example: "http://0.0.0.0:4243"
+chariott_url: <<value>>
+
+# The namespace of the publisher service.
+# Only needed for the chariott publisher example.
+# Example: "example.publisher"
+publisher_namespace: <<value>>
+
+# The name of the Pub Sub service.
+# Only needed for the chariott publisher example.
+# Example: "dynamic.publisher"
+publisher_name: <<value>>

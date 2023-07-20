@@ -11,12 +11,20 @@ license = "MIT"
 [dependencies]
 async-std = { workspace = true }
 async-trait = { workspace = true }
+config = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 log = { workspace = true }
 paho-mqtt = { workspace = true }
 proto = { path = "../proto-build" }
+serde = { workspace = true }
+serde_derive = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true, features = [ "v4", "fast-rng", "macro-diagnostics"] }
+yaml-rust = { workspace = true, optional = true }
+
+[features]
+default = ["yaml"]
+yaml = ["yaml-rust"]

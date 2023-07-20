@@ -29,20 +29,10 @@ use crate::{
 };
 
 pub mod connectors;
+pub mod load_config;
 pub mod pubsub_connector;
 pub mod pubsub_impl;
 pub mod topic_manager;
-
-/// Endpoint for the messaging broker.
-const BROKER: &str = "mqtt://localhost:1883";
-/// Endpoint for the Chariott service.
-const CHARIOTT_ENDPOINT: &str = "http://0.0.0.0:50000";
-/// Default endpoint for this service.
-const SERVICE_ENDPOINT: &str = "[::1]:50051";
-/// Name that this service registers under in Chariott.
-const SERVICE_NAME: &str = "dynamic.pubsub";
-/// Namespace that this service registers under in Chariott.
-const SERVICE_NAMESPACE: &str = "sdv.pubsub";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -62,9 +52,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     }
 
+    let settings = load_config::load_settings();
+
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
-    let broker_endpoint = BROKER.to_string();
+    let broker_endpoint = settings.messaging_url.clone();
     let broker_protocol = "mqtt".to_string();
 
     info!("Setting up deletion channel...");
@@ -73,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     info!("Getting sender from monitor...");
     let connector_sender = topic_manager.monitor(deletion_sender.clone()).await;
 
-    let addr = "[::1]:50051".parse()?;
+    let addr = settings.pub_sub_authority.parse()?;
     let pubsub = pubsub_impl::PubSubImpl {
         active_topics: topic_manager.get_active_topics_handle(),
         endpoint: broker_endpoint,
@@ -86,7 +78,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
         // This line will need to be changed if a different broker is used to utilize the correct connector.
         let mut connector: connectors::mosquitto_connector::MqttFiveBrokerConnector =
-            PubSubConnector::new(client_id, BROKER.to_string());
+            PubSubConnector::new(client_id, settings.messaging_url);
 
         let _connection_res = connector.monitor_topics(connector_sender).await;
         loop {
@@ -111,18 +103,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     if use_chariott {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
-            namespace: SERVICE_NAMESPACE.to_string(),
-            name: SERVICE_NAME.to_string(),
-            version: "0.0.1".to_string(),
+            namespace: settings.namespace.unwrap(),
+            name: settings.name.unwrap(),
+            version: settings.version.unwrap(),
         };
 
         // connect to and register with Chariott.
         let mut chariott_client =
-            chariott_connector::connect_to_chariott_with_retry(CHARIOTT_ENDPOINT).await?;
+            chariott_connector::connect_to_chariott_with_retry(&settings.chariott_url.unwrap()).await?;
 
         chariott_connector::register_with_chariott(
             &mut chariott_client,
-            SERVICE_ENDPOINT,
+            &settings.pub_sub_authority,
             service_identifier,
         )
         .await?;
