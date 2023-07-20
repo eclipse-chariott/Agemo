@@ -58,8 +58,8 @@ async fn register_with_chariott(
 ///
 /// # Arguments
 ///
-/// * `chariott_url` - The Chariott url.
-/// * `namespace` - The namespace used to get pub sub information about.
+/// * `chariott_client` - The gRPC client for interacting with the Chariott service.
+/// * `retry_interval_secs` - The interval to wait before retrying the connection.
 async fn get_pub_sub_url_with_retry(
     chariott_client: &mut ChariottClient,
     retry_interval_secs: u64,

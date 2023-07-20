@@ -4,9 +4,8 @@
 
 //! Set of helper functions for interacting with Chariott through the generated gRPC client.
 
-use std::{thread, time::Duration};
-
 use log::{info, warn};
+use std::{thread, time::Duration};
 use tonic::{transport::Channel, Code, Request, Status};
 
 use proto::{

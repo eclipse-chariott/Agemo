@@ -27,6 +27,7 @@ use uuid::Uuid;
 ///
 /// * `chariott_url` - The Chariott url.
 /// * `namespace` - The namespace to get publisher information about.
+/// * `retry_interval_secs` - The interval to wait before retrying the connection.
 async fn get_publisher_url_with_retry(
     chariott_client: &mut ChariottClient,
     namespace: &str,
