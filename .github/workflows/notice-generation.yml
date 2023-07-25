@@ -20,9 +20,9 @@ jobs:
       - name: Cache Dependencies
         uses: Swatinem/rust-cache@v1
       - run: |
-          git config --global user.email "sdv-ps@example.com"
+          git config --global user.email "chariott-bot@eclipse.com"
           git config --global user.name "Automated Notice Generation Pipeline"
           ./tools/notice_generation.sh
         shell: bash
         env:
-          GITHUB_PAT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
