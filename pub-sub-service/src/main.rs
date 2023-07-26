@@ -13,7 +13,7 @@
 // Tells cargo to warn if a doc comment is missing and should be provided.
 #![warn(missing_docs)]
 
-use std::{env, sync::mpsc};
+use std::sync::mpsc;
 
 use env_logger::{Builder, Target};
 use log::{error, info, warn, LevelFilter};
@@ -42,17 +42,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .target(Target::Stdout)
         .init();
 
-    let mut use_chariott = false;
-    let args: Vec<String> = env::args().collect();
-
-    // Check if the Chariott flag is used to determine if the service needs to register.
-    for arg in args {
-        if arg.eq("--chariott") {
-            use_chariott = true;
-        }
-    }
-
+    // Load settings in from config file.
     let settings = load_config::load_settings();
+
+    // Check if Chariott is enabled.
+    let use_chariott = settings.chariott_url.is_some();
 
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
@@ -99,16 +93,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     });
 
-    // If Chariott flag is used then connect to Chariott and register the service.
+    // If Chariott is enabled then connect to Chariott and register the service.
     if use_chariott {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
-            namespace: settings.namespace.unwrap(),
-            name: settings.name.unwrap(),
-            version: settings.version.unwrap(),
+            namespace: settings.namespace.expect("No namespace value loaded from config."),
+            name: settings.name.expect("No name value loaded from config."),
+            version: settings.version.expect("No version loaded from config."),
         };
 
-        // connect to and register with Chariott.
+        // Connect to and register with Chariott.
         let mut chariott_client =
             chariott_connector::connect_to_chariott_with_retry(&settings.chariott_url.unwrap()).await?;
 
