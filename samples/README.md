@@ -64,7 +64,9 @@ publisher_identifier:
 ```
 
 > **NOTE**: Ensure that configuration that pertains to the Pub Sub Service and Chariott Service match
-those respective service configurations.
+            those respective service configurations.
+
+Additionally:
 
 > **NOTE**: If only running the simple samples, any field marked with
             `Needed for any Chariott enabled examples` is not needed.
