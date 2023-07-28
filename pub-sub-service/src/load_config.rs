@@ -30,19 +30,28 @@ pub struct Settings {
 
 /// Load the settings.
 pub fn load_settings() -> Settings {
-    let config =
-        Config::builder().add_source(File::new(CONFIG_FILE, FileFormat::Yaml)).build().unwrap();
+    let config = Config::builder()
+        .add_source(File::new(CONFIG_FILE, FileFormat::Yaml))
+        .build()
+        .unwrap();
 
     let mut settings: Settings = config.try_deserialize().unwrap();
 
     if settings.chariott_url.is_some() {
         // Get version of the service for Chariott registration.
-        let version = option_env!("CARGO_PKG_VERSION").expect("Expected version to be defined in 'CARGO_PKG_VERSION'.");
+        let version = option_env!("CARGO_PKG_VERSION")
+            .expect("Expected version to be defined in 'CARGO_PKG_VERSION'.");
         settings.version = Some(version.to_string());
 
         // Throw error if name or namespace are not set as they are needed for Chariott registration.
-        settings.namespace.as_ref().expect("Namespace should be set in config if 'chariott_url' is set.");
-        settings.name.as_ref().expect("Name should be set in config if 'chariott_url' is set.");
+        settings
+            .namespace
+            .as_ref()
+            .expect("Namespace should be set in config if 'chariott_url' is set.");
+        settings
+            .name
+            .as_ref()
+            .expect("Name should be set in config if 'chariott_url' is set.");
     }
 
     settings

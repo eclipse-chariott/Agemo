@@ -97,14 +97,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     if use_chariott {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
-            namespace: settings.namespace.expect("No namespace value loaded from config."),
+            namespace: settings
+                .namespace
+                .expect("No namespace value loaded from config."),
             name: settings.name.expect("No name value loaded from config."),
             version: settings.version.expect("No version loaded from config."),
         };
 
         // Connect to and register with Chariott.
         let mut chariott_client =
-            chariott_connector::connect_to_chariott_with_retry(&settings.chariott_url.unwrap()).await?;
+            chariott_connector::connect_to_chariott_with_retry(&settings.chariott_url.unwrap())
+                .await?;
 
         chariott_connector::register_with_chariott(
             &mut chariott_client,

@@ -1,0 +1,66 @@
+#
+# Samples Configuration
+#
+
+### Chariott service configuration
+
+# The URL that the Chariott service listens on for requests.
+# Needed for any Chariott enabled examples.
+# Example: "http://0.0.0.0:50000"
+chariott_url: <<value>>
+
+###
+
+### Pub Sub service configuration
+
+# The URL that the Chariott service listens on for requests.
+# Example: "http://0.0.0.0:50051"
+pub_sub_url: <<value>>
+
+# The namespace the Pub Sub service registers under in Chariott.
+# Needed for any Chariott enabled examples.
+# Example: "sdv.pubsub"
+pub_sub_namespace: <<value>>
+
+###
+
+### Publisher service configuration
+
+# The IP address and port number that the service listens on for requests.
+# Example: "0.0.0.0:80"
+publisher_endpoint: <<value>>
+
+# The service identifier for the publisher service used when registering
+# with Chariott.
+# Needed for any Chariott enabled examples.
+publisher_identifier:
+
+  # The namespace of the service.
+  # Example: "sdv.publisher"
+  namespace: <<value>>
+
+  # The name of the service, which can be different from the namespace.
+  # Example: "dynamic.publisher"
+  name: <<value>>
+
+  # The version of the service.
+  # Example: "0.1.0"
+  version: <<value>>
+
+###
+
+### Communication Constants
+
+# Constant for gRPC kind.
+grpc_kind: "grpc+proto"
+
+# Constant for the Pub Sub service API reference.
+pub_sub_reference: "pubsub.v1.pubsub.proto"
+
+# Constant for the Publisher service API reference.
+publisher_reference: "publisher.v1.publisher.proto"
+
+# Retry interval for connections.
+retry_interval_secs: 5
+
+###

@@ -11,12 +11,20 @@ license = "MIT"
 [dependencies]
 async-std = { workspace = true }
 async-trait = { workspace = true }
+config = { workspace = true }
 ctrlc = { workspace = true }
 log = { workspace = true }
 proto = { path = "../../proto-build" }
 sample-mqtt-connector = { path = "../connectors/mqtt-five" }
+serde = { workspace = true }
+serde_derive = { workspace = true }
 serde_json = { workspace = true }
 strum = { workspace = true }
 strum_macros = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }
+yaml-rust = { workspace = true, optional = true }
+
+[features]
+default = ["yaml"]
+yaml = ["yaml-rust"]
