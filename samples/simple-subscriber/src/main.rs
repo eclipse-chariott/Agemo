@@ -45,9 +45,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let default_subject = "test_topic".to_string();
     let subject = env::args().nth(1).unwrap_or(default_subject);
 
+    // Convert the publisher authority from the configuration settings to a url.
+    let publisher_authority = settings.publisher_authority;
+    let publisher_url = format!("http://{publisher_authority}");
+
     // Get subscription information from the publisher for the requested subject.
     let info = subscriber_helper::get_subscription_info(
-        &settings.publisher_authority,
+        &publisher_url,
         &subject,
         &communication_consts.mqtt_v5_kind,
     )

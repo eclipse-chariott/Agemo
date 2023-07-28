@@ -61,11 +61,62 @@ with Chariott is through registering itself as a provider that can be discovered
 Chariott service. Publishers then communicate with Chariott to get connection information to the
 service and directly communicate.
 
-There is a flag that needs to be set when running the service for it to register with Chariott. You
-can see an example [here](../samples/README.md#for-chariott-enabled-samples), but to simply run the
+There are several configuration settings that need to be populated if the service is to be run with
+Chariott. Specifically, the `pub_sub_service_setting.yaml` configuration file should have the
+following values set:
+
+```yaml
+# The URL that the Chariott service listens on for requests.
+# Example: "http://0.0.0.0:4243"
+chariott_url: "http://0.0.0.0:50000"
+
+# The namespace of the Pub Sub service.
+# Example: "sdv.pubsub"
+namespace: "sdv.pubsub"
+
+# The name of the Pub Sub service.
+# Example: "dynamic.pubsub"
+name: "dynamic.pubsub"
+```
+
+The full yaml would then look something like this:
+
+```yaml
+#
+# Pub Sub Service Settings
+#
+
+# The IP address and port number that the Pub Sub Service listens on for requests.
+# Example: "0.0.0.0:80"
+pub_sub_authority: "0.0.0.0:50051"
+
+# The URL of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://localhost:1883"
+messaging_url: "mqtt://localhost:1883"
+
+# The URL that the Chariott Service listens on for requests.
+# Example: "http://0.0.0.0:4243"
+chariott_url: "http://0.0.0.0:50000"
+
+# The namespace of the Pub Sub Service.
+# Example: "sdv.pubsub"
+namespace: "sdv.pubsub"
+
+# The name of the Pub Sub Service.
+# Example: "dynamic.pubsub"
+name: "dynamic.pubsub"
+
+# The version of the Pub Sub Service.
+# This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
+# Example: "0.1.0"
+# version: <<value>>
+```
+
+One can see an example of a publisher and subscriber interacting with Chariott and the Pub Sub
+Service [here](../samples/README.md#for-chariott-enabled-samples), but to simply run the
 service and have it attempt registration with Chariott, run the following command in the
-enlistment's root:
+enlistment's root once the above configuration has been set under `target/debug`:
 
 ```shell
-cargo run --bin pub-sub-service -- --chariott
+cargo run -p pub-sub-service
 ```

@@ -2,29 +2,29 @@
 # Samples Configuration
 #
 
-### Chariott service configuration
+### Chariott Service Configuration
 
-# The URL that the Chariott service listens on for requests.
+# The URL that the Chariott Service listens on for requests.
 # Needed for any Chariott enabled examples.
 # Example: "http://0.0.0.0:50000"
 chariott_url: <<value>>
 
 ###
 
-### Pub Sub service configuration
+### Pub Sub Service Configuration
 
-# The URL that the Chariott service listens on for requests.
+# The URL that the Pub Sub Service listens on for requests.
 # Example: "http://0.0.0.0:50051"
 pub_sub_url: <<value>>
 
-# The namespace the Pub Sub service registers under in Chariott.
+# The namespace the Pub Sub Service registers under in Chariott.
 # Needed for any Chariott enabled examples.
 # Example: "sdv.pubsub"
 pub_sub_namespace: <<value>>
 
 ###
 
-### Publisher service configuration
+### Publisher Service Configuration
 
 # The IP address and port number that the service listens on for requests.
 # Example: "0.0.0.0:80"

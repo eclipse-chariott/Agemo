@@ -2,7 +2,7 @@
 # Pub Sub Service Settings
 #
 
-# The IP address and port number that the Pub Sub service listens on for requests.
+# The IP address and port number that the Pub Sub Service listens on for requests.
 # Example: "0.0.0.0:80"
 pub_sub_authority: <<value>>
 
@@ -10,19 +10,19 @@ pub_sub_authority: <<value>>
 # Example: "mqtt://localhost:1883"
 messaging_url: <<value>>
 
-# The URL that the Chariott service listens on for requests.
+# The URL that the Chariott Service listens on for requests.
 # Example: "http://0.0.0.0:4243"
 chariott_url: <<value>>
 
-# The namespace of the Pub Sub service.
+# The namespace of the Pub Sub Service.
 # Example: "sdv.pubsub"
 namespace: <<value>>
 
-# The name of the Pub Sub service.
+# The name of the Pub Sub Service.
 # Example: "dynamic.pubsub"
 name: <<value>>
 
-# The version of the Pub Sub service.
+# The version of the Pub Sub Service.
 # This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
 # Example: "0.1.0"
 # version: <<value>>
