@@ -16,7 +16,7 @@ use samples_common::{
     chariott_helper::{self, ChariottClient},
     load_config::{
         load_settings, ChariottPublisherServiceSettings, CommunicationConstants, ServiceIdentifier,
-        CONFIG_FILE,
+        CONFIG_FILE, CONSTANTS_FILE,
     },
     publisher_helper::DynamicPublisher,
 };
@@ -100,9 +100,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Load in settings for service.
     let settings = load_settings::<ChariottPublisherServiceSettings>(CONFIG_FILE);
-    let communication_consts = load_settings::<CommunicationConstants>(CONFIG_FILE);
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE);
 
-    let addr = settings.publisher_endpoint.parse()?;
+    let addr = settings.publisher_authority.parse()?;
 
     // Attempt to connect with Chariott.
     let mut chariott_client = chariott_helper::connect_to_chariott_with_retry(
@@ -122,12 +122,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     .await?;
 
     // Instantiate the gRPC publisher implementation.
-    let publisher: PublisherImpl = DynamicPublisher::new(pub_sub_service_url);
+    let publisher: PublisherImpl = DynamicPublisher::new(
+        settings.publisher_authority.clone(),
+        pub_sub_service_url,
+        communication_consts.grpc_kind.clone(),
+    );
 
     // Register with Chariott.
     register_with_chariott(
         &mut chariott_client,
-        &settings.publisher_endpoint,
+        &settings.publisher_authority,
         settings.publisher_identifier.clone(),
         &communication_consts.grpc_kind,
         &communication_consts.publisher_reference,

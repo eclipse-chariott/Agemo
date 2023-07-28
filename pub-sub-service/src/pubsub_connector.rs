@@ -19,10 +19,6 @@
 use async_trait::async_trait;
 use std::{fmt, sync::mpsc};
 
-/// Constant defining the message sent over a topic channel notifying any subscribers that a topic
-/// has been deleted.
-pub const TOPIC_DELETED_MSG: &str = "TOPIC DELETED";
-
 /// Enum defining the protocol type used by the messaging broker.
 #[derive(Debug, Clone, Copy)]
 pub enum PubSubProtocol {

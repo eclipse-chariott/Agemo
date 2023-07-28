@@ -8,14 +8,17 @@
 use env_logger::{Builder, Target};
 use log::LevelFilter;
 use proto::publisher::v1::publisher_server::PublisherServer;
-use publisher_impl::{PublisherImpl, ENDPOINT};
-use samples_common::publisher_helper::DynamicPublisher;
+use publisher_impl::PublisherImpl;
+use samples_common::{
+    load_config::{
+        load_settings, CommunicationConstants, SimplePublisherServiceSettings, CONFIG_FILE,
+        CONSTANTS_FILE,
+    },
+    publisher_helper::DynamicPublisher,
+};
 use tonic::transport::Server;
 
 mod publisher_impl;
-
-/// Default Pub Sub Service url to be used by the publisher.
-const PUBSUB: &str = "http://[::1]:50051";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -25,9 +28,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .target(Target::Stdout)
         .init();
 
+    // Load in settings for service.
+    let settings = load_settings::<SimplePublisherServiceSettings>(CONFIG_FILE);
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE);
+
     // Instantiate the gRPC publisher implementation.
-    let addr = ENDPOINT.parse()?;
-    let publisher: PublisherImpl = DynamicPublisher::new(PUBSUB.to_string());
+    let addr = settings.publisher_authority.parse()?;
+    let publisher: PublisherImpl = DynamicPublisher::new(
+        settings.publisher_authority,
+        settings.pub_sub_url,
+        communication_consts.grpc_kind,
+    );
 
     // Grpc server for handling calls from clients.
     Server::builder()

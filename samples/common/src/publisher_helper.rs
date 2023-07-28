@@ -20,8 +20,10 @@ pub trait DynamicPublisher {
     ///
     /// # Arguments
     ///
-    /// * `pubsub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
-    fn new(pubsub_url: String) -> Self;
+    /// * `endpoint` - Endpoint of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
+    fn new(endpoint: String, pub_sub_url: String, protocol: String) -> Self;
 
     /// Method executed when the topic management callback gets a `START` action from the Pub Sub
     /// Service.

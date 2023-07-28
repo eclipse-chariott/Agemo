@@ -25,7 +25,8 @@ use proto::pubsub::v1::pub_sub_server::PubSubServer;
 
 use crate::{
     connectors::chariott_connector::{self, ServiceIdentifier},
-    pubsub_connector::{MonitorMessage, TOPIC_DELETED_MSG},
+    load_config::CommunicationConstants,
+    pubsub_connector::MonitorMessage,
 };
 
 pub mod connectors;
@@ -44,6 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Load settings in from config file.
     let settings = load_config::load_settings();
+    let communication_consts = load_config::load_constants::<CommunicationConstants>();
 
     // Check if Chariott is enabled.
     let use_chariott = settings.chariott_url.is_some();
@@ -51,7 +53,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
     let broker_endpoint = settings.messaging_url.clone();
-    let broker_protocol = "mqtt".to_string();
+    let broker_protocol = communication_consts.mqtt_v5_kind.clone();
 
     info!("Setting up deletion channel...");
     let (deletion_sender, deletion_receiver) = mpsc::channel::<MonitorMessage>();
@@ -65,6 +67,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         endpoint: broker_endpoint,
         protocol: broker_protocol,
     };
+
+    // Local variable to pass to the broker monitor client.
+    let topic_deletion_message = communication_consts.topic_deletion_message.clone();
 
     // Interface with messaging broker to monitor and clean up topics in a separate thread.
     let _monitor_handle = tokio::spawn(async move {
@@ -81,7 +86,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             match delete_msg {
                 Ok(msg) => {
                     let _res = connector
-                        .delete_topic(msg.context, TOPIC_DELETED_MSG.to_string())
+                        .delete_topic(msg.context, topic_deletion_message.clone())
                         .await;
                 }
                 Err(err) => {
@@ -105,14 +110,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         };
 
         // Connect to and register with Chariott.
-        let mut chariott_client =
-            chariott_connector::connect_to_chariott_with_retry(&settings.chariott_url.unwrap())
-                .await?;
+        let mut chariott_client = chariott_connector::connect_to_chariott_with_retry(
+            &settings.chariott_url.unwrap(),
+            communication_consts.retry_interval_secs,
+        )
+        .await?;
 
         chariott_connector::register_with_chariott(
             &mut chariott_client,
             &settings.pub_sub_authority,
             service_identifier,
+            &communication_consts.grpc_kind,
+            &communication_consts.pub_sub_reference,
         )
         .await?;
     }

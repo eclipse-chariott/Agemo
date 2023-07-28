@@ -27,9 +27,6 @@ use std::{
 };
 use tonic::{Request, Response, Status};
 
-/// Default endpoint for the simple publisher.
-pub const ENDPOINT: &str = "[::1]:50061";
-
 /// Alias for the active topics hashmap, correlating a topic with a sender channel used to publish
 /// to the messaging broker.
 pub type ActiveTopicsMap = HashMap<String, mpsc::Sender<String>>;
@@ -39,6 +36,10 @@ pub type ActiveTopicsMap = HashMap<String, mpsc::Sender<String>>;
 pub struct PublisherImpl {
     /// Id of the publisher.
     pub id: String,
+    /// The endpoint of the publisher.
+    pub endpoint: String,
+    /// The protocol used to communicate with the publisher.
+    pub protocol: String,
     /// Handle pointing to a shared active topics map.
     pub active_topics_map: Arc<Mutex<ActiveTopicsMap>>,
     /// Store that maps the dynamically created topic to a topic known to the publisher.
@@ -52,10 +53,14 @@ impl PublisherImpl {
     ///
     /// # Arguments
     ///
-    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
-    pub fn new(pub_sub_url: String) -> Self {
+    /// * `endpoint` - Endpoint of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
+    fn new(endpoint: String, pub_sub_url: String, protocol: String) -> Self {
         PublisherImpl {
             id: format!("pub_{}", uuid::Uuid::new_v4()),
+            endpoint,
+            protocol,
             topics_store: TopicStore::new(),
             active_topics_map: Arc::new(Mutex::new(ActiveTopicsMap::new())),
             pub_sub_url,
@@ -68,9 +73,11 @@ impl DynamicPublisher for PublisherImpl {
     ///
     /// # Arguments
     ///
-    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
-    fn new(pub_sub_url: String) -> Self {
-        PublisherImpl::new(pub_sub_url)
+    /// * `endpoint` - Endpoint of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
+    fn new(endpoint: String, pub_sub_url: String, protocol: String) -> Self {
+        PublisherImpl::new(endpoint, pub_sub_url, protocol)
     }
 
     /// Action taken by the publisher when a START action is received from the Pub Sub Service.
@@ -192,7 +199,7 @@ impl Publisher for PublisherImpl {
         let topic_subscription_info = pub_sub_service_helper::create_topic(
             self.pub_sub_url.clone(),
             self.id.clone(),
-            String::from(ENDPOINT),
+            self.endpoint.clone(),
             String::from("grpc"),
         )
         .await?;

@@ -28,7 +28,7 @@ pub_sub_namespace: <<value>>
 
 # The IP address and port number that the service listens on for requests.
 # Example: "0.0.0.0:80"
-publisher_endpoint: <<value>>
+publisher_authority: <<value>>
 
 # The service identifier for the publisher service used when registering
 # with Chariott.
@@ -46,21 +46,5 @@ publisher_identifier:
   # The version of the service.
   # Example: "0.1.0"
   version: <<value>>
-
-###
-
-### Communication Constants
-
-# Constant for gRPC kind.
-grpc_kind: "grpc+proto"
-
-# Constant for the Pub Sub service API reference.
-pub_sub_reference: "pubsub.v1.pubsub.proto"
-
-# Constant for the Publisher service API reference.
-publisher_reference: "publisher.v1.publisher.proto"
-
-# Retry interval for connections.
-retry_interval_secs: 5
 
 ###
