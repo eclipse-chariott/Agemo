@@ -3,11 +3,11 @@ Service in a dynamic way.
 
 ## Setting Up Samples Configuration
 
-In addition to adding the
+In addition to copying the
 [pub_sub_service_settings.yaml](../pub-sub-service/template/pub_sub_service_settings.yaml) and the
 [constants_settings.yaml](../pub-sub-service/template/constants_settings.yaml) to `target/debug`
-as described [here](../README.md#configuration-setup), the template
-[samples_settings.yaml](./template/samples_settings.yaml) will need to be added to `target/debug`
+as described in the [Configuration Setup](../README.md#configuration-setup), the template
+[samples_settings.yaml](./template/samples_settings.yaml) will need to be copied to `target/debug`
 and filled out. Below is an example of how to fill out the template:
 
 ```yaml
@@ -64,10 +64,9 @@ publisher_identifier:
 ```
 
 > **NOTE**: Ensure that configuration that pertains to the Pub Sub Service and Chariott Service match
-            those respective service configurations.
+            their respective service configurations.
 
-Additionally:
-
+<!-- Separates the quote blocks for md -->
 > **NOTE**: If only running the simple samples, any field marked with
             `Needed for any Chariott enabled examples` is not needed.
 
@@ -95,7 +94,7 @@ You should see simulated data flowing to the subscriber(s).
 To run the Chariott samples, take the following steps.
 
 1. Start the [pub-sub-service](../README.md#running-the-service) in a terminal window. If the
-   service does not start trying to connect to Chariott ensure the configuration is correctly set
+   service does not start trying to connect to Chariott, ensure the configuration is correctly set
    in [Setting Up Samples Configuration](#setting-up-samples-configuration).
 
     ```shell

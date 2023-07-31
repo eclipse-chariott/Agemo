@@ -47,9 +47,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let settings = load_config::load_settings();
     let communication_consts = load_config::load_constants::<CommunicationConstants>();
 
-    // Check if Chariott is enabled.
-    let use_chariott = settings.chariott_url.is_some();
-
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
     let broker_endpoint = settings.messaging_url.clone();
@@ -99,14 +96,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     });
 
     // If Chariott is enabled then connect to Chariott and register the service.
-    if use_chariott {
+    if settings.chariott_url.is_some() {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
-            namespace: settings
-                .namespace
-                .expect("No namespace value loaded from config."),
-            name: settings.name.expect("No name value loaded from config."),
-            version: settings.version.expect("No version loaded from config."),
+            namespace: settings.namespace.unwrap(),
+            name: settings.name.unwrap(),
+            version: settings.version.unwrap(),
         };
 
         // Connect to and register with Chariott.

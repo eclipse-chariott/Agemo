@@ -75,7 +75,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // This loop will not break unless the stream is broken by the client.
     for msg in stream.into_iter() {
         // Record the message received on the stream.
-        info!("({}) {}: {}", subject, msg.topic, msg.payload);
+        info!("({subject}) {}: {}", msg.topic, msg.payload);
 
         // If deletion message is sent over the subscription then end the program.
         if msg.payload == communication_consts.topic_deletion_message {

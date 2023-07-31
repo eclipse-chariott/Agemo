@@ -139,8 +139,8 @@ retry_interval_secs: 5
 ###
 ```
 
->**NOTE**: This file should be able to be directly copied from the `/template` directory to the
-           `/target/debug` directory.
+>**NOTE**: For most use cases, this file doesn't need to be modified and can be copied as-is from
+           the `/template` directory to the `/target/debug` directory.
 
 #### Pub Sub Service Configuration File
 
@@ -178,7 +178,8 @@ messaging_url: "mqtt://localhost:1883"
 ```
 
 > **NOTE**: The commented out configuration settings enable Chariott communication within the
-            Pub Sub Service. See [here](./pub-sub-service/README.md#running-with-chariott) for more
+            Pub Sub Service. See
+            [Running With Chariott](./pub-sub-service/README.md#running-with-chariott) for more
             information.
 
 ### Start the messaging broker
@@ -247,7 +248,8 @@ The expected response is an empty set of brackets:
 
 These two methods are used by a publisher to dynamically manage a topic. Please refer to this
 [documentation](./docs/README.md) for more information on how to the service is utilized. You can
-see more full featured examples [here](./samples/README.md#running-the-simple-samples).
+see more full featured examples in
+[Running the Simple Samples](./samples/README.md#running-the-simple-samples).
 
 ## Trademarks
 

@@ -113,9 +113,9 @@ name: "dynamic.pubsub"
 ```
 
 One can see an example of a publisher and subscriber interacting with Chariott and the Pub Sub
-Service [here](../samples/README.md#for-chariott-enabled-samples), but to simply run the
-service and have it attempt registration with Chariott, run the following command in the
-enlistment's root once the above configuration has been set under `target/debug`:
+Service in the [Chariott Enabled Samples](../samples/README.md#for-chariott-enabled-samples), but
+to simply run the service and have it attempt registration with Chariott, run the following command
+in the enlistment's root once the above configuration has been set under `target/debug`:
 
 ```shell
 cargo run -p pub-sub-service
