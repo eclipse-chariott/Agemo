@@ -38,10 +38,10 @@ pub struct TopicRef {
     pub topic: String,
 }
 
-/// Object connecting the subscription endpoint and a topic.
+/// Object connecting the subscription uri and a topic.
 pub struct SubscriptionInfo {
-    /// The endpoint to subscribe to (generally the messaging broker endpoint).
-    pub endpoint: String,
+    /// The uri to subscribe to (generally the messaging broker uri).
+    pub uri: String,
     /// The topic to subscribe to.
     pub topic: String,
 }
@@ -50,17 +50,17 @@ pub struct SubscriptionInfo {
 ///
 /// # Arguments
 ///
-/// * `pub_endpoint` - The endpoint of the publisher of the data.
+/// * `pub_uri` - The uri of the publisher of the data.
 /// * `subject` - The subject to request data about.
 /// * `expected_protocol` - The protocol expected for the subscription.
 pub async fn get_subscription_info(
-    pub_endpoint: &str,
+    pub_uri: &str,
     subject: &str,
     expected_protocol: &str,
 ) -> Result<SubscriptionInfo, Box<dyn std::error::Error + Send + Sync>> {
     info!("Requesting subject: {}", subject);
 
-    let pub_client_result = PublisherClient::connect(pub_endpoint.to_string()).await;
+    let pub_client_result = PublisherClient::connect(pub_uri.to_string()).await;
 
     // TODO: Handle error
     let mut pub_client = pub_client_result.unwrap();
@@ -72,7 +72,7 @@ pub async fn get_subscription_info(
     let sub_response = pub_client.get_subscription_info(sub_request).await?;
     let sub_info = sub_response.into_inner();
     let protocol = sub_info.protocol_kind;
-    let endpoint = sub_info.subscription_endpoint;
+    let uri = sub_info.subscription_uri;
 
     // If protocol returned is something the subscriber can't handle, then exit.
     if protocol != *expected_protocol {
@@ -84,7 +84,7 @@ pub async fn get_subscription_info(
     let metadata_json: Value = serde_json::from_str(&sub_info.subscription_metadata).unwrap();
     let topic = metadata_json["topic"].as_str().unwrap().to_string();
 
-    Ok(SubscriptionInfo { endpoint, topic })
+    Ok(SubscriptionInfo { uri, topic })
 }
 
 /// Gets the subscription stream from the broker.
@@ -92,19 +92,19 @@ pub async fn get_subscription_info(
 /// # Arguments
 ///
 /// * `client_id` - The id of the subscriber service.
-/// * `endpoint` - The endpoint of the messaging broker.
+/// * `uri` - The uri of the messaging broker.
 /// * `topic_handle` - The shared reference handle of the topic.
 /// * `broker_handle` - The shared reference handle of the broker.
 pub async fn get_subscription_stream(
     client_id: String,
-    endpoint: String,
+    uri: String,
     topic_handle: Arc<Mutex<TopicRef>>,
     broker_handle: Arc<Mutex<BrokerRef>>,
 ) -> Result<Receiver<PubSubMessage>, Box<dyn std::error::Error + Send + Sync>> {
     let topic = topic_handle.lock().await;
     let mut broker = broker_handle.lock().await;
 
-    broker.client = Some(PubSubConnectorClient::new(client_id, endpoint));
+    broker.client = Some(PubSubConnectorClient::new(client_id, uri));
     broker
         .client
         .as_ref()

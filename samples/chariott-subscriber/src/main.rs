@@ -4,41 +4,47 @@
 
 //! Chariott-enabled subscriber example showing how to get information about and subscribe to a
 //! topic following the Pub Sub Service model. Calls Chariott's service discovery to get publisher
-//! endpoint information.
+//! uri information.
 
 use std::{env, sync::Arc};
 
 use async_std::sync::Mutex;
 use env_logger::{Builder, Target};
 use log::{info, LevelFilter};
-use proto::publisher;
 
 use samples_common::{
     chariott_helper::{self, ChariottClient},
-    constants,
+    load_config::{
+        load_settings, ChariottSubscriberServiceSettings, CommunicationConstants, CONFIG_FILE,
+        CONSTANTS_FILE,
+    },
     subscriber_helper::{self, BrokerRef, TopicRef, EMPTY_TOPIC, SHUTDOWN},
 };
 use tonic::Status;
 use uuid::Uuid;
 
-/// Gets the publisher endpoint from Chariott.
+/// Gets the publisher uri from Chariott.
 ///
 /// # Arguments
 ///
-/// * `chariott_url` - The Chariott url.
+/// * `chariott_client` - The Chariott client.
 /// * `namespace` - The namespace to get publisher information about.
 /// * `retry_interval_secs` - The interval to wait before retrying the connection.
-async fn get_publisher_url_with_retry(
+/// * `communication_kind` - The expected kind of communication.
+/// * `communication_reference` - The expected reference API file.
+async fn get_publisher_uri_with_retry(
     chariott_client: &mut ChariottClient,
     namespace: &str,
     retry_interval_secs: u64,
+    communication_kind: &str,
+    communication_reference: &str,
 ) -> Result<String, Status> {
     let service = chariott_helper::get_service_metadata_with_retry(
         chariott_client,
         namespace,
         retry_interval_secs,
-        publisher::v1::SCHEMA_KIND,
-        publisher::v1::SCHEMA_REFERENCE,
+        communication_kind,
+        communication_reference,
     )
     .await?;
 
@@ -52,6 +58,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .filter(None, LevelFilter::Info)
         .target(Target::Stdout)
         .init();
+
+    // Load in settings for service.
+    let settings = load_settings::<ChariottSubscriberServiceSettings>(CONFIG_FILE)?;
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE)?;
 
     // Instantiate shared broker and shared topic references.
     let broker_handle: Arc<Mutex<BrokerRef>> = Arc::new(Mutex::new(BrokerRef { client: None }));
@@ -67,23 +77,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let default_subject = "test_topic".to_string();
     let subject = env::args().nth(1).unwrap_or(default_subject);
 
-    // Get publisher endpoint from Chariott.
-    let namespace = "sdv.chariott.publisher";
-    let retry_interval_secs = 5;
+    // The namespace to discover a service under in Chariott. Defaults to namespace in config.
+    let default_namespace = settings.publisher_identifier.namespace;
+    let namespace = env::args().nth(2).unwrap_or(default_namespace);
 
     // Attempt to connect to Chariott.
     let mut chariott_client = chariott_helper::connect_to_chariott_with_retry(
-        constants::CHARIOTT_ENDPOINT,
-        retry_interval_secs,
+        &settings.chariott_uri,
+        communication_consts.retry_interval_secs,
     )
     .await?;
 
     // Wait for publisher service to register with Chariott.
-    let publisher_url =
-        get_publisher_url_with_retry(&mut chariott_client, namespace, retry_interval_secs).await?;
+    let publisher_uri = get_publisher_uri_with_retry(
+        &mut chariott_client,
+        &namespace,
+        communication_consts.retry_interval_secs,
+        &communication_consts.grpc_kind,
+        &communication_consts.publisher_reference,
+    )
+    .await?;
 
     // Get subscription information.
-    let info = subscriber_helper::get_subscription_info(&publisher_url, &subject, "mqtt").await?;
+    let info = subscriber_helper::get_subscription_info(
+        &publisher_uri,
+        &subject,
+        &communication_consts.mqtt_v5_kind,
+    )
+    .await?;
     {
         let mut topic = topic_handle.lock().await;
         topic.topic = info.topic.clone();
@@ -93,7 +114,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let id = format!("sub_{}", Uuid::new_v4());
     let stream = subscriber_helper::get_subscription_stream(
         id,
-        info.endpoint,
+        info.uri,
         topic_handle.clone(),
         broker_handle,
     )
@@ -102,10 +123,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Print out the messages received by the subscription.
     // This loop will not break unless the stream is broken by the client.
     for msg in stream.into_iter() {
-        info!("({}) {}: {}", subject, msg.topic, msg.payload);
+        info!("({subject}) {}: {}", msg.topic, msg.payload);
 
         // If deletion message is sent over the subscription then end the program.
-        if msg.payload == *"TOPIC DELETED" {
+        if msg.payload == communication_consts.topic_deletion_message {
             let mut topic = topic_handle.lock().await;
             topic.topic = EMPTY_TOPIC.to_string();
             let _ = shutdown_sender.send(SHUTDOWN.to_string());

@@ -13,7 +13,7 @@
 // Tells cargo to warn if a doc comment is missing and should be provided.
 #![warn(missing_docs)]
 
-use std::{env, sync::mpsc};
+use std::sync::mpsc;
 
 use env_logger::{Builder, Target};
 use log::{error, info, warn, LevelFilter};
@@ -25,24 +25,15 @@ use proto::pubsub::v1::pub_sub_server::PubSubServer;
 
 use crate::{
     connectors::chariott_connector::{self, ServiceIdentifier},
-    pubsub_connector::{MonitorMessage, TOPIC_DELETED_MSG},
+    load_config::CommunicationConstants,
+    pubsub_connector::MonitorMessage,
 };
 
 pub mod connectors;
+pub mod load_config;
 pub mod pubsub_connector;
 pub mod pubsub_impl;
 pub mod topic_manager;
-
-/// Endpoint for the messaging broker.
-const BROKER: &str = "mqtt://localhost:1883";
-/// Endpoint for the Chariott service.
-const CHARIOTT_ENDPOINT: &str = "http://0.0.0.0:50000";
-/// Default endpoint for this service.
-const SERVICE_ENDPOINT: &str = "[::1]:50051";
-/// Name that this service registers under in Chariott.
-const SERVICE_NAME: &str = "dynamic.pubsub";
-/// Namespace that this service registers under in Chariott.
-const SERVICE_NAMESPACE: &str = "sdv.pubsub";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -52,20 +43,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .target(Target::Stdout)
         .init();
 
-    let mut use_chariott = false;
-    let args: Vec<String> = env::args().collect();
-
-    // Check if the Chariott flag is used to determine if the service needs to register.
-    for arg in args {
-        if arg.eq("--chariott") {
-            use_chariott = true;
-        }
-    }
+    // Load settings in from config file.
+    let settings = load_config::load_settings()?;
+    let communication_consts = load_config::load_constants::<CommunicationConstants>()?;
 
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
-    let broker_endpoint = BROKER.to_string();
-    let broker_protocol = "mqtt".to_string();
+    let broker_uri = settings.messaging_uri.clone();
+    let broker_protocol = communication_consts.mqtt_v5_kind.clone();
 
     info!("Setting up deletion channel...");
     let (deletion_sender, deletion_receiver) = mpsc::channel::<MonitorMessage>();
@@ -73,12 +58,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     info!("Getting sender from monitor...");
     let connector_sender = topic_manager.monitor(deletion_sender.clone()).await;
 
-    let addr = "[::1]:50051".parse()?;
+    let addr = settings.pub_sub_authority.parse()?;
     let pubsub = pubsub_impl::PubSubImpl {
         active_topics: topic_manager.get_active_topics_handle(),
-        endpoint: broker_endpoint,
+        uri: broker_uri,
         protocol: broker_protocol,
     };
+
+    // Local variable to pass to the broker monitor client.
+    let topic_deletion_message = communication_consts.topic_deletion_message.clone();
 
     // Interface with messaging broker to monitor and clean up topics in a separate thread.
     let _monitor_handle = tokio::spawn(async move {
@@ -86,7 +74,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
         // This line will need to be changed if a different broker is used to utilize the correct connector.
         let mut connector: connectors::mosquitto_connector::MqttFiveBrokerConnector =
-            PubSubConnector::new(client_id, BROKER.to_string());
+            PubSubConnector::new(client_id, settings.messaging_uri);
 
         let _connection_res = connector.monitor_topics(connector_sender).await;
         loop {
@@ -95,7 +83,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             match delete_msg {
                 Ok(msg) => {
                     let _res = connector
-                        .delete_topic(msg.context, TOPIC_DELETED_MSG.to_string())
+                        .delete_topic(msg.context, topic_deletion_message.clone())
                         .await;
                 }
                 Err(err) => {
@@ -107,23 +95,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     });
 
-    // If Chariott flag is used then connect to Chariott and register the service.
-    if use_chariott {
+    // If Chariott is enabled then connect to Chariott and register the service.
+    if settings.chariott_uri.is_some() {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
-            namespace: SERVICE_NAMESPACE.to_string(),
-            name: SERVICE_NAME.to_string(),
-            version: "0.0.1".to_string(),
+            namespace: settings.namespace.unwrap(),
+            name: settings.name.unwrap(),
+            version: settings.version.unwrap(),
         };
 
-        // connect to and register with Chariott.
-        let mut chariott_client =
-            chariott_connector::connect_to_chariott_with_retry(CHARIOTT_ENDPOINT).await?;
+        // Connect to and register with Chariott.
+        let mut chariott_client = chariott_connector::connect_to_chariott_with_retry(
+            &settings.chariott_uri.unwrap(),
+            communication_consts.retry_interval_secs,
+        )
+        .await?;
 
         chariott_connector::register_with_chariott(
             &mut chariott_client,
-            SERVICE_ENDPOINT,
+            &settings.pub_sub_authority,
             service_identifier,
+            &communication_consts.grpc_kind,
+            &communication_consts.pub_sub_reference,
         )
         .await?;
     }

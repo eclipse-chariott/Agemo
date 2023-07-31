@@ -18,8 +18,8 @@ pub trait PubSubConnectorClient {
     /// # Arguments
     ///
     /// * `client_id` - Id to be used to create the broker client.
-    /// * `endpoint` - The endpoint of the broker that the client is connecting to.
-    fn new(client_id: String, endpoint: String) -> Self;
+    /// * `uri` - The uri of the broker that the client is connecting to.
+    fn new(client_id: String, uri: String) -> Self;
 
     /// Function that initiates the connection with the messaging broker.
     async fn connect(&self) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;

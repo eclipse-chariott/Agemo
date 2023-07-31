@@ -37,24 +37,24 @@ pub enum TopicAction {
 ///
 /// # Arguments
 ///
-/// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
+/// * `pub_sub_uri` - URI of the Pub Sub Service. (ex. "http://\[::1\]:50051")
 /// * `client_id` - The client id of the service calling the method.
-/// * `management_endpoint` - The management endpoint of the service calling the method.
-/// * `management_protocol` - The protocol used by the given management endpoint.
+/// * `management_authority` - The management authority of the service calling the method.
+/// * `management_protocol` - The protocol used by the given management callback.
 pub async fn create_topic(
-    pub_sub_url: String,
+    pub_sub_uri: String,
     client_id: String,
-    management_endpoint: String,
+    management_authority: String,
     management_protocol: String,
 ) -> Result<SubscriptionInfoResponse, Status> {
-    let mut ps_client = PubSubClient::connect(pub_sub_url).await.map_err(|e| {
+    let mut ps_client = PubSubClient::connect(pub_sub_uri).await.map_err(|e| {
         error!("Error connecting to pub sub wrapper client: {e:?}");
         Status::from_error(Box::new(e))
     })?;
 
     let request = Request::new(CreateTopicRequest {
         publisher_id: client_id,
-        management_callback: format!("http://{}", management_endpoint),
+        management_callback: format!("http://{}", management_authority),
         management_protocol,
     });
 
@@ -66,7 +66,7 @@ pub async fn create_topic(
 
     let topic_subscription_info = SubscriptionInfoResponse {
         protocol_kind: topic_info.broker_protocol,
-        subscription_endpoint: topic_info.broker_endpoint,
+        subscription_uri: topic_info.broker_uri,
         subscription_metadata,
     };
 
@@ -77,14 +77,14 @@ pub async fn create_topic(
 ///
 /// # Arguments
 ///
-/// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
+/// * `pub_sub_uri` - URI of the Pub Sub Service. (ex. "http://\[::1\]:50051")
 /// * `topic` - The generated topic returned from the `create_topic` method call.
 pub async fn delete_topic(
-    pub_sub_url: String,
+    pub_sub_uri: String,
     topic: String,
 ) -> Result<Response<DeleteTopicResponse>, Status> {
     // Call Pub Sub Service and get the topic and subscription information.
-    let mut ps_client = PubSubClient::connect(pub_sub_url).await.map_err(|e| {
+    let mut ps_client = PubSubClient::connect(pub_sub_uri).await.map_err(|e| {
         error!("Error connecting to pub sub wrapper client: {e:?}");
         Status::from_error(Box::new(e))
     })?;

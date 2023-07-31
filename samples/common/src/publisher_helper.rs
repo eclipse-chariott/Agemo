@@ -20,8 +20,10 @@ pub trait DynamicPublisher {
     ///
     /// # Arguments
     ///
-    /// * `pubsub_url` - Url of the Pub Sub Service. (ex. "http://\[::1\]:50051")
-    fn new(pubsub_url: String) -> Self;
+    /// * `authority` - Authority of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_uri` - URI of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
+    fn new(authority: String, pub_sub_uri: String, protocol: String) -> Self;
 
     /// Method executed when the topic management callback gets a `START` action from the Pub Sub
     /// Service.
@@ -74,7 +76,7 @@ where
 {
     tokio::spawn(async move {
         let client: MqttFiveClientConnector =
-            PubSubConnectorClient::new(pub_id.clone(), client_info.subscription_endpoint.clone());
+            PubSubConnectorClient::new(pub_id.clone(), client_info.subscription_uri.clone());
         let _response = client.connect();
 
         // Create messages and publish them.

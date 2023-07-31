@@ -7,6 +7,9 @@
   - [Building](#building)
   - [Running the Tests](#running-the-tests)
 - [Running the Service](#running-the-service)
+  - [Configuration Setup](#configuration-setup)
+    - [Constants Configuration File](#constants-configuration-file)
+    - [Pub Sub Service Configuration File](#pub-sub-service-configuration-file)
   - [Start the messaging broker](#start-the-messaging-broker)
   - [Start the Pub Sub Service](#start-the-pub-sub-service)
   - [Interacting with the service](#interacting-with-the-service)
@@ -99,6 +102,86 @@ Below are the steps to run the Pub Sub Service in its most simple form. The serv
 and the quickest way to interact with the services is through the use of the
 [grpcurl](http://github.com/fullstorydev/grpcurl) command line tool.
 
+### Configuration Setup
+
+There are two template files that must be created in `target/debug` and filled out before the
+service can be run. Below is the minimal set of configuration needed to start the service:
+
+#### Constants Configuration File
+
+[constants_settings.yaml](./pub-sub-service/template/constants_settings.yaml)
+
+```yaml
+#
+# Constants Configuration
+#
+
+### Communication Constants
+
+# Pub Sub Service topic deletion message.
+topic_deletion_message: "TOPIC DELETED"
+
+# Constant for gRPC kind.
+grpc_kind: "grpc+proto"
+
+# Constant for mqtt kind.
+mqtt_v5_kind: "mqtt_v5"
+
+# Constant for the Pub Sub service API reference.
+pub_sub_reference: "pubsub.v1.pubsub.proto"
+
+# Constant for the Publisher service API reference.
+publisher_reference: "publisher.v1.publisher.proto"
+
+# Retry interval for connections.
+retry_interval_secs: 5
+
+###
+```
+
+>**NOTE**: For most use cases, this file doesn't need to be modified and can be copied as-is from
+           the `/template` directory to the `/target/debug` directory.
+
+#### Pub Sub Service Configuration File
+
+[pub_sub_service_settings.yaml](./pub-sub-service/template/pub_sub_service_settings.yaml)
+
+```yaml
+#
+# Pub Sub Service Settings
+#
+
+# The IP address and port number that the Pub Sub Service listens on for requests.
+# Example: "0.0.0.0:80"
+pub_sub_authority: "0.0.0.0:50051"
+
+# The URI of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://0.0.0.0:1883"
+messaging_uri: "mqtt://0.0.0.0:1883"
+
+# The URI that the Chariott Service listens on for requests.
+# Example: "http://0.0.0.0:4243"
+# chariott_uri: <<value>>
+
+# The namespace of the Pub Sub Service.
+# Example: "sdv.pubsub"
+# namespace: <<value>>
+
+# The name of the Pub Sub Service.
+# Example: "dynamic.pubsub"
+# name: <<value>>
+
+# The version of the Pub Sub Service.
+# This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
+# Example: "0.1.0"
+# version: <<value>>
+```
+
+> **NOTE**: The commented out configuration settings enable Chariott communication within the
+            Pub Sub Service. See
+            [Running With Chariott](./pub-sub-service/README.md#running-with-chariott) for more
+            information.
+
 ### Start the messaging broker
 
 The messaging broker must be started first, this can be done with the following command from the
@@ -114,7 +197,7 @@ Then start up the Pub Sub Service project with the following command from the en
 in a separate terminal window:
 
 ```shell
-cargo run --bin pub-sub-service
+cargo run -p pub-sub-service
 ```
 
 ### Interacting with the service
@@ -137,7 +220,7 @@ An example of an expected response would look like:
 ```shell
 {
   "generatedTopic": "09285f6c-9a86-49db-9159-0d91f8f4d3bb",
-  "brokerEndpoint": "mqtt://localhost:1883",
+  "brokerUri": "mqtt://0.0.0.0:1883",
   "brokerProtocol": "mqtt"
 }
 ```
@@ -165,7 +248,8 @@ The expected response is an empty set of brackets:
 
 These two methods are used by a publisher to dynamically manage a topic. Please refer to this
 [documentation](./docs/README.md) for more information on how to the service is utilized. You can
-see more full featured examples [here](./samples/README.md#running-the-simple-samples).
+see more full featured examples in
+[Running the Simple Samples](./samples/README.md#running-the-simple-samples).
 
 ## Trademarks
 

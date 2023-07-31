@@ -1,0 +1,25 @@
+#
+# Constants Configuration
+#
+
+### Communication Constants
+
+# Pub Sub Service topic deletion message.
+topic_deletion_message: "TOPIC DELETED"
+
+# Constant for gRPC kind.
+grpc_kind: "grpc+proto"
+
+# Constant for mqtt kind.
+mqtt_v5_kind: "mqtt_v5"
+
+# Constant for the Pub Sub service API reference.
+pub_sub_reference: "pubsub.v1.pubsub.proto"
+
+# Constant for the Publisher service API reference.
+publisher_reference: "publisher.v1.publisher.proto"
+
+# Retry interval for connections.
+retry_interval_secs: 5
+
+###

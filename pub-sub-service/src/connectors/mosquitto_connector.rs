@@ -34,9 +34,9 @@ impl MqttFiveBrokerConnector {
     /// # Arguments
     ///
     /// * `client_id` - Id used when creating a new mqtt client.
-    /// * `broker_endpoint` - The endpoint of the broker that the client is connecting to.
-    fn new(client_id: String, broker_endpoint: String) -> Self {
-        let host = broker_endpoint;
+    /// * `broker_uri` - The uri of the broker that the client is connecting to.
+    fn new(client_id: String, broker_uri: String) -> Self {
+        let host = broker_uri;
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
             .server_uri(host)
@@ -182,8 +182,8 @@ impl MqttFiveBrokerConnector {
 
 #[async_trait]
 impl PubSubConnector for MqttFiveBrokerConnector {
-    fn new(client_id: String, endpoint: String) -> Self {
-        Self::new(client_id, endpoint)
+    fn new(client_id: String, uri: String) -> Self {
+        Self::new(client_id, uri)
     }
 
     async fn monitor_topics(

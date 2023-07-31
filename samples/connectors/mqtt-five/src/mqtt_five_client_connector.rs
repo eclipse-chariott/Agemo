@@ -33,8 +33,8 @@ pub struct MqttFiveClientConnector {
 
 #[async_trait]
 impl PubSubConnectorClient for MqttFiveClientConnector {
-    fn new(client_id: String, endpoint: String) -> Self {
-        let host = endpoint.clone();
+    fn new(client_id: String, uri: String) -> Self {
+        let host = uri.clone();
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
             .server_uri(host)
@@ -69,7 +69,7 @@ impl PubSubConnectorClient for MqttFiveClientConnector {
             }
         });
 
-        info!("Created client with id: {client_id} and connection_endpoint: {endpoint}");
+        info!("Created client with id: {client_id} and connection_uri: {uri}");
 
         MqttFiveClientConnector {
             client: cli,
