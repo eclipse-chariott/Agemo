@@ -36,16 +36,16 @@ pub type ActiveTopicsMap = HashMap<String, mpsc::Sender<String>>;
 pub struct PublisherImpl {
     /// Id of the publisher.
     pub id: String,
-    /// The endpoint of the publisher.
-    pub endpoint: String,
+    /// The authority of the publisher.
+    pub authority: String,
     /// The protocol used to communicate with the publisher.
     pub protocol: String,
     /// Handle pointing to a shared active topics map.
     pub active_topics_map: Arc<Mutex<ActiveTopicsMap>>,
     /// Store that maps the dynamically created topic to a topic known to the publisher.
     pub topics_store: TopicStore,
-    /// The url of the Pub Sub Service.
-    pub pub_sub_url: String,
+    /// The uri of the Pub Sub Service.
+    pub pub_sub_uri: String,
 }
 
 impl PublisherImpl {
@@ -53,17 +53,17 @@ impl PublisherImpl {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Endpoint of the Publisher Server. (ex. "0.0.0.0:50061")
-    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `authority` - Authority of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_uri` - URI of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
     /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
-    fn new(endpoint: String, pub_sub_url: String, protocol: String) -> Self {
+    fn new(authority: String, pub_sub_uri: String, protocol: String) -> Self {
         PublisherImpl {
             id: format!("pub_{}", uuid::Uuid::new_v4()),
-            endpoint,
+            authority,
             protocol,
             topics_store: TopicStore::new(),
             active_topics_map: Arc::new(Mutex::new(ActiveTopicsMap::new())),
-            pub_sub_url,
+            pub_sub_uri,
         }
     }
 }
@@ -73,11 +73,11 @@ impl DynamicPublisher for PublisherImpl {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Endpoint of the Publisher Server. (ex. "0.0.0.0:50061")
-    /// * `pub_sub_url` - Url of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
+    /// * `authority` - Authority of the Publisher Server. (ex. "0.0.0.0:50061")
+    /// * `pub_sub_uri` - URI of the Pub Sub Service. (ex. "http://0.0.0.0:50051")
     /// * `protocol` - Protocol of the Publisher Server. (ex. "grpc+proto")
-    fn new(endpoint: String, pub_sub_url: String, protocol: String) -> Self {
-        PublisherImpl::new(endpoint, pub_sub_url, protocol)
+    fn new(authority: String, pub_sub_uri: String, protocol: String) -> Self {
+        PublisherImpl::new(authority, pub_sub_uri, protocol)
     }
 
     /// Action taken by the publisher when a START action is received from the Pub Sub Service.
@@ -144,9 +144,9 @@ impl DynamicPublisher for PublisherImpl {
                 info!("Deleting topic '({topic}) {generated_topic}'.");
 
                 // Call delete topic from the Pub Sub Service.
-                let url = self.pub_sub_url.clone();
+                let uri = self.pub_sub_uri.clone();
                 let _handle = tokio::spawn(async move {
-                    pub_sub_service_helper::delete_topic(url, generated_topic.clone()).await
+                    pub_sub_service_helper::delete_topic(uri, generated_topic.clone()).await
                 });
             }
         }
@@ -197,9 +197,9 @@ impl Publisher for PublisherImpl {
 
         // Otherwise, call Pub Sub service and get the topic and subscription information.
         let topic_subscription_info = pub_sub_service_helper::create_topic(
-            self.pub_sub_url.clone(),
+            self.pub_sub_uri.clone(),
             self.id.clone(),
-            self.endpoint.clone(),
+            self.authority.clone(),
             String::from("grpc"),
         )
         .await?;

@@ -4,7 +4,7 @@
 
 //! Chariott-enabled subscriber example showing how to get information about and subscribe to a
 //! topic following the Pub Sub Service model. Calls Chariott's service discovery to get publisher
-//! endpoint information.
+//! uri information.
 
 use std::{env, sync::Arc};
 
@@ -23,16 +23,16 @@ use samples_common::{
 use tonic::Status;
 use uuid::Uuid;
 
-/// Gets the publisher endpoint from Chariott.
+/// Gets the publisher uri from Chariott.
 ///
 /// # Arguments
 ///
-/// * `chariott_url` - The Chariott url.
+/// * `chariott_client` - The Chariott client.
 /// * `namespace` - The namespace to get publisher information about.
 /// * `retry_interval_secs` - The interval to wait before retrying the connection.
 /// * `communication_kind` - The expected kind of communication.
 /// * `communication_reference` - The expected reference API file.
-async fn get_publisher_url_with_retry(
+async fn get_publisher_uri_with_retry(
     chariott_client: &mut ChariottClient,
     namespace: &str,
     retry_interval_secs: u64,
@@ -83,13 +83,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Attempt to connect to Chariott.
     let mut chariott_client = chariott_helper::connect_to_chariott_with_retry(
-        &settings.chariott_url,
+        &settings.chariott_uri,
         communication_consts.retry_interval_secs,
     )
     .await?;
 
     // Wait for publisher service to register with Chariott.
-    let publisher_url = get_publisher_url_with_retry(
+    let publisher_uri = get_publisher_uri_with_retry(
         &mut chariott_client,
         &namespace,
         communication_consts.retry_interval_secs,
@@ -100,7 +100,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Get subscription information.
     let info = subscriber_helper::get_subscription_info(
-        &publisher_url,
+        &publisher_uri,
         &subject,
         &communication_consts.mqtt_v5_kind,
     )
@@ -114,7 +114,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let id = format!("sub_{}", Uuid::new_v4());
     let stream = subscriber_helper::get_subscription_stream(
         id,
-        info.endpoint,
+        info.uri,
         topic_handle.clone(),
         broker_handle,
     )

@@ -24,11 +24,11 @@ message CreateTopicRequest {
     // An id of the publisher used to identify all topics a publisher creates.
     string publisher_id = 1;
 
-    // Callback endpoint for a publisher, used to communicate updates from the
+    // Callback uri for a publisher, used to communicate updates from the
     // Pub Sub Service.
     string managementCallback = 2;
 
-    // The protocol used to communicate over the management endpoint.
+    // The protocol used to communicate over the management callback.
     // (Currently expects the protocol to be gRPC).
     string managementProtocol = 3;
 }
@@ -40,8 +40,8 @@ message CreateTopicResponse {
     // The newly created topic name.
     string generatedTopic = 1;
 
-    // Endpoint of the messaging broker used to provide pub/sub functionality.
-    string brokerEndpoint = 2;
+    // URI of the messaging broker used to provide pub/sub functionality.
+    string brokerUri = 2;
 
     // Communication protocol used by the messaging broker.
     // An example protocol: "mqtt"

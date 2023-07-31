@@ -29,24 +29,24 @@ mod publisher_impl;
 /// # Arguments
 ///
 /// * `chariott_client` - The gRPC client for interacting with the Chariott service.
-/// * `provider_endpoint` - The endpoint where the provider service hosts the gRPC server.
+/// * `provider_authority` - The authority where the provider service hosts the gRPC server.
 /// * `provider_identifier` - The identifiers that uniquely describe this service.
 /// * `communication_kind` - The kind of communication used by this service.
 /// * `communication_reference` - The reference API file used to generate the gRPC service.
 async fn register_with_chariott(
     chariott_client: &mut ChariottClient,
-    provider_endpoint: &str,
+    provider_authority: &str,
     provider_identifier: ServiceIdentifier,
     communication_kind: &str,
     communication_reference: &str,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let provider_url_str = format!("http://{provider_endpoint}");
+    let provider_uri_str = format!("http://{provider_authority}");
 
     let service_metadata = ServiceMetadata {
         namespace: provider_identifier.namespace,
         name: provider_identifier.name,
         version: provider_identifier.version,
-        uri: provider_url_str,
+        uri: provider_uri_str,
         communication_kind: communication_kind.to_string(),
         communication_reference: communication_reference.to_string(),
     };
@@ -62,7 +62,7 @@ async fn register_with_chariott(
     Ok(())
 }
 
-/// Calls Chariott to get Pub Sub Service endpoint.
+/// Calls Chariott to get Pub Sub Service uri.
 ///
 /// # Arguments
 ///
@@ -71,7 +71,7 @@ async fn register_with_chariott(
 /// * `retry_interval_secs` - The interval to wait before retrying the connection.
 /// * `communication_kind` - The expected kind of communication.
 /// * `communication_reference` - The expected reference API file.
-async fn get_pub_sub_url_with_retry(
+async fn get_pub_sub_uri_with_retry(
     chariott_client: &mut ChariottClient,
     namespace: &str,
     retry_interval_secs: u64,
@@ -106,13 +106,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Attempt to connect with Chariott.
     let mut chariott_client = chariott_helper::connect_to_chariott_with_retry(
-        &settings.chariott_url,
+        &settings.chariott_uri,
         communication_consts.retry_interval_secs,
     )
     .await?;
 
     // Wait for Pub Sub Service to register with Chariott.
-    let pub_sub_service_url = get_pub_sub_url_with_retry(
+    let pub_sub_service_uri = get_pub_sub_uri_with_retry(
         &mut chariott_client,
         &settings.pub_sub_namespace,
         communication_consts.retry_interval_secs,
@@ -124,7 +124,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Instantiate the gRPC publisher implementation.
     let publisher: PublisherImpl = DynamicPublisher::new(
         settings.publisher_authority.clone(),
-        pub_sub_service_url,
+        pub_sub_service_uri,
         communication_consts.grpc_kind.clone(),
     );
 

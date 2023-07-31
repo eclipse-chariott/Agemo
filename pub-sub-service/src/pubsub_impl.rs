@@ -23,8 +23,8 @@ use crate::topic_manager::{ActiveTopicsMap, TopicMetadata};
 pub struct PubSubImpl {
     /// Handle that points to a shared active topics map.
     pub active_topics: Arc<Mutex<ActiveTopicsMap>>,
-    /// The endpoint of the messaging broker.
-    pub endpoint: String,
+    /// The uri of the messaging broker.
+    pub uri: String,
     /// The messaging protocol used by the messaging broker.
     pub protocol: String,
 }
@@ -62,7 +62,7 @@ impl PubSub for PubSubImpl {
 
         let reply = CreateTopicResponse {
             generated_topic: gen_topic,
-            broker_endpoint: self.endpoint.clone(),
+            broker_uri: self.uri.clone(),
             broker_protocol: self.protocol.clone(),
         };
 
@@ -105,7 +105,7 @@ mod pubsub_impl_tests {
         let expected_cb = "test_cb".to_string();
         let expected_management_protocol = "test_mgmt_protocol".to_string();
         let expected_pub_id = "pub_test".to_string();
-        let expected_endpoint = "test_broker".to_string();
+        let expected_uri = "test_broker".to_string();
         let expected_protocol = "test_protocol".to_string();
         let expected_metadata =
             TopicMetadata::new(expected_pub_id.clone(), 0, Some(expected_cb.clone()));
@@ -114,7 +114,7 @@ mod pubsub_impl_tests {
 
         let pubsub = PubSubImpl {
             active_topics: test_topic_map.clone(),
-            endpoint: expected_endpoint.clone(),
+            uri: expected_uri.clone(),
             protocol: expected_protocol.clone(),
         };
 
@@ -130,7 +130,7 @@ mod pubsub_impl_tests {
         let response = result.unwrap();
         let actual = response.into_inner();
         assert!(Uuid::parse_str(&actual.generated_topic).is_ok());
-        assert_eq!(expected_endpoint, actual.broker_endpoint);
+        assert_eq!(expected_uri, actual.broker_uri);
         assert_eq!(expected_protocol, actual.broker_protocol);
 
         // This block controls the lifetime of the lock.

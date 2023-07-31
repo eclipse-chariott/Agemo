@@ -34,10 +34,10 @@ pub struct CommunicationConstants {
 pub struct Settings {
     /// The IP address and port number that the Pub Sub service listens on for requests.
     pub pub_sub_authority: String,
-    /// The URL of the messaging service used to facilitate publish and subscribe functionality.
-    pub messaging_url: String,
-    /// The URL that the Chariott service listens on for requests.
-    pub chariott_url: Option<String>,
+    /// The URI of the messaging service used to facilitate publish and subscribe functionality.
+    pub messaging_uri: String,
+    /// The URI that the Chariott service listens on for requests.
+    pub chariott_uri: Option<String>,
     /// The namespace of the Pub Sub service.
     pub namespace: Option<String>,
     /// The name of the Pub Sub service.
@@ -58,7 +58,7 @@ pub fn load_settings() -> Settings {
 
     let mut settings: Settings = config.try_deserialize().unwrap();
 
-    if settings.chariott_url.is_some() {
+    if settings.chariott_uri.is_some() {
         // Get version of the service for Chariott registration if not defined.
         if settings.version.is_none() {
             let version = env!(
@@ -72,11 +72,11 @@ pub fn load_settings() -> Settings {
         settings
             .namespace
             .as_ref()
-            .expect("Namespace should be set in config if 'chariott_url' is set.");
+            .expect("Namespace should be set in config if 'chariott_uri' is set.");
         settings
             .name
             .as_ref()
-            .expect("Name should be set in config if 'chariott_url' is set.");
+            .expect("Name should be set in config if 'chariott_uri' is set.");
     }
 
     settings

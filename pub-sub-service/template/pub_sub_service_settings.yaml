@@ -6,13 +6,13 @@
 # Example: "0.0.0.0:80"
 pub_sub_authority: <<value>>
 
-# The URL of the messaging service used to facilitate publish and subscribe functionality.
-# Example: "mqtt://localhost:1883"
-messaging_url: <<value>>
+# The URI of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://0.0.0.0:1883"
+messaging_uri: <<value>>
 
-# The URL that the Chariott Service listens on for requests.
+# The URI that the Chariott Service listens on for requests.
 # Example: "http://0.0.0.0:4243"
-chariott_url: <<value>>
+chariott_uri: <<value>>
 
 # The namespace of the Pub Sub Service.
 # Example: "sdv.pubsub"

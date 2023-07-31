@@ -4,18 +4,18 @@
 
 ### Chariott Service Configuration
 
-# The URL that the Chariott Service listens on for requests.
+# The URI that the Chariott Service listens on for requests.
 # Needed for any Chariott enabled examples.
 # Example: "http://0.0.0.0:50000"
-chariott_url: <<value>>
+chariott_uri: <<value>>
 
 ###
 
 ### Pub Sub Service Configuration
 
-# The URL that the Pub Sub Service listens on for requests.
+# The URI that the Pub Sub Service listens on for requests.
 # Example: "http://0.0.0.0:50051"
-pub_sub_url: <<value>>
+pub_sub_uri: <<value>>
 
 # The namespace the Pub Sub Service registers under in Chariott.
 # Needed for any Chariott enabled examples.

@@ -17,18 +17,18 @@ and filled out. Below is an example of how to fill out the template:
 
 ### Chariott Service Configuration
 
-# The URL that the Chariott Service listens on for requests.
+# The URI that the Chariott Service listens on for requests.
 # Needed for any Chariott enabled examples.
 # Example: "http://0.0.0.0:50000"
-chariott_url: "http://0.0.0.0:50000"
+chariott_uri: "http://0.0.0.0:50000"
 
 ###
 
 ### Pub Sub Service Configuration
 
-# The URL that the Pub Sub Service listens on for requests.
+# The URI that the Pub Sub Service listens on for requests.
 # Example: "http://0.0.0.0:50051"
-pub_sub_url: "http://0.0.0.0:50051"
+pub_sub_uri: "http://0.0.0.0:50051"
 
 # The namespace the Pub Sub Service registers under in Chariott.
 # Needed for any Chariott enabled examples.
@@ -128,7 +128,7 @@ All services should then recognize that Chariott has been started:
 1. The publisher will find the Pub Sub Service through Chariott service discovery and communicate
    with the Pub Sub Service and then register itself with Chariott.
 1. The subscriber(s) will find the publisher through Chariott service discovery and use the
-   returned endpoint to communicate with the publisher and set up a subscription.
+   returned uri to communicate with the publisher and set up a subscription.
 
 You should then see simulated data flowing to the subscriber(s).
 

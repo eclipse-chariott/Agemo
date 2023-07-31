@@ -43,8 +43,8 @@ pub struct CommunicationConstants {
 /// Object that contains settings for instantiating a Chariott enabled publisher.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ChariottPublisherServiceSettings {
-    /// Url of the Chariott service.
-    pub chariott_url: String,
+    /// URI of the Chariott service.
+    pub chariott_uri: String,
     /// Namespace where the Pub Sub service is expected to register.
     pub pub_sub_namespace: String,
     /// The IP address and port number that this Publisher listens on for requests.
@@ -56,8 +56,8 @@ pub struct ChariottPublisherServiceSettings {
 /// Object that contains settings for instantiating a Chariott enabled subscriber.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ChariottSubscriberServiceSettings {
-    /// Url of the Chariott service.
-    pub chariott_url: String,
+    /// URI of the Chariott service.
+    pub chariott_uri: String,
     /// The default service to discover.
     pub publisher_identifier: ServiceIdentifier,
 }
@@ -67,8 +67,8 @@ pub struct ChariottSubscriberServiceSettings {
 pub struct SimplePublisherServiceSettings {
     /// The IP address and port number that this Publisher listens on for requests.
     pub publisher_authority: String,
-    /// Url of the Pub Sub service.
-    pub pub_sub_url: String,
+    /// URI of the Pub Sub service.
+    pub pub_sub_uri: String,
 }
 
 /// Object that contains settings for instantiating a simple subscriber.

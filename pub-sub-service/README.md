@@ -32,7 +32,7 @@ can then use this information to start publishing on this created topic.
 
 ### Topic Updates
 
-When a publisher requests for a topic to be created, they provide a management callback endpoint.
+When a publisher requests for a topic to be created, they provide a management callback uri.
 This is used by the Pub Sub Service to inform the publisher of events happening on the topic.
 Specifically, the service notifies the publisher when the following actions happen:
 
@@ -66,9 +66,9 @@ Chariott. Specifically, the `pub_sub_service_setting.yaml` configuration file sh
 following values set:
 
 ```yaml
-# The URL that the Chariott service listens on for requests.
+# The URI that the Chariott service listens on for requests.
 # Example: "http://0.0.0.0:4243"
-chariott_url: "http://0.0.0.0:50000"
+chariott_uri: "http://0.0.0.0:50000"
 
 # The namespace of the Pub Sub service.
 # Example: "sdv.pubsub"
@@ -90,13 +90,13 @@ The full yaml would then look something like this:
 # Example: "0.0.0.0:80"
 pub_sub_authority: "0.0.0.0:50051"
 
-# The URL of the messaging service used to facilitate publish and subscribe functionality.
-# Example: "mqtt://localhost:1883"
-messaging_url: "mqtt://localhost:1883"
+# The URI of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://0.0.0.0:1883"
+messaging_uri: "mqtt://0.0.0.0:1883"
 
-# The URL that the Chariott Service listens on for requests.
+# The URI that the Chariott Service listens on for requests.
 # Example: "http://0.0.0.0:4243"
-chariott_url: "http://0.0.0.0:50000"
+chariott_uri: "http://0.0.0.0:50000"
 
 # The namespace of the Pub Sub Service.
 # Example: "sdv.pubsub"

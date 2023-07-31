@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = settings.publisher_authority.parse()?;
     let publisher: PublisherImpl = DynamicPublisher::new(
         settings.publisher_authority,
-        settings.pub_sub_url,
+        settings.pub_sub_uri,
         communication_consts.grpc_kind,
     );
 

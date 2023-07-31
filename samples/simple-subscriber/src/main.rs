@@ -45,13 +45,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let default_subject = "test_topic".to_string();
     let subject = env::args().nth(1).unwrap_or(default_subject);
 
-    // Convert the publisher authority from the configuration settings to a url.
+    // Convert the publisher authority from the configuration settings to a uri.
     let publisher_authority = settings.publisher_authority;
-    let publisher_url = format!("http://{publisher_authority}");
+    let publisher_uri = format!("http://{publisher_authority}");
 
     // Get subscription information from the publisher for the requested subject.
     let info = subscriber_helper::get_subscription_info(
-        &publisher_url,
+        &publisher_uri,
         &subject,
         &communication_consts.mqtt_v5_kind,
     )
@@ -65,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let id = format!("sub_{}", Uuid::new_v4());
     let stream = subscriber_helper::get_subscription_stream(
         id,
-        info.endpoint,
+        info.uri,
         topic_handle.clone(),
         broker_handle,
     )

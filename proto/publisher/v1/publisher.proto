@@ -38,8 +38,8 @@ message SubscriptionInfoResponse {
     // An example protocol: "mqtt"
     string protocolKind = 1;
 
-    // Endpoint that a subscriber will connect to for a subscription.
-    string subscriptionEndpoint = 2;
+    // URI that a subscriber will connect to for a subscription.
+    string subscriptionUri = 2;
 
     // In addition to providing the topic to connect to, this can in the future
     // can provide other information for how to connect to a topic in the

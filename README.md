@@ -155,13 +155,13 @@ retry_interval_secs: 5
 # Example: "0.0.0.0:80"
 pub_sub_authority: "0.0.0.0:50051"
 
-# The URL of the messaging service used to facilitate publish and subscribe functionality.
-# Example: "mqtt://localhost:1883"
-messaging_url: "mqtt://localhost:1883"
+# The URI of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://0.0.0.0:1883"
+messaging_uri: "mqtt://0.0.0.0:1883"
 
-# The URL that the Chariott Service listens on for requests.
+# The URI that the Chariott Service listens on for requests.
 # Example: "http://0.0.0.0:4243"
-# chariott_url: <<value>>
+# chariott_uri: <<value>>
 
 # The namespace of the Pub Sub Service.
 # Example: "sdv.pubsub"
@@ -220,7 +220,7 @@ An example of an expected response would look like:
 ```shell
 {
   "generatedTopic": "09285f6c-9a86-49db-9159-0d91f8f4d3bb",
-  "brokerEndpoint": "mqtt://localhost:1883",
+  "brokerUri": "mqtt://0.0.0.0:1883",
   "brokerProtocol": "mqtt"
 }
 ```

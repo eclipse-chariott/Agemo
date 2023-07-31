@@ -72,8 +72,8 @@ pub trait PubSubConnector {
     /// # Arguments
     ///
     /// * `client_id` - Id to be used to create the broker client.
-    /// * `endpoint` - The endpoint of the broker that the client is connecting to.
-    fn new(client_id: String, endpoint: String) -> Self;
+    /// * `uri` - The uri of the broker that the client is connecting to.
+    fn new(client_id: String, uri: String) -> Self;
 
     /// Function that monitors the messaging broker for changes and forwards those changes back
     /// over the callback channel.

@@ -28,7 +28,7 @@ pub struct TopicMetadata {
     pub count: i32,
     deleted: bool,
     last_action: Instant,
-    /// Endpoint information for the publisher.
+    /// Callback uri information for the publisher.
     pub management_callback: Option<String>,
 }
 
@@ -39,7 +39,7 @@ impl TopicMetadata {
     ///
     /// * `client_id` - The publisher's id.
     /// * `count` - The initial number of subscriptions on the topic.
-    /// * `management_cb` - Callback endpoint for the publisher that created the topic.
+    /// * `management_cb` - Callback uri for the publisher that created the topic.
     pub fn new(client_id: String, count: i32, management_cb: Option<String>) -> Self {
         TopicMetadata {
             client_id,
@@ -80,11 +80,11 @@ impl TopicMetadata {
 /// and the value is the [`TopicMetadata`].
 pub type ActiveTopicsMap = HashMap<String, TopicMetadata>;
 
-/// Associates a topic with the publisher endpoint that is providing the topic updates.
+/// Associates a topic with the publisher uri that is providing the topic updates.
 #[derive(Debug, PartialEq)]
 pub struct TopicManagementInfo {
     topic: String,
-    endpoint: String,
+    uri: String,
 }
 
 impl TopicManagementInfo {
@@ -93,9 +93,9 @@ impl TopicManagementInfo {
     /// # Arguments
     ///
     /// * `topic` - The topic name.
-    /// * `endpoint` - The management endpoint for the topic.
-    pub fn new(topic: String, endpoint: String) -> Self {
-        TopicManagementInfo { topic, endpoint }
+    /// * `uri` - The management uri for the topic.
+    pub fn new(topic: String, uri: String) -> Self {
+        TopicManagementInfo { topic, uri }
     }
 }
 
@@ -110,13 +110,13 @@ pub enum TopicAction {
     Delete(TopicManagementInfo),
 }
 
-/// Structure that has metadata for a given action on a topic, with a management endpoint to
+/// Structure that has metadata for a given action on a topic, with a management uri to
 /// provide the update to.
 pub struct TopicActionMetadata {
     /// Topic that the action is happening to.
     pub topic: String,
-    /// Management endpoint for the publisher.
-    pub endpoint: String,
+    /// Management uri for the publisher.
+    pub uri: String,
     /// Action on the topic, represented by [`TopicAction`].
     pub action: String,
 }
@@ -131,17 +131,17 @@ impl TopicActionMetadata {
         match action {
             TopicAction::Start(info) => TopicActionMetadata {
                 topic: info.topic,
-                endpoint: info.endpoint,
+                uri: info.uri,
                 action: "START".to_string(),
             },
             TopicAction::Stop(info) => TopicActionMetadata {
                 topic: info.topic,
-                endpoint: info.endpoint,
+                uri: info.uri,
                 action: "STOP".to_string(),
             },
             TopicAction::Delete(info) => TopicActionMetadata {
                 topic: info.topic,
-                endpoint: info.endpoint,
+                uri: info.uri,
                 action: "DELETE".to_string(),
             },
         }
@@ -205,11 +205,11 @@ impl TopicManager {
                     mut_val.reset_timeout();
 
                     // Only want to return an action if there is only one subscriber and there is a publisher to notify.
-                    if let Some(management_endpoint) = mut_val.get_management_callback() {
+                    if let Some(management_uri) = mut_val.get_management_callback() {
                         if mut_val.count == 1 {
                             return Some(TopicAction::Start(TopicManagementInfo::new(
                                 context.clone(),
-                                management_endpoint,
+                                management_uri,
                             )));
                         }
                     }
@@ -224,13 +224,13 @@ impl TopicManager {
                     mut_val.reset_timeout();
 
                     // Only want to return an action if there are no longer any subscribers and a publisher to notify.
-                    if let Some(management_endpoint) = mut_val.get_management_callback() {
+                    if let Some(management_uri) = mut_val.get_management_callback() {
                         if mut_val.count <= 0 {
                             mut_val.count = 0; // Potential edge case with duplicate messages causing count to go below zero
 
                             return Some(TopicAction::Stop(TopicManagementInfo::new(
                                 context.clone(),
-                                management_endpoint,
+                                management_uri,
                             )));
                         }
                     }
@@ -244,13 +244,13 @@ impl TopicManager {
                     mut_val.reset_timeout();
 
                     // Only want to return an action if there is a publisher to notify.
-                    if let Some(management_endpoint) = mut_val.get_management_callback() {
+                    if let Some(management_uri) = mut_val.get_management_callback() {
                         if mut_val.count <= 0 {
                             mut_val.count = 0; // Potential edge case with duplicate messages causing count to go below zero
 
                             return Some(TopicAction::Stop(TopicManagementInfo::new(
                                 context.clone(),
-                                management_endpoint,
+                                management_uri,
                             )));
                         }
                     }
@@ -261,8 +261,8 @@ impl TopicManager {
             PubSubAction::Delete => map
                 .remove(&context)
                 .and_then(|metadata| metadata.get_management_callback())
-                .map(|management_endpoint| {
-                    TopicAction::Delete(TopicManagementInfo::new(context, management_endpoint))
+                .map(|management_uri| {
+                    TopicAction::Delete(TopicManagementInfo::new(context, management_uri))
                 }),
             _ => {
                 warn!("Shouldn't be here! Invalid action: {action}");
@@ -292,7 +292,7 @@ impl TopicManager {
         }
 
         // Get information from publisher client
-        let mut pub_client = PublisherClient::connect(action_metadata.endpoint.clone()).await?;
+        let mut pub_client = PublisherClient::connect(action_metadata.uri.clone()).await?;
 
         let request = Request::new(ManageTopicRequest {
             topic: action_metadata.topic.clone(),
@@ -468,41 +468,41 @@ mod topic_action_tests {
     #[tokio::test]
     async fn initialize_topic_action_metadata_test() {
         let expected_topic = "test".to_string();
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let expected_start_action = "START".to_string();
         let expected_stop_action = "STOP".to_string();
         let expected_delete_action = "DELETE".to_string();
         let start_action = TopicAction::Start(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt.clone(),
+            expected_mgmt_uri.clone(),
         ));
 
         let start_action_metadata = TopicActionMetadata::new(start_action);
 
         assert_eq!(expected_topic, start_action_metadata.topic);
-        assert_eq!(expected_mgmt_endpt, start_action_metadata.endpoint);
+        assert_eq!(expected_mgmt_uri, start_action_metadata.uri);
         assert_eq!(expected_start_action, start_action_metadata.action);
 
         let stop_action = TopicAction::Stop(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt.clone(),
+            expected_mgmt_uri.clone(),
         ));
 
         let stop_action_metadata = TopicActionMetadata::new(stop_action);
 
         assert_eq!(expected_topic, stop_action_metadata.topic);
-        assert_eq!(expected_mgmt_endpt, stop_action_metadata.endpoint);
+        assert_eq!(expected_mgmt_uri, stop_action_metadata.uri);
         assert_eq!(expected_stop_action, stop_action_metadata.action);
 
         let delete_action = TopicAction::Delete(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt.clone(),
+            expected_mgmt_uri.clone(),
         ));
 
         let delete_action_metadata = TopicActionMetadata::new(delete_action);
 
         assert_eq!(expected_topic, delete_action_metadata.topic);
-        assert_eq!(expected_mgmt_endpt, delete_action_metadata.endpoint);
+        assert_eq!(expected_mgmt_uri, delete_action_metadata.uri);
         assert_eq!(expected_delete_action, delete_action_metadata.action);
     }
 }
@@ -517,9 +517,9 @@ mod topic_manager_tests {
         let topic_map_handle = test_manager.get_active_topics_handle();
         let expected_topic = "test".to_string();
         let initial_count = 1;
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let initial_metadata =
-            TopicMetadata::new(String::new(), initial_count, Some(expected_mgmt_endpt));
+            TopicMetadata::new(String::new(), initial_count, Some(expected_mgmt_uri));
         let initial_time = initial_metadata.get_timeout();
 
         // Insert existing topic
@@ -552,11 +552,11 @@ mod topic_manager_tests {
         let topic_map_handle = test_manager.get_active_topics_handle();
         let expected_topic = "test".to_string();
         let initial_count = 0;
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let initial_metadata = TopicMetadata::new(
             String::new(),
             initial_count,
-            Some(expected_mgmt_endpt.clone()),
+            Some(expected_mgmt_uri.clone()),
         );
         let initial_time = initial_metadata.get_timeout();
 
@@ -576,7 +576,7 @@ mod topic_manager_tests {
 
         let expected_action_inner = TopicAction::Start(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt,
+            expected_mgmt_uri,
         ));
         assert_eq!(expected_action_inner, actual_action.unwrap());
 
@@ -625,9 +625,9 @@ mod topic_manager_tests {
         let topic_map_handle = test_manager.get_active_topics_handle();
         let expected_topic = "test".to_string();
         let initial_count = 2;
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let initial_metadata =
-            TopicMetadata::new(String::new(), initial_count, Some(expected_mgmt_endpt));
+            TopicMetadata::new(String::new(), initial_count, Some(expected_mgmt_uri));
         let initial_time = initial_metadata.get_timeout();
 
         // Insert existing topic
@@ -660,11 +660,11 @@ mod topic_manager_tests {
         let topic_map_handle = test_manager.get_active_topics_handle();
         let expected_topic = "test".to_string();
         let initial_count = 1;
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let initial_metadata = TopicMetadata::new(
             String::new(),
             initial_count,
-            Some(expected_mgmt_endpt.clone()),
+            Some(expected_mgmt_uri.clone()),
         );
         let initial_time = initial_metadata.get_timeout();
 
@@ -684,7 +684,7 @@ mod topic_manager_tests {
 
         let expected_action_inner = TopicAction::Stop(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt,
+            expected_mgmt_uri,
         ));
         assert_eq!(expected_action_inner, actual_action.unwrap());
 
@@ -704,11 +704,11 @@ mod topic_manager_tests {
         let topic_map_handle = test_manager.get_active_topics_handle();
         let expected_topic = "test".to_string();
         let initial_count = 0;
-        let expected_mgmt_endpt = "test.endpt".to_string();
+        let expected_mgmt_uri = "test.uri".to_string();
         let initial_metadata = TopicMetadata::new(
             String::new(),
             initial_count,
-            Some(expected_mgmt_endpt.clone()),
+            Some(expected_mgmt_uri.clone()),
         );
         let initial_time = initial_metadata.get_timeout();
 
@@ -728,7 +728,7 @@ mod topic_manager_tests {
 
         let expected_action_inner = TopicAction::Stop(TopicManagementInfo::new(
             expected_topic.clone(),
-            expected_mgmt_endpt,
+            expected_mgmt_uri,
         ));
         assert_eq!(expected_action_inner, actual_action.unwrap());
 
@@ -746,7 +746,7 @@ mod topic_manager_tests {
     async fn manage_topic_on_delete_action() {
         let delete_action = TopicAction::Delete(TopicManagementInfo::new(
             "topic".to_string(),
-            "endpoint".to_string(),
+            "uri".to_string(),
         ));
 
         let ok_result = TopicManager::manage_topic(delete_action).await;

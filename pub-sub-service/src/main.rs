@@ -49,7 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Initialize pub sub service
     let topic_manager = TopicManager::new();
-    let broker_endpoint = settings.messaging_url.clone();
+    let broker_uri = settings.messaging_uri.clone();
     let broker_protocol = communication_consts.mqtt_v5_kind.clone();
 
     info!("Setting up deletion channel...");
@@ -61,7 +61,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let addr = settings.pub_sub_authority.parse()?;
     let pubsub = pubsub_impl::PubSubImpl {
         active_topics: topic_manager.get_active_topics_handle(),
-        endpoint: broker_endpoint,
+        uri: broker_uri,
         protocol: broker_protocol,
     };
 
@@ -74,7 +74,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
         // This line will need to be changed if a different broker is used to utilize the correct connector.
         let mut connector: connectors::mosquitto_connector::MqttFiveBrokerConnector =
-            PubSubConnector::new(client_id, settings.messaging_url);
+            PubSubConnector::new(client_id, settings.messaging_uri);
 
         let _connection_res = connector.monitor_topics(connector_sender).await;
         loop {
@@ -96,7 +96,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     });
 
     // If Chariott is enabled then connect to Chariott and register the service.
-    if settings.chariott_url.is_some() {
+    if settings.chariott_uri.is_some() {
         // Create service identifiers used to uniquely identify the service.
         let service_identifier = ServiceIdentifier {
             namespace: settings.namespace.unwrap(),
@@ -106,7 +106,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
         // Connect to and register with Chariott.
         let mut chariott_client = chariott_connector::connect_to_chariott_with_retry(
-            &settings.chariott_url.unwrap(),
+            &settings.chariott_uri.unwrap(),
             communication_consts.retry_interval_secs,
         )
         .await?;
