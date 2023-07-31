@@ -60,8 +60,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     // Load in settings for service.
-    let settings = load_settings::<ChariottSubscriberServiceSettings>(CONFIG_FILE);
-    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE);
+    let settings = load_settings::<ChariottSubscriberServiceSettings>(CONFIG_FILE)?;
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE)?;
 
     // Instantiate shared broker and shared topic references.
     let broker_handle: Arc<Mutex<BrokerRef>> = Arc::new(Mutex::new(BrokerRef { client: None }));

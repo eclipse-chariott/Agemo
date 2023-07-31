@@ -21,7 +21,7 @@ use tonic::transport::Server;
 mod publisher_impl;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Setup logging.
     Builder::new()
         .filter(None, LevelFilter::Info)
@@ -29,8 +29,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     // Load in settings for service.
-    let settings = load_settings::<SimplePublisherServiceSettings>(CONFIG_FILE);
-    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE);
+    let settings = load_settings::<SimplePublisherServiceSettings>(CONFIG_FILE)?;
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE)?;
 
     // Instantiate the gRPC publisher implementation.
     let addr = settings.publisher_authority.parse()?;

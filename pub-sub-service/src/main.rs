@@ -44,8 +44,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     // Load settings in from config file.
-    let settings = load_config::load_settings();
-    let communication_consts = load_config::load_constants::<CommunicationConstants>();
+    let settings = load_config::load_settings()?;
+    let communication_consts = load_config::load_constants::<CommunicationConstants>()?;
 
     // Initialize pub sub service
     let topic_manager = TopicManager::new();

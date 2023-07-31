@@ -7,6 +7,7 @@
 #![cfg(feature = "yaml")]
 
 use config::{Config, File, FileFormat};
+use log::error;
 use serde_derive::{Deserialize, Serialize};
 
 pub const CONFIG_FILE: &str = "target/debug/samples_settings";
@@ -81,21 +82,29 @@ pub struct SimpleSubscriberServiceSettings {
 /// Load the settings.
 ///
 /// Will attempt to load a configuration from the settings file to an object 'T'.
-/// Exits program on failure.
+/// Returns error on failure.
 ///
 /// # Arguments
 ///
 /// * `config_file_path` - Path from root of repo to the configuration file. Includes file name.
-pub fn load_settings<T>(config_file_path: &str) -> T
+pub fn load_settings<T>(config_file_path: &str) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
     let config = Config::builder()
         .add_source(File::new(config_file_path, FileFormat::Yaml))
         .build()
-        .unwrap();
+        .map_err(|error| {
+            error!("Unable to load file `{config_file_path}`. Failed with error: {error}.");
+            error
+        })?;
 
-    let settings: T = config.try_deserialize().unwrap();
+    let settings: T = config
+        .try_deserialize()
+        .map_err(|error| {
+            error!("Deserialize settings from `{config_file_path}` failed with error: {error}.");
+            error
+        })?;
 
-    settings
+    Ok(settings)
 }

@@ -99,8 +99,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     // Load in settings for service.
-    let settings = load_settings::<ChariottPublisherServiceSettings>(CONFIG_FILE);
-    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE);
+    let settings = load_settings::<ChariottPublisherServiceSettings>(CONFIG_FILE)?;
+    let communication_consts = load_settings::<CommunicationConstants>(CONSTANTS_FILE)?;
 
     let addr = settings.publisher_authority.parse()?;
 

@@ -7,6 +7,7 @@
 #![cfg(feature = "yaml")]
 
 use config::{Config, File, FileFormat};
+use log::error;
 use serde_derive::{Deserialize, Serialize};
 
 const CONFIG_FILE: &str = "target/debug/pub_sub_service_settings";
@@ -50,13 +51,21 @@ pub struct Settings {
 ///
 /// Will attempt to load the settigns from the service configuration file. If the necessary config
 /// is set will run in Chariott enabled mode, otherwise the service will run in standalone mode.
-pub fn load_settings() -> Settings {
+pub fn load_settings() -> Result<Settings, Box<dyn std::error::Error + Send + Sync>> {
     let config = Config::builder()
         .add_source(File::new(CONFIG_FILE, FileFormat::Yaml))
         .build()
-        .unwrap();
+        .map_err(|error| {
+            error!("Unable to load file `{CONFIG_FILE}`. Failed with error: {error}.");
+            error
+        })?;
 
-    let mut settings: Settings = config.try_deserialize().unwrap();
+    let mut settings: Settings = config
+        .try_deserialize()
+        .map_err(|error| {
+            error!("Deserialize settings from `{CONFIG_FILE}` failed with error: {error}.");
+            error
+        })?;
 
     if settings.chariott_uri.is_some() {
         // Get version of the service for Chariott registration if not defined.
@@ -68,34 +77,43 @@ pub fn load_settings() -> Settings {
             settings.version = Some(version.to_string());
         }
 
-        // Throw error if name or namespace are not set as they are needed for Chariott registration.
-        settings
-            .namespace
-            .as_ref()
-            .expect("Namespace should be set in config if 'chariott_uri' is set.");
-        settings
-            .name
-            .as_ref()
-            .expect("Name should be set in config if 'chariott_uri' is set.");
+        // Error if name or namespace are not set as they are needed for Chariott registration.
+        if settings.namespace.is_none() {
+            error!("Namespace should be set in config if 'chariott_uri' is set.");
+            return Err(Box::from("Namespace not set"));
+        }
+
+        if settings.name.is_none() {
+            error!("Name should be set in config if 'chariott_uri' is set.");
+            return Err(Box::from("Name not set"));
+        }
     }
 
-    settings
+    Ok(settings)
 }
 
 /// Load the constants.
 ///
 /// Will attempt to load a configuration from the constants file to an object 'T' where 'T' is an
-/// object representing a collection of constants. Exits program on failure.
-pub fn load_constants<T>() -> T
+/// object representing a collection of constants. Returns error on failure.
+pub fn load_constants<T>() -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
     let config = Config::builder()
         .add_source(File::new(CONSTANTS_FILE, FileFormat::Yaml))
         .build()
-        .unwrap();
+        .map_err(|error| {
+            error!("Unable to load file `{CONSTANTS_FILE}`. Failed with error: {error}.");
+            error
+        })?;
 
-    let settings: T = config.try_deserialize().unwrap();
+    let settings: T = config
+        .try_deserialize()
+        .map_err(|error| {
+            error!("Deserialize settings from `{CONSTANTS_FILE}` failed with error: {error}.");
+            error
+        })?;
 
-    settings
+    Ok(settings)
 }
