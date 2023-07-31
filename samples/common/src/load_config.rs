@@ -87,7 +87,9 @@ pub struct SimpleSubscriberServiceSettings {
 /// # Arguments
 ///
 /// * `config_file_path` - Path from root of repo to the configuration file. Includes file name.
-pub fn load_settings<T>(config_file_path: &str) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
+pub fn load_settings<T>(
+    config_file_path: &str,
+) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
@@ -99,12 +101,10 @@ where
             error
         })?;
 
-    let settings: T = config
-        .try_deserialize()
-        .map_err(|error| {
-            error!("Deserialize settings from `{config_file_path}` failed with error: {error}.");
-            error
-        })?;
+    let settings: T = config.try_deserialize().map_err(|error| {
+        error!("Deserialize settings from `{config_file_path}` failed with error: {error}.");
+        error
+    })?;
 
     Ok(settings)
 }

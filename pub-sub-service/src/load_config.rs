@@ -60,12 +60,10 @@ pub fn load_settings() -> Result<Settings, Box<dyn std::error::Error + Send + Sy
             error
         })?;
 
-    let mut settings: Settings = config
-        .try_deserialize()
-        .map_err(|error| {
-            error!("Deserialize settings from `{CONFIG_FILE}` failed with error: {error}.");
-            error
-        })?;
+    let mut settings: Settings = config.try_deserialize().map_err(|error| {
+        error!("Deserialize settings from `{CONFIG_FILE}` failed with error: {error}.");
+        error
+    })?;
 
     if settings.chariott_uri.is_some() {
         // Get version of the service for Chariott registration if not defined.
@@ -108,12 +106,10 @@ where
             error
         })?;
 
-    let settings: T = config
-        .try_deserialize()
-        .map_err(|error| {
-            error!("Deserialize settings from `{CONSTANTS_FILE}` failed with error: {error}.");
-            error
-        })?;
+    let settings: T = config.try_deserialize().map_err(|error| {
+        error!("Deserialize settings from `{CONSTANTS_FILE}` failed with error: {error}.");
+        error
+    })?;
 
     Ok(settings)
 }
