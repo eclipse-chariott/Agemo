@@ -1,6 +1,6 @@
 <h1 align="center" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">Pub Sub Service</h1>
 
-<h3 align="center" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">The source code for the eclipse-chariott pub sub service project.</h3>
+<h3 align="center" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">An in-vehicle dynamic pub sub service handler.</h3>
 
 <p align="center">
     <a href="https://github.com/eclipse-chariott/Agemo/tags"><img alt="Version tag" src="https://img.shields.io/github/v/tag/eclipse-chariott/Agemo?label=version"></a>
