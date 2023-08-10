@@ -104,7 +104,7 @@ cargo test
 There are two template files that must be created in `target/debug` and filled out before the
 service can be run. Below is the minimal set of configuration needed to start the service:
 
-#### Constants Configuration File
+### Constants Configuration File
 
 [constants_settings.yaml](./pub-sub-service/template/constants_settings.yaml)
 
@@ -139,7 +139,7 @@ retry_interval_secs: 5
 >**NOTE**: For most use cases, this file doesn't need to be modified and can be copied as-is from
            the `/template` directory to the `/target/debug` directory.
 
-#### Pub Sub Service Configuration File
+### Pub Sub Service Configuration File
 
 [pub_sub_service_settings.yaml](./pub-sub-service/template/pub_sub_service_settings.yaml)
 
