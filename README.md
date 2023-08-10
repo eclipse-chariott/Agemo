@@ -1,29 +1,32 @@
-# Pub Sub Service
+<h1 align="center" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">Pub Sub Service</h1>
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Cloning the Repo](#cloning-the-repo)
-  - [Building](#building)
-  - [Running the Tests](#running-the-tests)
-- [Running the Service](#running-the-service)
-  - [Configuration Setup](#configuration-setup)
-    - [Constants Configuration File](#constants-configuration-file)
-    - [Pub Sub Service Configuration File](#pub-sub-service-configuration-file)
-  - [Start the messaging broker](#start-the-messaging-broker)
-  - [Start the Pub Sub Service](#start-the-pub-sub-service)
-  - [Interacting with the service](#interacting-with-the-service)
-- [Trademarks](#trademarks)
+<h3 align="center" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">An in-vehicle dynamic pub sub service handler.</h3>
+
+<p align="center">
+    <a href="https://github.com/eclipse-chariott/Agemo/tags"><img alt="Version tag" src="https://img.shields.io/github/v/tag/eclipse-chariott/Agemo?label=version"></a>
+    <a href="https://github.com/eclipse-chariott/Agemo/issues"><img alt="issues: N/A" src="https://img.shields.io/github/issues/eclipse-chariott/Agemo"></a>
+    <a href="https://github.com/eclipse-chariott/Agemo/actions/workflows/rust-ci.yml"><img alt="build: N/A" src="https://img.shields.io/github/actions/workflow/status/eclipse-chariott/Agemo/rust-ci.yml"></a>
+    <img src="https://img.shields.io/badge/status-maintained-green.svg" alt="status: maintained">
+    <a href="https://github.com/eclipse-chariott/Agemo/blob/main/LICENSE"><img alt="license: MIT" src="https://img.shields.io/github/license/eclipse-chariott/Agemo"></a>
+</p>
+
+<p align="center">
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#configuration-setup">Configuration Setup</a> •
+  <a href="#running-the-service">Running the Service</a>
+</p>
+
+</br>
 
 ## Introduction
 
 The Pub Sub Service is a [gRPC](https://grpc.io) service that provides publish/subscribe
 functionality for applications within the vehicle, including [Eclipse Ibeji](https://github.com/eclipse-ibeji/ibeji)
 and [Eclipse Chariott](https://github.com/eclipse-chariott/chariott). The service can register with
-Chariott, making it easily discoverable by other applications. The service allows for integration
-of a different messaging broker that meets certain
-[requirements](./docs/README.md#bring-your-own-broker). The other feature that
-the service provides is dynamic topic management capabilities.
+Chariott, making it easily discoverable by other applications. The service provides the ability to
+dynamically create and manage topics. Additionally, the service is designed to allow for the
+replacement of the default messaging broker as long as the broker meets certain requirements (see
+[Bring Your Own Broker](./docs/README.md#bring-your-own-broker)).
 
 ## Getting Started
 
@@ -96,18 +99,12 @@ enlistment's root directory and run:
 cargo test
 ```
 
-## Running the Service
-
-Below are the steps to run the Pub Sub Service in its most simple form. The service is gRPC based,
-and the quickest way to interact with the services is through the use of the
-[grpcurl](http://github.com/fullstorydev/grpcurl) command line tool.
-
-### Configuration Setup
+## Configuration Setup
 
 There are two template files that must be created in `target/debug` and filled out before the
 service can be run. Below is the minimal set of configuration needed to start the service:
 
-#### Constants Configuration File
+### Constants Configuration File
 
 [constants_settings.yaml](./pub-sub-service/template/constants_settings.yaml)
 
@@ -142,7 +139,7 @@ retry_interval_secs: 5
 >**NOTE**: For most use cases, this file doesn't need to be modified and can be copied as-is from
            the `/template` directory to the `/target/debug` directory.
 
-#### Pub Sub Service Configuration File
+### Pub Sub Service Configuration File
 
 [pub_sub_service_settings.yaml](./pub-sub-service/template/pub_sub_service_settings.yaml)
 
@@ -181,6 +178,12 @@ messaging_uri: "mqtt://0.0.0.0:1883"
             Pub Sub Service. See
             [Running With Chariott](./pub-sub-service/README.md#running-with-chariott) for more
             information.
+
+## Running the Service
+
+Below are the steps to run the Pub Sub Service in its most simple form. The service is gRPC based,
+and the quickest way to interact with the services is through the use of the
+[grpcurl](http://github.com/fullstorydev/grpcurl) command line tool.
 
 ### Start the messaging broker
 
