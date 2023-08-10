@@ -54,7 +54,7 @@ pub async fn create_topic(
 
     let request = Request::new(CreateTopicRequest {
         publisher_id: client_id,
-        management_callback: format!("http://{}", management_authority),
+        management_callback: format!("http://{management_authority}"), // Devskim: ignore DS137138
         management_protocol,
     });
 
