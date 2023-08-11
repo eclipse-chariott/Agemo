@@ -47,7 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Convert the publisher authority from the configuration settings to a uri.
     let publisher_authority = settings.publisher_authority;
-    let publisher_uri = format!("http://{publisher_authority}");
+    let publisher_uri = format!("http://{publisher_authority}"); // Devskim: ignore DS137138
 
     // Get subscription information from the publisher for the requested subject.
     let info = subscriber_helper::get_subscription_info(

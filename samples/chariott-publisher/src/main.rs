@@ -40,7 +40,7 @@ async fn register_with_chariott(
     communication_kind: &str,
     communication_reference: &str,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let provider_uri_str = format!("http://{provider_authority}");
+    let provider_uri_str = format!("http://{provider_authority}"); // Devskim: ignore DS137138
 
     let service_metadata = ServiceMetadata {
         namespace: provider_identifier.namespace,
