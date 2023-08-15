@@ -21,7 +21,7 @@ use std::sync::mpsc;
 use strum_macros::{Display, EnumString};
 
 /// Enum defining the protocol type used by the messaging broker.
-#[derive(Debug, Clone, Copy, Display, EnumString, PartialEq)]
+#[derive(Debug, Clone, Copy, Display, EnumString, Eq, PartialEq)]
 pub enum PubSubProtocol {
     /// Represents the MQTT protocol.
     #[strum(serialize = "MQTT")]
@@ -29,7 +29,7 @@ pub enum PubSubProtocol {
 }
 
 /// Enum representing an action that happens in the messaging broker.
-#[derive(Clone, Copy, Debug, Display, EnumString, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, EnumString, Eq, PartialEq)]
 pub enum PubSubAction {
     /// Represents a subscribe to a topic.
     #[strum(serialize = "SUBSCRIBE")]
