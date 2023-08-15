@@ -19,6 +19,8 @@ paho-mqtt = { workspace = true }
 proto = { path = "../proto-build" }
 serde = { workspace = true }
 serde_derive = { workspace = true }
+strum = { workspace = true }
+strum_macros = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }
 url = { workspace = true }
