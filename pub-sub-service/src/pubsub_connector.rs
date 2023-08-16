@@ -17,41 +17,35 @@
 //! issue on GitHub.
 
 use async_trait::async_trait;
-use std::{fmt, sync::mpsc};
+use std::sync::mpsc;
+use strum_macros::{Display, EnumString};
 
 /// Enum defining the protocol type used by the messaging broker.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Display, EnumString, Eq, PartialEq)]
 pub enum PubSubProtocol {
     /// Represents the MQTT protocol.
+    #[strum(serialize = "MQTT")]
     Mqtt,
 }
 
 /// Enum representing an action that happens in the messaging broker.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, EnumString, Eq, PartialEq)]
 pub enum PubSubAction {
     /// Represents a subscribe to a topic.
+    #[strum(serialize = "SUBSCRIBE")]
     Subscribe,
     /// Represents an unsubscribe to a topic.
+    #[strum(serialize = "UNSUBSCRIBE")]
     Unsubscribe,
     /// Represents a notification that a topic has no subscribers after a period of time.
+    #[strum(serialize = "TIMEOUT")]
     Timeout,
     /// Represents a deletion of a topic.
+    #[strum(serialize = "DELETE")]
     Delete,
     /// Represents an unclean publisher disconnect.
+    #[strum(serialize = "PUBDISCONNECT")]
     PubDisconnect,
-}
-
-impl fmt::Display for PubSubProtocol {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl fmt::Display for PubSubAction {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let string = format!("{self:?}").to_uppercase();
-        write!(f, "{string}")
-    }
 }
 
 /// Structure defining a message returned from the broker connector when an action happens.
