@@ -43,6 +43,12 @@ package manager in place of `apt` when going through these steps.
 
     > **NOTE**: Rust needs gcc's linker.
 
+1. Install cmake:
+
+    ```shell
+    sudo apt install cmake
+    ```
+
 1. Install git and rust:
 
     ```shell

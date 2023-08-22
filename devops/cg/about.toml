@@ -8,4 +8,5 @@ accepted = [
     "BSD-3-Clause",
     "Zlib",
     "CC0-1.0",
+    "ISC",
 ]

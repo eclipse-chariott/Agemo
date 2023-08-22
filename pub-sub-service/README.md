@@ -62,7 +62,7 @@ Chariott service. Publishers then communicate with Chariott to get connection in
 service and directly communicate.
 
 There are several configuration settings that need to be populated if the service is to be run with
-Chariott. Specifically, the `pub_sub_service_setting.yaml` configuration file should have the
+Chariott. Specifically, the `pub_sub_service_settings.yaml` configuration file should have the
 following values set:
 
 ```yaml
