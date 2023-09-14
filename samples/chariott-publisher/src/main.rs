@@ -140,10 +140,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     .await?;
 
     // Grpc server for handling calls from clients.
-    // Note the two services, the `PublisherCallbackServer` handles callbacks from the pub sub
-    // service, the `SamplePublisherServer` fields requests from subscribers.
     Server::builder()
+        // Handles callbacks from the pub sub service.
         .add_service(PublisherCallbackServer::new(publisher.clone()))
+        // Fields request from subscribers for subscription information.
         .add_service(SamplePublisherServer::new(publisher))
         .serve(addr)
         .await?;
