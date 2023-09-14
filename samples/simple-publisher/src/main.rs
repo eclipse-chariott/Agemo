@@ -7,8 +7,6 @@
 
 use env_logger::{Builder, Target};
 use log::LevelFilter;
-use samples_proto::publisher::v1::publisher_callback_server::PublisherCallbackServer;
-use samples_proto::sample_publisher::v1::sample_publisher_server::SamplePublisherServer;
 use publisher_impl::PublisherImpl;
 use samples_common::{
     load_config::{
@@ -17,6 +15,8 @@ use samples_common::{
     },
     publisher_helper::DynamicPublisher,
 };
+use samples_proto::publisher::v1::publisher_callback_server::PublisherCallbackServer;
+use samples_proto::sample_publisher::v1::sample_publisher_server::SamplePublisherServer;
 use tonic::transport::Server;
 
 mod publisher_impl;

@@ -14,7 +14,9 @@ use std::{
 };
 
 use log::{error, info, warn};
-use proto::publisher::v1::{publisher_callback_client::PublisherCallbackClient, ManageTopicRequest};
+use proto::publisher::v1::{
+    publisher_callback_client::PublisherCallbackClient, ManageTopicRequest,
+};
 use tonic::Request;
 
 use crate::pubsub_connector::{MonitorMessage, PubSubAction};

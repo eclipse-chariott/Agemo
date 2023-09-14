@@ -11,7 +11,7 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, Mutex, mpsc},
+    sync::{mpsc, Arc, Mutex},
     time::Instant,
 };
 
@@ -57,7 +57,7 @@ impl TopicMetadata {
 
     /// Deactivates topic, stopping publishing and setting last active timestamp to this instant.
     pub fn deactivate_topic(&mut self) {
-        if let Some(sender) = &self.active_sender {
+        if let Some(sender) = self.active_sender.to_owned() {
             drop(sender);
             self.active_sender = None;
             self.last_active = Instant::now();
@@ -143,7 +143,11 @@ impl TopicStore {
     ///
     /// * `topic` - The topic to update the `action` field for.
     /// * `sender` - The sender side of an mpsc channel used to stop the publishing thread.
-    pub fn activate_topic(&self, topic: &str, sender: mpsc::Sender<String>) -> Option<TopicMetadata> {
+    pub fn activate_topic(
+        &self,
+        topic: &str,
+        sender: mpsc::Sender<String>,
+    ) -> Option<TopicMetadata> {
         self.topics_map
             .lock()
             .unwrap()

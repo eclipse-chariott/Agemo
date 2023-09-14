@@ -14,10 +14,12 @@ use std::{
 
 use async_std::sync::Mutex;
 use log::{error, info};
-use samples_proto::sample_publisher::v1::{sample_publisher_client::SamplePublisherClient, SubscriptionInfoRequest};
 use sample_mqtt_connector::{
     client_connector::{PubSubConnectorClient, PubSubMessage},
     mqtt_five_client_connector::MqttFiveClientConnector,
+};
+use samples_proto::sample_publisher::v1::{
+    sample_publisher_client::SamplePublisherClient, SubscriptionInfoRequest,
 };
 use serde_json::Value;
 

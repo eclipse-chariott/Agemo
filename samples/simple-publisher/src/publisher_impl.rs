@@ -9,19 +9,19 @@
 //! from the Pub Sub Service (START, STOP and DELETE).
 
 use log::info;
-use samples_proto::{
-    publisher::v1::{
-        publisher_callback_server::PublisherCallback, ManageTopicRequest, ManageTopicResponse
-    },
-    sample_publisher::v1:: {
-        sample_publisher_server::SamplePublisher, SubscriptionInfoRequest, SubscriptionInfoResponse,
-    },
-};
 use samples_common::{
     data_generator,
     pub_sub_service_helper::{self, TopicAction},
     publisher_helper::{self, DynamicPublisher},
-    topic_store::{TopicStore, TopicMetadata},
+    topic_store::{TopicMetadata, TopicStore},
+};
+use samples_proto::{
+    publisher::v1::{
+        publisher_callback_server::PublisherCallback, ManageTopicRequest, ManageTopicResponse,
+    },
+    sample_publisher::v1::{
+        sample_publisher_server::SamplePublisher, SubscriptionInfoRequest, SubscriptionInfoResponse,
+    },
 };
 use std::{
     str::FromStr,
@@ -90,7 +90,11 @@ impl DynamicPublisher for PublisherImpl {
 
         // Activate topic in store.
         {
-            topic_metadata = self.topic_store.lock().unwrap().activate_topic(&topic, send);
+            topic_metadata = self
+                .topic_store
+                .lock()
+                .unwrap()
+                .activate_topic(&topic, send);
         }
 
         let client_info = topic_metadata.unwrap().subscription_info;
@@ -182,7 +186,11 @@ impl PublisherCallback for PublisherImpl {
         // Get known topic based on the passed in generated topic.
         let topic: String;
         {
-            topic = self.topic_store.lock().unwrap().get_generated_topic_mapping(&generated_topic)?;
+            topic = self
+                .topic_store
+                .lock()
+                .unwrap()
+                .get_generated_topic_mapping(&generated_topic)?;
         }
 
         info!("Executing action '{action}' for topic '({topic}) {generated_topic}'.");
@@ -222,7 +230,12 @@ impl SamplePublisher for PublisherImpl {
         // If there is already a dynamic topic created for the subject then shortcut and return
         // that subscription info.
         {
-            if let Some(topic_metadata) = self.topic_store.lock().unwrap().get_topic_metadata(&requested_topic) {
+            if let Some(topic_metadata) = self
+                .topic_store
+                .lock()
+                .unwrap()
+                .get_topic_metadata(&requested_topic)
+            {
                 return Ok(Response::new(topic_metadata.subscription_info));
             }
         }
@@ -238,7 +251,10 @@ impl SamplePublisher for PublisherImpl {
 
         // Add new topic information to the topic maps.
         {
-            self.topic_store.lock().unwrap().add_topic(requested_topic, topic_subscription_info.clone());
+            self.topic_store
+                .lock()
+                .unwrap()
+                .add_topic(requested_topic, topic_subscription_info.clone());
         }
 
         // Return response with how to subscribe to publisher.

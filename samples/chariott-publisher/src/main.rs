@@ -7,11 +7,6 @@
 
 use env_logger::{Builder, Target};
 use log::LevelFilter;
-use samples_proto::{
-    publisher::v1::publisher_callback_server::PublisherCallbackServer,
-    sample_publisher::v1::sample_publisher_server::SamplePublisherServer,
-    service_registry::v1::{RegisterRequest, ServiceMetadata},
-};
 use publisher_impl::PublisherImpl;
 use samples_common::{
     chariott_helper::{self, ChariottClient},
@@ -20,6 +15,11 @@ use samples_common::{
         CONFIG_FILE, CONSTANTS_FILE,
     },
     publisher_helper::DynamicPublisher,
+};
+use samples_proto::{
+    publisher::v1::publisher_callback_server::PublisherCallbackServer,
+    sample_publisher::v1::sample_publisher_server::SamplePublisherServer,
+    service_registry::v1::{RegisterRequest, ServiceMetadata},
 };
 use tonic::{transport::Server, Request, Status};
 

@@ -9,10 +9,10 @@ use serde_json::{json, Value};
 use strum_macros::{Display, EnumString};
 
 use samples_proto::{
-    sample_publisher::v1::SubscriptionInfoResponse,
     pubsub::v1::{
         pub_sub_client::PubSubClient, CreateTopicRequest, DeleteTopicRequest, DeleteTopicResponse,
     },
+    sample_publisher::v1::SubscriptionInfoResponse,
 };
 use tonic::{Request, Response, Status};
 
