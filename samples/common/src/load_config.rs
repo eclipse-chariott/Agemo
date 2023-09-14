@@ -35,8 +35,6 @@ pub struct CommunicationConstants {
     pub mqtt_v5_kind: String,
     /// The reference API marker for the Pub Sub service.
     pub pub_sub_reference: String,
-    /// The reference API marker for a publisher service.
-    pub publisher_reference: String,
     /// Interval for attempting to retry finding a service.
     pub retry_interval_secs: u64,
 }
@@ -52,6 +50,8 @@ pub struct ChariottPublisherServiceSettings {
     pub publisher_authority: String,
     /// Service identifier for this Publisher.
     pub publisher_identifier: ServiceIdentifier,
+    /// The reference API marker for a publisher service.
+    pub publisher_reference: String,
 }
 
 /// Object that contains settings for instantiating a Chariott enabled subscriber.
@@ -61,6 +61,8 @@ pub struct ChariottSubscriberServiceSettings {
     pub chariott_uri: String,
     /// The default service to discover.
     pub publisher_identifier: ServiceIdentifier,
+    /// The reference API marker for a publisher service.
+    pub publisher_reference: String,
 }
 
 /// Object that contains settings for instantiating a simple publisher.

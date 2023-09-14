@@ -60,6 +60,10 @@ publisher_identifier:
   # Example: "0.1.0"
   version: "0.1.0"
 
+# Constant for the publisher service API reference.
+# Example: "sample_publisher.v1.sample_publisher.proto"
+publisher_reference: "sample_publisher.v1.sample_publisher.proto"
+
 ###
 ```
 

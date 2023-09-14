@@ -94,7 +94,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         &namespace,
         communication_consts.retry_interval_secs,
         &communication_consts.grpc_kind,
-        &communication_consts.publisher_reference,
+        &settings.publisher_reference,
     )
     .await?;
 

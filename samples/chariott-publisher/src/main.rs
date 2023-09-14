@@ -135,7 +135,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         &settings.publisher_authority,
         settings.publisher_identifier.clone(),
         &communication_consts.grpc_kind,
-        &communication_consts.publisher_reference,
+        &settings.publisher_reference,
     )
     .await?;
 
