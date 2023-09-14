@@ -7,10 +7,6 @@
 
 use env_logger::{Builder, Target};
 use log::LevelFilter;
-use proto::{
-    publisher::v1::publisher_server::PublisherServer,
-    service_registry::v1::{RegisterRequest, ServiceMetadata},
-};
 use publisher_impl::PublisherImpl;
 use samples_common::{
     chariott_helper::{self, ChariottClient},
@@ -19,6 +15,11 @@ use samples_common::{
         CONFIG_FILE, CONSTANTS_FILE,
     },
     publisher_helper::DynamicPublisher,
+};
+use samples_proto::{
+    publisher::v1::publisher_callback_server::PublisherCallbackServer,
+    sample_publisher::v1::sample_publisher_server::SamplePublisherServer,
+    service_registry::v1::{RegisterRequest, ServiceMetadata},
 };
 use tonic::{transport::Server, Request, Status};
 
@@ -134,13 +135,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         &settings.publisher_authority,
         settings.publisher_identifier.clone(),
         &communication_consts.grpc_kind,
-        &communication_consts.publisher_reference,
+        &settings.publisher_reference,
     )
     .await?;
 
     // Grpc server for handling calls from clients.
     Server::builder()
-        .add_service(PublisherServer::new(publisher))
+        // Handles callbacks from the pub sub service.
+        .add_service(PublisherCallbackServer::new(publisher.clone()))
+        // Fields request from subscribers for subscription information.
+        .add_service(SamplePublisherServer::new(publisher))
         .serve(addr)
         .await?;
 

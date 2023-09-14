@@ -47,8 +47,12 @@ through this interface, they provide a management endpoint (defined in
 [publisher.proto](../proto/publisher/v1/publisher.proto)) so that the Pub Sub Service can provide
 relevant information about a topic. In addition, the Pub Sub Service returns the dynamically
 generated topic and necessary broker information for a publisher to use to serve their data. A
-subscriber will interact with the publisher interface to get the necessary subscription information
-(topic name, broker information, etc.) for that data.
+subscriber can interact with the publisher to get the necessary subscription information
+(topic name, broker information, etc.) as seen in the diagrams below, or get the information in a
+different manner. This is not prescribed in the proto definitions but an example can be found in
+the samples under [sample_publisher.proto](../samples/proto/sample_grpc/v1/sample_publisher.proto).
+One reason you may want to follow this pattern is that it allows for the publisher to create topics
+on demand, rather than creating all the topics on start up.
 
 Below is a simple component diagram outlining how services interact with the Pub Sub Service.
 
@@ -207,8 +211,8 @@ Below is a diagram showing the lifetime of a topic:
 
 ## Chariott Integration
 
-The Pub Sub Service connects to [Eclipse Chariott](https://github.com/eclipse-chariott/chariott) as
-a Service Provider. This means that the service becomes discoverable through the Chariott service
+The Pub Sub Service registers with [Eclipse Chariott](https://github.com/eclipse-chariott/chariott)
+as a Service Provider. This means that the service becomes discoverable through Chariott's service
 discovery mechanism. Applications that want to utlize a publish/subscribe service can call Chariott
 to return the gRPC endpoint for the Pub Sub Service. Publishers are the only applications that need
 to communicate directly with the Pub Sub Service to manage topic lifetimes and get any broker
@@ -219,7 +223,4 @@ Below is a diagram showing what interfaces are used to enable Chariott connectio
 
 ![pubsub chariott component](../docs/diagrams/pubsub_chariott_component.svg)
 > **NOTE**: It is expected that publishers register with Chariott and utilize Chariott to find the
-            Pub Sub Service via service discovery. This currently requires a publisher to
-            implement the provider.proto gRPC interface found in the Chariott repo. This may change
-            in the future. Subscribers are expected to get a publisher's endpoint from the
-            Chariott discovery service as well.
+            Pub Sub Service via service discovery. Subscribers are expected to get a publisher's endpoint from the Chariott discovery service.

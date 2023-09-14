@@ -24,8 +24,6 @@ pub struct CommunicationConstants {
     pub mqtt_v5_kind: String,
     /// The reference API marker for the Pub Sub service.
     pub pub_sub_reference: String,
-    /// The reference API marker for a publisher service.
-    pub publisher_reference: String,
     /// Interval for attempting to retry finding a service.
     pub retry_interval_secs: u64,
 }

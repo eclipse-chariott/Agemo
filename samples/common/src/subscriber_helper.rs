@@ -14,10 +14,12 @@ use std::{
 
 use async_std::sync::Mutex;
 use log::{error, info};
-use proto::publisher::v1::{publisher_client::PublisherClient, SubscriptionInfoRequest};
 use sample_mqtt_connector::{
     client_connector::{PubSubConnectorClient, PubSubMessage},
     mqtt_five_client_connector::MqttFiveClientConnector,
+};
+use samples_proto::sample_publisher::v1::{
+    sample_publisher_client::SamplePublisherClient, SubscriptionInfoRequest,
 };
 use serde_json::Value;
 
@@ -60,7 +62,7 @@ pub async fn get_subscription_info(
 ) -> Result<SubscriptionInfo, Box<dyn std::error::Error + Send + Sync>> {
     info!("Requesting subject: {}", subject);
 
-    let pub_client_result = PublisherClient::connect(pub_uri.to_string()).await;
+    let pub_client_result = SamplePublisherClient::connect(pub_uri.to_string()).await;
 
     // TODO: Handle error
     let mut pub_client = pub_client_result.unwrap();

@@ -2,6 +2,7 @@
 component "Publisher" as pub
 
 pub -up- publisher.proto
+pub -up- sample_publisher.proto
 pub -> pubsub.proto
 
 component "Pub Sub Service" as ps_service
@@ -11,7 +12,7 @@ ps_service -up-> publisher.proto
 
 component "Subscriber" as sub
 
-sub -up-> publisher.proto
+sub -up-> sample_publisher.proto
 
 [pub] -down-> [Broker]
 [ps_service] <-down-> [Broker]

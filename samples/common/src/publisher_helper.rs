@@ -11,7 +11,7 @@ use sample_mqtt_connector::{
 use std::{sync::mpsc, time::Duration};
 use tokio::task::JoinHandle;
 
-use proto::publisher::v1::SubscriptionInfoResponse;
+use samples_proto::sample_publisher::v1::SubscriptionInfoResponse;
 
 /// Trait that defines a set of methods that a publisher should implement to enable dynamic topic
 /// management.
