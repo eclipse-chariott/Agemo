@@ -5,6 +5,7 @@ component "Publisher gRPC" as pub {
 }
 
 pub -up- publisher.proto
+pub -up- sample_publisher.proto
 pub --> pubsub.proto
 
 component "PubSub Service gRPC" as ps_service {
@@ -20,7 +21,7 @@ component "Subscriber gRPC" as sub {
     sub.broker - [SubConnector]
 }
 
-sub --> publisher.proto
+sub --> sample_publisher.proto
 
 [PubConnector] -down-> [Broker]
 [BrokerMonitor] <-down-> [Broker]

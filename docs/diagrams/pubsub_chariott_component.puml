@@ -1,26 +1,24 @@
 @startuml pubsub chariott component diagram
 component "Chariott" as chariott
 
-chariott -left-> chariott.provider.proto
-chariott -right- chariott.runtime.proto
+chariott -right- service_discovery.proto
 
 component "Pub Sub Service" as ps_service
 
-ps_service -up- chariott.provider.proto
 ps_service -right- pubsub.proto
 ps_service -down-> publisher.proto
 
 component "Publisher" as pub
 
-pub -up- chariott.provider.proto
-pub -up-> chariott.runtime.proto
+pub -up-> service_discovery.proto
 pub -left-> pubsub.proto
 pub -down- publisher.proto
+pub -down- sample_publisher.proto
 
 component "Subscriber" as sub
 
-sub -up-> chariott.runtime.proto
-sub -down- publisher.proto
+sub -up-> service_discovery.proto
+sub -down-> sample_publisher.proto
 
 [ps_service] <--down--> [Broker]
 [pub] -down-> [Broker]
