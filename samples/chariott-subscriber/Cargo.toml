@@ -12,7 +12,7 @@ license = "MIT"
 async-std = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
-proto = { path = "../../proto-build" }
+samples_proto = { path = "../proto-build" }
 samples-common = { path = "../common" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }

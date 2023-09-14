@@ -11,11 +11,11 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc},
     time::Instant,
 };
 
-use proto::publisher::v1::SubscriptionInfoResponse;
+use samples_proto::sample_publisher::v1::SubscriptionInfoResponse;
 
 use tonic::Status;
 
@@ -27,7 +27,7 @@ pub type TopicsMap = HashMap<String, TopicMetadata>;
 pub type GeneratedTopicsMap = HashMap<String, String>;
 
 /// Metadata of a topic.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct TopicMetadata {
     /// The current state of the topic.
     pub action: TopicAction,
@@ -35,6 +35,8 @@ pub struct TopicMetadata {
     pub last_active: Instant,
     /// The relevant subscription information for subscribing to the topic.
     pub subscription_info: SubscriptionInfoResponse,
+    /// The channel that is opened when a topic is active.
+    pub active_sender: Option<mpsc::Sender<String>>,
 }
 
 impl TopicMetadata {
@@ -49,17 +51,22 @@ impl TopicMetadata {
             action: TopicAction::Init,
             last_active: Instant::now(),
             subscription_info,
+            active_sender: None,
         }
     }
 
-    /// Sets the `last_active` field to the current time.
-    pub fn reset_last_active(&mut self) {
-        self.last_active = Instant::now();
+    /// Deactivates topic, stopping publishing and setting last active timestamp to this instant.
+    pub fn deactivate_topic(&mut self) {
+        if let Some(sender) = &self.active_sender {
+            drop(sender);
+            self.active_sender = None;
+            self.last_active = Instant::now();
+        }
     }
 }
 
 /// Stores a list of topics with relevant metadata.
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct TopicStore {
     /// Maps topics with the topic metadata.
     topics_map: Arc<Mutex<TopicsMap>>,
@@ -123,25 +130,27 @@ impl TopicStore {
     /// # Arguments
     ///
     /// * `topic` - The topic to reset the `last_active` time for.
-    pub fn set_topic_last_active(&self, topic: &str) {
+    pub fn deactivate_topic(&self, topic: &str) {
         if let Some(topic_metadata) = self.topics_map.lock().unwrap().get_mut(topic) {
-            topic_metadata.reset_last_active()
+            topic_metadata.deactivate_topic();
         }
     }
 
-    /// Update the topic action field in stored topic metadata.
+    /// Activates topic, adding the channel for deactivation when the time comes to the topic
+    /// metadata. Returns the updated topic metadata.
     ///
     /// # Arguments
     ///
     /// * `topic` - The topic to update the `action` field for.
-    /// * `action` - The action to set the field to.
-    pub fn update_topic_action(&self, topic: &str, action: TopicAction) -> Option<TopicMetadata> {
+    /// * `sender` - The sender side of an mpsc channel used to stop the publishing thread.
+    pub fn activate_topic(&self, topic: &str, sender: mpsc::Sender<String>) -> Option<TopicMetadata> {
         self.topics_map
             .lock()
             .unwrap()
             .get_mut(topic)
             .map(|topic_metadata| {
-                topic_metadata.action = action;
+                topic_metadata.active_sender = Some(sender);
+                topic_metadata.action = TopicAction::Start;
                 topic_metadata.last_active = Instant::now();
                 topic_metadata.clone()
             })

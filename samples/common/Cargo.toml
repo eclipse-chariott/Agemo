@@ -14,7 +14,7 @@ async-trait = { workspace = true }
 config = { workspace = true }
 ctrlc = { workspace = true }
 log = { workspace = true }
-proto = { path = "../../proto-build" }
+samples_proto = { path = "../proto-build" }
 sample-mqtt-connector = { path = "../connectors/mqtt-five" }
 serde = { workspace = true }
 serde_derive = { workspace = true }

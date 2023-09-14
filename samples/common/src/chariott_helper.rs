@@ -7,7 +7,7 @@
 use std::{thread, time::Duration};
 
 use log::{info, warn};
-use proto::service_registry::v1::{
+use samples_proto::service_registry::v1::{
     service_registry_client::ServiceRegistryClient, DiscoverByNamespaceRequest, ServiceMetadata,
 };
 use tonic::{transport::Channel, Code, Request, Status};

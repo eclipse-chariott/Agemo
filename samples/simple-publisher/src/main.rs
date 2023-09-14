@@ -7,7 +7,8 @@
 
 use env_logger::{Builder, Target};
 use log::LevelFilter;
-use proto::publisher::v1::publisher_server::PublisherServer;
+use samples_proto::publisher::v1::publisher_callback_server::PublisherCallbackServer;
+use samples_proto::sample_publisher::v1::sample_publisher_server::SamplePublisherServer;
 use publisher_impl::PublisherImpl;
 use samples_common::{
     load_config::{
@@ -41,8 +42,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     );
 
     // Grpc server for handling calls from clients.
+    // Note the two services, the `PublisherCallbackServer` handles callbacks from the pub sub
+    // service, the `SamplePublisherServer` fields requests from subscribers.
     Server::builder()
-        .add_service(PublisherServer::new(publisher))
+        .add_service(PublisherCallbackServer::new(publisher.clone()))
+        .add_service(SamplePublisherServer::new(publisher))
         .serve(addr)
         .await?;
 

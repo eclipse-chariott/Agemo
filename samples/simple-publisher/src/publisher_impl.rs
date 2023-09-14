@@ -9,30 +9,29 @@
 //! from the Pub Sub Service (START, STOP and DELETE).
 
 use log::info;
-use proto::publisher::v1::{
-    publisher_server::Publisher, ManageTopicRequest, ManageTopicResponse, SubscriptionInfoRequest,
-    SubscriptionInfoResponse,
+use samples_proto::{
+    publisher::v1::{
+        publisher_callback_server::PublisherCallback, ManageTopicRequest, ManageTopicResponse
+    },
+    sample_publisher::v1:: {
+        sample_publisher_server::SamplePublisher, SubscriptionInfoRequest, SubscriptionInfoResponse,
+    },
 };
 use samples_common::{
     data_generator,
     pub_sub_service_helper::{self, TopicAction},
     publisher_helper::{self, DynamicPublisher},
-    topic_store::TopicStore,
+    topic_store::{TopicStore, TopicMetadata},
 };
 use std::{
-    collections::HashMap,
     str::FromStr,
     sync::{mpsc, Arc, Mutex},
     time::Duration,
 };
 use tonic::{Request, Response, Status};
 
-/// Alias for the active topics hashmap, correlating a topic with a sender channel used to publish
-/// to the messaging broker.
-pub type ActiveTopicsMap = HashMap<String, mpsc::Sender<String>>;
-
 /// Base structure for the publisher gRPC service.
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PublisherImpl {
     /// Id of the publisher.
     pub id: String,
@@ -40,10 +39,8 @@ pub struct PublisherImpl {
     pub authority: String,
     /// The protocol used to communicate with the publisher.
     pub protocol: String,
-    /// Handle pointing to a shared active topics map.
-    pub active_topics_map: Arc<Mutex<ActiveTopicsMap>>,
     /// Store that maps the dynamically created topic to a topic known to the publisher.
-    pub topics_store: TopicStore,
+    pub topic_store: Arc<Mutex<TopicStore>>,
     /// The uri of the Pub Sub Service.
     pub pub_sub_uri: String,
 }
@@ -61,8 +58,7 @@ impl PublisherImpl {
             id: format!("pub_{}", uuid::Uuid::new_v4()),
             authority,
             protocol,
-            topics_store: TopicStore::new(),
-            active_topics_map: Arc::new(Mutex::new(ActiveTopicsMap::new())),
+            topic_store: Arc::new(Mutex::new(TopicStore::new())),
             pub_sub_uri,
         }
     }
@@ -90,18 +86,12 @@ impl DynamicPublisher for PublisherImpl {
         // Initialize a client with a disconnect channel
         let (send, recv) = mpsc::channel::<String>();
 
-        // Add disconnect channel to active topics map with the key being the topic known to the publisher.
-        {
-            self.active_topics_map
-                .lock()
-                .unwrap()
-                .insert(topic.clone(), send);
-        }
+        let topic_metadata: Option<TopicMetadata>;
 
-        // Update topic metadata.
-        let topic_metadata = self
-            .topics_store
-            .update_topic_action(&topic, TopicAction::Start);
+        // Activate topic in store.
+        {
+            topic_metadata = self.topic_store.lock().unwrap().activate_topic(&topic, send);
+        }
 
         let client_info = topic_metadata.unwrap().subscription_info;
 
@@ -125,21 +115,18 @@ impl DynamicPublisher for PublisherImpl {
     fn on_stop_action(&self, topic: String, generated_topic: String) {
         // Remove topic from active list and call disconnect channel for topic thread.
         // Then set the last active timestamp of the action actually removed the topic.
-        {
-            if let Some(sender) = self.active_topics_map.lock().unwrap().remove(&topic) {
-                drop(sender);
-                self.topics_store.set_topic_last_active(&topic);
-            }
-        }
+        let topic_store = self.topic_store.lock().unwrap();
+
+        topic_store.deactivate_topic(&topic);
 
         // The service will keep sending 'STOP' pings as long as the topic exists and there are no subscribers.
         // This is an example of how a publisher could choose to delete the topic on a stop message.
-        if let Some(topic_metadata) = self.topics_store.get_topic_metadata(&topic) {
+        if let Some(topic_metadata) = topic_store.get_topic_metadata(&topic) {
             let threshold = Duration::from_secs(20);
 
             if topic_metadata.last_active.elapsed().as_secs() > threshold.as_secs() {
                 // Remove topic from store.
-                self.topics_store.remove_topic(&topic, &generated_topic);
+                topic_store.remove_topic(&topic, &generated_topic);
 
                 info!("Deleting topic '({topic}) {generated_topic}'.");
 
@@ -164,56 +151,15 @@ impl DynamicPublisher for PublisherImpl {
         // so just remove the topic from the active lists.
 
         // Remove topic from lists.
-        self.topics_store.remove_topic(&topic, &generated_topic);
-        if let Some(sender) = self.active_topics_map.lock().unwrap().remove(&topic) {
-            drop(sender);
-        }
+        let topic_store = self.topic_store.lock().unwrap();
+
+        topic_store.deactivate_topic(&topic);
+        topic_store.remove_topic(&topic, &generated_topic);
     }
 }
 
 #[tonic::async_trait]
-impl Publisher for PublisherImpl {
-    /// Provides subscription information based on the given request.
-    ///
-    /// This function returns the necessary info needed to subscribe to a data stream based on the
-    /// request.
-    ///
-    /// # Arguments
-    /// * `request` - Contains the requested subject to get subscription information about.
-    async fn get_subscription_info(
-        &self,
-        request: Request<SubscriptionInfoRequest>,
-    ) -> Result<Response<SubscriptionInfoResponse>, Status> {
-        // Extract the requested topic from the request. For simplicity in this example the subject
-        // correlates directly with a topic.
-        let requested_topic = request.into_inner().subject;
-        info!("Got request for subscription info on subject '{requested_topic}'.");
-
-        // If there is already a dynamic topic created for the subject then shortcut and return
-        // that subscription info.
-        if let Some(topic_metadata) = self.topics_store.get_topic_metadata(&requested_topic) {
-            return Ok(Response::new(topic_metadata.subscription_info));
-        }
-
-        // Otherwise, call Pub Sub Service and get the topic and subscription information.
-        let topic_subscription_info = pub_sub_service_helper::create_topic(
-            self.pub_sub_uri.clone(),
-            self.id.clone(),
-            self.authority.clone(),
-            String::from("grpc"),
-        )
-        .await?;
-
-        // Add new topic information to the topic maps.
-        self.topics_store
-            .add_topic(requested_topic, topic_subscription_info.clone());
-
-        // Return response with how to subscribe to publisher.
-        let response = Response::new(topic_subscription_info);
-
-        Ok(response)
-    }
-
+impl PublisherCallback for PublisherImpl {
     /// Allows for topic management by the Pub Sub Service.
     ///
     /// Callback implemented by the publisher and utilized by the Pub Sub Service to provide
@@ -234,9 +180,10 @@ impl Publisher for PublisherImpl {
         let generated_topic = manage_req.topic;
 
         // Get known topic based on the passed in generated topic.
-        let topic = self
-            .topics_store
-            .get_generated_topic_mapping(&generated_topic)?;
+        let topic: String;
+        {
+            topic = self.topic_store.lock().unwrap().get_generated_topic_mapping(&generated_topic)?;
+        }
 
         info!("Executing action '{action}' for topic '({topic}) {generated_topic}'.");
 
@@ -251,5 +198,52 @@ impl Publisher for PublisherImpl {
         info!("Successfully executed action.");
 
         Ok(Response::new(ManageTopicResponse {}))
+    }
+}
+
+#[tonic::async_trait]
+impl SamplePublisher for PublisherImpl {
+    /// Provides subscription information based on the given request.
+    ///
+    /// This function returns the necessary info needed to subscribe to a data stream based on the
+    /// request.
+    ///
+    /// # Arguments
+    /// * `request` - Contains the requested subject to get subscription information about.
+    async fn get_subscription_info(
+        &self,
+        request: Request<SubscriptionInfoRequest>,
+    ) -> Result<Response<SubscriptionInfoResponse>, Status> {
+        // Extract the requested topic from the request. For simplicity in this example the subject
+        // correlates directly with a topic.
+        let requested_topic = request.into_inner().subject;
+        info!("Got request for subscription info on subject '{requested_topic}'.");
+
+        // If there is already a dynamic topic created for the subject then shortcut and return
+        // that subscription info.
+        {
+            if let Some(topic_metadata) = self.topic_store.lock().unwrap().get_topic_metadata(&requested_topic) {
+                return Ok(Response::new(topic_metadata.subscription_info));
+            }
+        }
+
+        // Otherwise, call Pub Sub Service and get the topic and subscription information.
+        let topic_subscription_info = pub_sub_service_helper::create_topic(
+            self.pub_sub_uri.clone(),
+            self.id.clone(),
+            self.authority.clone(),
+            String::from("grpc"),
+        )
+        .await?;
+
+        // Add new topic information to the topic maps.
+        {
+            self.topic_store.lock().unwrap().add_topic(requested_topic, topic_subscription_info.clone());
+        }
+
+        // Return response with how to subscribe to publisher.
+        let response = Response::new(topic_subscription_info);
+
+        Ok(response)
     }
 }

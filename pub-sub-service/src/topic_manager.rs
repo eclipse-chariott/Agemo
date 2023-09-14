@@ -14,7 +14,7 @@ use std::{
 };
 
 use log::{error, info, warn};
-use proto::publisher::v1::{publisher_client::PublisherClient, ManageTopicRequest};
+use proto::publisher::v1::{publisher_callback_client::PublisherCallbackClient, ManageTopicRequest};
 use tonic::Request;
 
 use crate::pubsub_connector::{MonitorMessage, PubSubAction};
@@ -292,7 +292,7 @@ impl TopicManager {
         }
 
         // Get information from publisher client
-        let mut pub_client = PublisherClient::connect(action_metadata.uri.clone()).await?;
+        let mut pub_client = PublisherCallbackClient::connect(action_metadata.uri.clone()).await?;
 
         let request = Request::new(ManageTopicRequest {
             topic: action_metadata.topic.clone(),
