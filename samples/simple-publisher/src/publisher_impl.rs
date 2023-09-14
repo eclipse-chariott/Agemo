@@ -117,10 +117,9 @@ impl DynamicPublisher for PublisherImpl {
     /// * `topic` - The topic known to the publisher that is associated with the generated topic.
     /// * `generated_topic` - The generated topic from the Pub Sub Service.
     fn on_stop_action(&self, topic: String, generated_topic: String) {
-        // Remove topic from active list and call disconnect channel for topic thread.
-        // Then set the last active timestamp of the action actually removed the topic.
         let topic_store = self.topic_store.lock().unwrap();
 
+        // Deactivate topic in store, which stops publishing to the passed in topic.
         topic_store.deactivate_topic(&topic);
 
         // The service will keep sending 'STOP' pings as long as the topic exists and there are no subscribers.
@@ -200,7 +199,7 @@ impl PublisherCallback for PublisherImpl {
             TopicAction::Start => self.on_start_action(topic, generated_topic),
             TopicAction::Stop => self.on_stop_action(topic, generated_topic),
             TopicAction::Delete => self.on_delete_action(topic, generated_topic),
-            _ => return Err(Status::already_exists(generated_topic)),
+            _ => return Err(Status::invalid_argument(generated_topic)),
         }
 
         info!("Successfully executed action.");
