@@ -211,8 +211,8 @@ Below is a diagram showing the lifetime of a topic:
 
 ## Chariott Integration
 
-The Pub Sub Service connects to [Eclipse Chariott](https://github.com/eclipse-chariott/chariott) as
-a Service Provider. This means that the service becomes discoverable through the Chariott service
+The Pub Sub Service registers with [Eclipse Chariott](https://github.com/eclipse-chariott/chariott)
+as a Service Provider. This means that the service becomes discoverable through Chariott's service
 discovery mechanism. Applications that want to utlize a publish/subscribe service can call Chariott
 to return the gRPC endpoint for the Pub Sub Service. Publishers are the only applications that need
 to communicate directly with the Pub Sub Service to manage topic lifetimes and get any broker
