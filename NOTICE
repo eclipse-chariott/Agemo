@@ -4,7 +4,7 @@ This page lists the licenses of the projects used in cargo-about.
 
 ## Overview of licenses
 
-- MIT License (88)
+- MIT License (89)
 - Apache License 2.0 (3)
 - BSD 3-Clause "New" or "Revised" License (2)
 - Eclipse Public License 1.0 (1)
@@ -394,10 +394,10 @@ END OF TERMS AND CONDITIONS
 
 #### Used by
 
-- [prost]( https://github.com/tokio-rs/prost ) 0.11.9
-- [prost-build]( https://github.com/tokio-rs/prost ) 0.11.9
-- [prost-derive]( https://github.com/tokio-rs/prost ) 0.11.9
-- [prost-types]( https://github.com/tokio-rs/prost ) 0.11.9
+- [prost]( https://github.com/tokio-rs/prost ) 0.12.1
+- [prost-build]( https://github.com/tokio-rs/prost ) 0.12.1
+- [prost-derive]( https://github.com/tokio-rs/prost ) 0.12.1
+- [prost-types]( https://github.com/tokio-rs/prost ) 0.12.1
 
 #### License
 
@@ -610,7 +610,7 @@ limitations under the License.
 
 #### Used by
 
-- [matchit]( https://github.com/ibraheemdev/matchit ) 0.7.2
+- [matchit]( https://github.com/ibraheemdev/matchit ) 0.7.3
 
 #### License
 
@@ -1374,7 +1374,7 @@ THE SOFTWARE.
 #### Used by
 
 - [either]( https://github.com/bluss/either ) 1.9.0
-- [itertools]( https://github.com/rust-itertools/itertools ) 0.10.5
+- [itertools]( https://github.com/rust-itertools/itertools ) 0.11.0
 - [petgraph]( https://github.com/petgraph/petgraph ) 0.6.4
 
 #### License
@@ -2604,6 +2604,70 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
+- [async-stream]( https://github.com/tokio-rs/async-stream ) 0.3.5
+- [async-stream-impl]( https://github.com/tokio-rs/async-stream ) 0.3.5
+
+#### License
+
+```text
+Copyright (c) 2019 Carl Lerche
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+Copyright (c) 2018 David Tolnay
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+```
+
+### MIT (MIT License)
+
+#### Used by
+
 - [http-body]( https://github.com/hyperium/http-body ) 0.4.5
 
 #### License
@@ -2793,8 +2857,8 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [tonic]( https://github.com/hyperium/tonic ) 0.9.2
-- [tonic-build]( https://github.com/hyperium/tonic ) 0.9.2
+- [tonic]( https://github.com/hyperium/tonic ) 0.10.1
+- [tonic-build]( https://github.com/hyperium/tonic ) 0.10.1
 
 #### License
 
@@ -2938,7 +3002,7 @@ DEALINGS IN THE SOFTWARE.
 
 - [tokio]( https://github.com/tokio-rs/tokio ) 1.32.0
 - [tokio-stream]( https://github.com/tokio-rs/tokio ) 0.1.14
-- [tokio-util]( https://github.com/tokio-rs/tokio ) 0.7.8
+- [tokio-util]( https://github.com/tokio-rs/tokio ) 0.7.9
 
 #### License
 
@@ -3247,7 +3311,7 @@ SOFTWARE.
 
 #### Used by
 
-- [matchit]( https://github.com/ibraheemdev/matchit ) 0.7.2
+- [matchit]( https://github.com/ibraheemdev/matchit ) 0.7.3
 
 #### License
 
@@ -3365,7 +3429,7 @@ SOFTWARE.
 - [fastrand]( https://github.com/smol-rs/fastrand ) 1.9.0
 - [fastrand]( https://github.com/smol-rs/fastrand ) 2.0.0
 - [futures-lite]( https://github.com/smol-rs/futures-lite ) 1.13.0
-- [hermit-abi]( https://github.com/hermitcore/rusty-hermit ) 0.3.2
+- [hermit-abi]( https://github.com/hermitcore/hermit-rs ) 0.3.3
 - [home]( https://github.com/rust-lang/cargo ) 0.5.5
 - [io-lifetimes]( https://github.com/sunfishcode/io-lifetimes ) 1.0.11
 - [is-terminal]( https://github.com/sunfishcode/is-terminal ) 0.4.9
@@ -3383,17 +3447,16 @@ SOFTWARE.
 - [pin-project]( https://github.com/taiki-e/pin-project ) 1.1.3
 - [pin-project-internal]( https://github.com/taiki-e/pin-project ) 1.1.3
 - [pin-project-lite]( https://github.com/taiki-e/pin-project-lite ) 0.2.13
-- [prettyplease]( https://github.com/dtolnay/prettyplease ) 0.1.25
+- [prettyplease]( https://github.com/dtolnay/prettyplease ) 0.2.15
 - [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.67
 - [quote]( https://github.com/dtolnay/quote ) 1.0.33
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.23
-- [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.13
+- [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.14
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
 - [serde]( https://github.com/serde-rs/serde ) 1.0.188
 - [serde_derive]( https://github.com/serde-rs/serde ) 1.0.188
 - [serde_json]( https://github.com/serde-rs/json ) 1.0.107
-- [syn]( https://github.com/dtolnay/syn ) 1.0.109
-- [syn]( https://github.com/dtolnay/syn ) 2.0.36
+- [syn]( https://github.com/dtolnay/syn ) 2.0.37
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.48
 - [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.48
 - [unicode-ident]( https://github.com/dtolnay/unicode-ident ) 1.0.12
@@ -3606,9 +3669,9 @@ THE SOFTWARE.
 
 #### Used by
 
-- [aho-corasick]( https://github.com/BurntSushi/aho-corasick ) 1.0.5
+- [aho-corasick]( https://github.com/BurntSushi/aho-corasick ) 1.1.1
 - [memchr]( https://github.com/BurntSushi/memchr ) 2.6.3
-- [termcolor]( https://github.com/BurntSushi/termcolor ) 1.2.0
+- [termcolor]( https://github.com/BurntSushi/termcolor ) 1.3.0
 - [ucd-trie]( https://github.com/BurntSushi/ucd-generate ) 0.1.6
 
 #### License
@@ -3742,7 +3805,7 @@ SOFTWARE.
 
 #### Used by
 
-- [winapi-util]( https://github.com/BurntSushi/winapi-util ) 0.1.5
+- [winapi-util]( https://github.com/BurntSushi/winapi-util ) 0.1.6
 
 #### License
 
@@ -3911,8 +3974,7 @@ SOFTWARE.
 
 #### Used by
 
-- [termcolor]( https://github.com/BurntSushi/termcolor ) 1.2.0
-- [winapi-util]( https://github.com/BurntSushi/winapi-util ) 0.1.5
+- [memchr]( https://github.com/BurntSushi/memchr ) 2.6.3
 
 #### License
 
@@ -3934,50 +3996,26 @@ You may use this code under the terms of either license.
 ```text
 UNICODE, INC. LICENSE AGREEMENT - DATA FILES AND SOFTWARE
 
-See Terms of Use <https://www.unicode.org/copyright.html>
-for definitions of Unicode Inc.’s Data Files and Software.
+Unicode Data Files include all data files under the directories http://www.unicode.org/Public/, http://www.unicode.org/reports/, http://www.unicode.org/cldr/data/, http://source.icu-project.org/repos/icu/, and http://www.unicode.org/utility/trac/browser/.
 
-NOTICE TO USER: Carefully read the following legal agreement.
-BY DOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING UNICODE INC.'S
-DATA FILES ("DATA FILES"), AND/OR SOFTWARE ("SOFTWARE"),
-YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE
-TERMS AND CONDITIONS OF THIS AGREEMENT.
-IF YOU DO NOT AGREE, DO NOT DOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE
-THE DATA FILES OR SOFTWARE.
+Unicode Data Files do not include PDF online code charts under the directory http://www.unicode.org/Public/.
+
+Software includes any source code published in the Unicode Standard or under the directories http://www.unicode.org/Public/, http://www.unicode.org/reports/, http://www.unicode.org/cldr/data/, http://source.icu-project.org/repos/icu/, and http://www.unicode.org/utility/trac/browser/.
+
+NOTICE TO USER: Carefully read the following legal agreement. BY DOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING UNICODE INC.'S DATA FILES ("DATA FILES"), AND/OR SOFTWARE ("SOFTWARE"), YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT DOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR SOFTWARE.
 
 COPYRIGHT AND PERMISSION NOTICE
 
-Copyright © 1991-2022 Unicode, Inc. All rights reserved.
-Distributed under the Terms of Use in https://www.unicode.org/copyright.html.
+Copyright © 1991-2016 Unicode, Inc. All rights reserved. Distributed under the Terms of Use in http://www.unicode.org/copyright.html.
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of the Unicode data files and any associated documentation
-(the "Data Files") or Unicode software and any associated documentation
-(the "Software") to deal in the Data Files or Software
-without restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, and/or sell copies of
-the Data Files or Software, and to permit persons to whom the Data Files
-or Software are furnished to do so, provided that either
-(a) this copyright and permission notice appear with all copies
-of the Data Files or Software, or
-(b) this copyright and permission notice appear in associated
-Documentation.
+Permission is hereby granted, free of charge, to any person obtaining a copy of the Unicode data files and any associated documentation (the "Data Files") or Unicode software and any associated documentation (the "Software") to deal in the Data Files or Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, and/or sell copies of the Data Files or Software, and to permit persons to whom the Data Files or Software are furnished to do so, provided that either
 
-THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF
-ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT OF THIRD PARTY RIGHTS.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS
-NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL
-DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+     (a) this copyright and permission notice appear with all copies of the Data Files or Software, or
+     (b) this copyright and permission notice appear in associated Documentation.
 
-Except as contained in this notice, the name of a copyright holder
-shall not be used in advertising or otherwise to promote the sale,
-use or other dealings in these Data Files or Software without prior
-written authorization of the copyright holder.
+THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+
+Except as contained in this notice, the name of a copyright holder shall not be used in advertising or otherwise to promote the sale, use or other dealings in these Data Files or Software without prior written authorization of the copyright holder.
 
 ```
 
