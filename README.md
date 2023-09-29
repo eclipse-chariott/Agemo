@@ -60,6 +60,13 @@ package manager in place of `apt` when going through these steps.
     > **NOTE**: The rust toolchain version is managed by the rust-toolchain.toml file, so once you
                 install rustup there is no need to manually install a toolchain or set a default.
 
+1. Install OpenSSL:
+
+    ```shell
+    sudo apt install pkg-config
+    sudo apt install libssl-dev
+    ```
+
 1. Install Protobuf Compiler:
 
     ```shell
