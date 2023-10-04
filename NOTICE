@@ -887,7 +887,7 @@ additional terms or conditions.
 
 #### Used by
 
-- [sha2]( https://github.com/RustCrypto/hashes ) 0.10.7
+- [sha2]( https://github.com/RustCrypto/hashes ) 0.10.8
 
 #### License
 
@@ -1196,8 +1196,8 @@ THE SOFTWARE.
 - [bitflags]( https://github.com/bitflags/bitflags ) 1.3.2
 - [bitflags]( https://github.com/bitflags/bitflags ) 2.4.0
 - [log]( https://github.com/rust-lang/log ) 0.4.20
-- [regex]( https://github.com/rust-lang/regex ) 1.9.5
-- [regex-automata]( https://github.com/rust-lang/regex/tree/master/regex-automata ) 0.3.8
+- [regex]( https://github.com/rust-lang/regex ) 1.9.6
+- [regex-automata]( https://github.com/rust-lang/regex/tree/master/regex-automata ) 0.3.9
 - [regex-syntax]( https://github.com/rust-lang/regex/tree/master/regex-syntax ) 0.7.5
 
 #### License
@@ -1738,7 +1738,7 @@ DEALINGS IN THE SOFTWARE.
 
 - [ahash]( https://github.com/tkaitchuck/ahash ) 0.7.6
 - [hashbrown]( https://github.com/rust-lang/hashbrown ) 0.12.3
-- [hashbrown]( https://github.com/rust-lang/hashbrown ) 0.14.0
+- [hashbrown]( https://github.com/rust-lang/hashbrown ) 0.14.1
 
 #### License
 
@@ -1882,7 +1882,7 @@ DEALINGS IN THE SOFTWARE.
 #### Used by
 
 - [indexmap]( https://github.com/bluss/indexmap ) 1.9.3
-- [indexmap]( https://github.com/bluss/indexmap ) 2.0.0
+- [indexmap]( https://github.com/bluss/indexmap ) 2.0.2
 
 #### License
 
@@ -2857,8 +2857,8 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [tonic]( https://github.com/hyperium/tonic ) 0.10.1
-- [tonic-build]( https://github.com/hyperium/tonic ) 0.10.1
+- [tonic]( https://github.com/hyperium/tonic ) 0.10.2
+- [tonic-build]( https://github.com/hyperium/tonic ) 0.10.2
 
 #### License
 
@@ -3413,21 +3413,21 @@ SOFTWARE.
 - [adler]( https://github.com/jonas-schievink/adler.git ) 1.0.2
 - [anyhow]( https://github.com/dtolnay/anyhow ) 1.0.75
 - [async-channel]( https://github.com/smol-rs/async-channel ) 1.9.0
-- [async-executor]( https://github.com/smol-rs/async-executor ) 1.5.1
+- [async-executor]( https://github.com/smol-rs/async-executor ) 1.5.4
 - [async-global-executor]( https://github.com/Keruspe/async-global-executor ) 2.3.1
 - [async-io]( https://github.com/smol-rs/async-io ) 1.13.0
 - [async-lock]( https://github.com/smol-rs/async-lock ) 2.8.0
 - [async-std]( https://github.com/async-rs/async-std ) 1.12.0
-- [async-task]( https://github.com/smol-rs/async-task ) 4.4.0
+- [async-task]( https://github.com/smol-rs/async-task ) 4.4.1
 - [async-trait]( https://github.com/dtolnay/async-trait ) 0.1.73
-- [atomic-waker]( https://github.com/smol-rs/atomic-waker ) 1.1.1
-- [blocking]( https://github.com/smol-rs/blocking ) 1.3.1
-- [concurrent-queue]( https://github.com/smol-rs/concurrent-queue ) 2.2.0
+- [atomic-waker]( https://github.com/smol-rs/atomic-waker ) 1.1.2
+- [blocking]( https://github.com/smol-rs/blocking ) 1.4.0
+- [concurrent-queue]( https://github.com/smol-rs/concurrent-queue ) 2.3.0
 - [ctrlc]( https://github.com/Detegr/rust-ctrlc.git ) 3.4.1
 - [env_logger]( https://github.com/rust-cli/env_logger/ ) 0.10.0
 - [event-listener]( https://github.com/smol-rs/event-listener ) 2.5.3
 - [fastrand]( https://github.com/smol-rs/fastrand ) 1.9.0
-- [fastrand]( https://github.com/smol-rs/fastrand ) 2.0.0
+- [fastrand]( https://github.com/smol-rs/fastrand ) 2.0.1
 - [futures-lite]( https://github.com/smol-rs/futures-lite ) 1.13.0
 - [hermit-abi]( https://github.com/hermitcore/hermit-rs ) 0.3.3
 - [home]( https://github.com/rust-lang/cargo ) 0.5.5
@@ -3435,32 +3435,33 @@ SOFTWARE.
 - [is-terminal]( https://github.com/sunfishcode/is-terminal ) 0.4.9
 - [itoa]( https://github.com/dtolnay/itoa ) 1.0.9
 - [linux-raw-sys]( https://github.com/sunfishcode/linux-raw-sys ) 0.3.8
-- [linux-raw-sys]( https://github.com/sunfishcode/linux-raw-sys ) 0.4.7
+- [linux-raw-sys]( https://github.com/sunfishcode/linux-raw-sys ) 0.4.8
 - [minimal-lexical]( https://github.com/Alexhuszagh/minimal-lexical ) 0.2.1
 - [once_cell]( https://github.com/matklad/once_cell ) 1.18.0
-- [parking]( https://github.com/smol-rs/parking ) 2.1.0
+- [parking]( https://github.com/smol-rs/parking ) 2.1.1
 - [pathdiff]( https://github.com/Manishearth/pathdiff ) 0.2.1
-- [pest]( https://github.com/pest-parser/pest ) 2.7.3
-- [pest_derive]( https://github.com/pest-parser/pest ) 2.7.3
-- [pest_generator]( https://github.com/pest-parser/pest ) 2.7.3
-- [pest_meta]( https://github.com/pest-parser/pest ) 2.7.3
+- [pest]( https://github.com/pest-parser/pest ) 2.7.4
+- [pest_derive]( https://github.com/pest-parser/pest ) 2.7.4
+- [pest_generator]( https://github.com/pest-parser/pest ) 2.7.4
+- [pest_meta]( https://github.com/pest-parser/pest ) 2.7.4
 - [pin-project]( https://github.com/taiki-e/pin-project ) 1.1.3
 - [pin-project-internal]( https://github.com/taiki-e/pin-project ) 1.1.3
 - [pin-project-lite]( https://github.com/taiki-e/pin-project-lite ) 0.2.13
+- [piper]( https://github.com/notgull/piper ) 0.2.1
 - [prettyplease]( https://github.com/dtolnay/prettyplease ) 0.2.15
 - [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.67
 - [quote]( https://github.com/dtolnay/quote ) 1.0.33
-- [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.23
-- [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.14
+- [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.24
+- [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.15
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
 - [serde]( https://github.com/serde-rs/serde ) 1.0.188
 - [serde_derive]( https://github.com/serde-rs/serde ) 1.0.188
 - [serde_json]( https://github.com/serde-rs/json ) 1.0.107
 - [syn]( https://github.com/dtolnay/syn ) 2.0.37
-- [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.48
-- [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.48
+- [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.49
+- [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.49
 - [unicode-ident]( https://github.com/dtolnay/unicode-ident ) 1.0.12
-- [waker-fn]( https://github.com/stjepang/waker-fn ) 1.1.0
+- [waker-fn]( https://github.com/smol-rs/waker-fn ) 1.1.1
 - [wasi]( https://github.com/bytecodealliance/wasi ) 0.11.0+wasi-snapshot-preview1
 
 #### License
