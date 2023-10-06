@@ -6,12 +6,38 @@
 
 #![cfg(feature = "yaml")]
 
+use std::env;
+
 use config::{Config, File, FileFormat};
 use log::error;
 use serde_derive::{Deserialize, Serialize};
 
 const CONFIG_FILE: &str = "target/debug/pub_sub_service_settings";
 const CONSTANTS_FILE: &str = "target/debug/constants_settings";
+
+/// If feature 'containerize' is set, will modify a localhost uri to point to container's localhost
+/// DNS alias. Otherwise, returns the uri as a String.
+///
+/// # Arguments
+/// * `uri` - The uri to potentially modify.
+pub fn localhost(uri: &str) -> String {
+    #[cfg(feature = "containerize")]
+    let uri = {
+        // Container env variable names.
+        const HOST_GATEWAY_ENV_VAR: &str = "HOST_GATEWAY";
+        const LOCALHOST_ALIAS_ENV_VAR: &str = "LOCALHOST_ALIAS";
+
+        // Exit the program if container env variables are not set.
+        let host_gateway = env::var(HOST_GATEWAY_ENV_VAR)
+            .unwrap_or_else(|_| panic!("{HOST_GATEWAY_ENV_VAR} is not set"));
+        let localhost_alias = env::var(LOCALHOST_ALIAS_ENV_VAR)
+            .unwrap_or_else(|_| panic!("{LOCALHOST_ALIAS_ENV_VAR} is not set"));
+
+        uri.replace(&localhost_alias, &host_gateway)
+    };
+
+    uri.to_string()
+}
 
 /// Object that contains constants used for establishing connection between services.
 #[derive(Clone, Debug, Serialize, Deserialize)]

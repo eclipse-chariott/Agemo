@@ -14,7 +14,10 @@ use log::{error, info, warn};
 use paho_mqtt::{self as mqtt, MQTT_VERSION_5};
 use std::{process, sync::mpsc};
 
-use crate::pubsub_connector::{self, MonitorMessage, PubSubAction, PubSubConnector};
+use crate::{
+    load_config::localhost,
+    pubsub_connector::{self, MonitorMessage, PubSubAction, PubSubConnector},
+};
 
 /// Mosquitto broker's reserved topic for subscribe related notifications.
 const SUBSCRIBE: &str = "$SYS/broker/log/M/subscribe";
@@ -36,7 +39,7 @@ impl MqttFiveBrokerConnector {
     /// * `client_id` - Id used when creating a new mqtt client.
     /// * `broker_uri` - The uri of the broker that the client is connecting to.
     fn new(client_id: String, broker_uri: String) -> Self {
-        let host = broker_uri;
+        let host = localhost(&broker_uri);
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
             .server_uri(host)

@@ -19,7 +19,10 @@ use proto::publisher::v1::{
 };
 use tonic::Request;
 
-use crate::pubsub_connector::{MonitorMessage, PubSubAction};
+use crate::{
+    load_config::localhost,
+    pubsub_connector::{MonitorMessage, PubSubAction},
+};
 
 /// Metadata relevant to a dynamic topic.
 #[derive(Clone, Debug, PartialEq)]
@@ -294,7 +297,8 @@ impl TopicManager {
         }
 
         // Get information from publisher client
-        let mut pub_client = PublisherCallbackClient::connect(action_metadata.uri.clone()).await?;
+        let mut pub_client =
+            PublisherCallbackClient::connect(localhost(&action_metadata.uri)).await?;
 
         let request = Request::new(ManageTopicRequest {
             topic: action_metadata.topic.clone(),
