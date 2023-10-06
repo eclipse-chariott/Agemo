@@ -13,4 +13,4 @@ Cargo.lock
 /.vscode/*
 
 # Do not include .env files for Docker.
-*.env
+/*.env
