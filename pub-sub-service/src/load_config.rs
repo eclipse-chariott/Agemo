@@ -20,7 +20,7 @@ const CONSTANTS_FILE: &str = "target/debug/constants_settings";
 ///
 /// # Arguments
 /// * `uri` - The uri to potentially modify.
-pub fn localhost(uri: &str) -> String {
+pub fn get_uri(uri: &str) -> String {
     #[cfg(feature = "containerize")]
     let uri = {
         // Container env variable names.

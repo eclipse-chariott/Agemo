@@ -303,9 +303,7 @@ command in the project root directory:
 
 1. To detach from the container, enter:
 
-    ```shell
-    Ctrl-p Ctrl-q
-    ```
+    <kbd>Ctrl</kbd> + <kbd>p</kbd>, <kbd>Ctrl</kbd> + <kbd>q</kbd>
 
 1. To stop the container, enter:
 
@@ -347,16 +345,10 @@ root directory:
     podman run -p 50051:50051 --env-file=podman.env --network=slirp4netns:allow_host_loopback=true localhost/pub_sub_service
     ```
 
-1. To stop the container, find the container with:
+1. To stop the container, run:
 
     ```shell
-    podman ps
-    ```
-
-    Then run:
-
-    ```shell
-    podman stop <container_name>
+    podman ps -f ancestor=localhost/pub_sub_service:latest --format="{{.Names}}" | xargs podman stop
     ```
 
 #### Notes

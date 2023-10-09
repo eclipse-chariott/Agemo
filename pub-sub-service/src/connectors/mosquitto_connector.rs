@@ -15,7 +15,7 @@ use paho_mqtt::{self as mqtt, MQTT_VERSION_5};
 use std::{process, sync::mpsc};
 
 use crate::{
-    load_config::localhost,
+    load_config::get_uri,
     pubsub_connector::{self, MonitorMessage, PubSubAction, PubSubConnector},
 };
 
@@ -39,7 +39,7 @@ impl MqttFiveBrokerConnector {
     /// * `client_id` - Id used when creating a new mqtt client.
     /// * `broker_uri` - The uri of the broker that the client is connecting to.
     fn new(client_id: String, broker_uri: String) -> Self {
-        let host = localhost(&broker_uri);
+        let host = get_uri(&broker_uri);
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
             .server_uri(host)

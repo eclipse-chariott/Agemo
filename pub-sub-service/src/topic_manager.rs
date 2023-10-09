@@ -20,7 +20,7 @@ use proto::publisher::v1::{
 use tonic::Request;
 
 use crate::{
-    load_config::localhost,
+    load_config::get_uri,
     pubsub_connector::{MonitorMessage, PubSubAction},
 };
 
@@ -298,7 +298,7 @@ impl TopicManager {
 
         // Get information from publisher client
         let mut pub_client =
-            PublisherCallbackClient::connect(localhost(&action_metadata.uri)).await?;
+            PublisherCallbackClient::connect(get_uri(&action_metadata.uri)).await?;
 
         let request = Request::new(ManageTopicRequest {
             topic: action_metadata.topic.clone(),

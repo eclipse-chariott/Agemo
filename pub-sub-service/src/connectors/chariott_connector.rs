@@ -13,7 +13,7 @@ use proto::{
     service_registry::v1::{RegisterRequest, ServiceMetadata},
 };
 
-use crate::load_config::localhost;
+use crate::load_config::get_uri;
 
 type ChariottClient = ServiceRegistryClient<Channel>;
 
@@ -41,7 +41,7 @@ pub async fn connect_to_chariott_with_retry(
     let mut reason = String::new();
 
     while client_opt.is_none() {
-        client_opt = match ServiceRegistryClient::connect(localhost(chariott_uri)).await {
+        client_opt = match ServiceRegistryClient::connect(get_uri(chariott_uri)).await {
             Ok(client) => Some(client),
             Err(e) => {
                 let status = Status::from_error(Box::new(e));
