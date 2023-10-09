@@ -18,16 +18,16 @@ ARG APP_NAME
 WORKDIR /app
 
 COPY ./ .
-COPY ./target/debug/*.yaml /app/target/debug/
 
 # Add Build dependencies.
 RUN apt update && apt upgrade -y
 RUN apt install -y cmake protobuf-compiler pkg-config libssl-dev
 
-# Build the application with the 'containerize' feature/
-RUN cargo build --features containerize --release -p pub-sub-service
+# Build the application with the 'containerize' feature.
+RUN cargo build --features containerize --release -p $APP_NAME
 
-RUN cp ./target/release/$APP_NAME /app/$APP_NAME
+# Copy the built application to working directory.
+RUN cp ./target/release/$APP_NAME /app/service
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -41,8 +41,6 @@ RUN cp ./target/release/$APP_NAME /app/$APP_NAME
 # reproducability is important, consider using a digest
 # (e.g., debian@sha256:ac707220fbd7b67fc19b112cee8170b41a9e97f703f588b2cdbbcdcecdd8af57).
 FROM debian:bullseye-slim AS final
-ARG APP_NAME
-ENV APP_NAME=$APP_NAME
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
@@ -60,11 +58,11 @@ USER appuser
 WORKDIR /sdv
 
 # Copy the executable from the "build" stage.
-COPY --from=build /app/$APP_NAME /sdv/
+COPY --from=build /app/service /sdv/
 COPY --from=build /app/target/debug/*.yaml /sdv/target/debug/
 
 # Expose the port that the application listens on.
 EXPOSE 50051
 
 # What the container should run when it is started.
-CMD ./$APP_NAME
+CMD ["/sdv/service"]
