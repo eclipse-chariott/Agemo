@@ -267,23 +267,25 @@ see more full featured examples in
 
 ## Running in a Container
 
-See below for instructions on how to run the service in a container. Currently, there is support
-for both Docker and Podman containers. Both variations expect that the other steps have been
-followed above to configure the service and start the MQTT broker.
-
 ### Docker
 
 #### Prequisites
 
-Install Docker: [Docker Installation](https://docs.docker.com/engine/install/)
+[Install Docker](https://docs.docker.com/engine/install/)
 
 #### Running in Docker
 
 To run the service in a Docker container:
 
-1. Copy the [docker.env](./container/template/docker.env) template from the
-[container](./container/) directory into the project root directory. This file should already be
-set up with out any modification needed.
+1. Copy the [docker.env](./container/template/docker.env) template into the project root directory.
+The file sets two environment variables, 'HOST_GATEWAY' and 'LOCALHOST_ALIAS', where 'HOST_GATEWAY'
+is the DNS name used by the container to represent the localhost address and 'LOCALHOST_ALIAS' is
+the localhost address used in the service's configuration settings. This file should already be set
+up with out any modification needed. From the project root directory, the file can be copied with:
+
+    ```shell
+    cp ./container/template/docker.env .
+    ```
 
 1. Run the following command in the project root directory to build the docker container from the
 Dockerfile:
@@ -315,15 +317,21 @@ command in the project root directory:
 
 #### Prequisites
 
-Install Podman: [Podman Installation](https://podman.io/docs/installation)
+[Install Podman](https://podman.io/docs/installation)
 
 #### Running in Podman
 
 To run the service in a Podman container:
 
-1. Copy the [podman.env](./container/template/podman.env) template from the
-[container](./container/) directory into the project root directory. This file should already be
-set up with out any modification needed.
+1. Copy the [podman.env](./container/template/podman.env) template into the project root directory.
+The file sets two environment variables, 'HOST_GATEWAY' and 'LOCALHOST_ALIAS', where 'HOST_GATEWAY'
+is the DNS name used by the container to represent the localhost address and 'LOCALHOST_ALIAS' is
+the localhost address used in the service's configuration settings. This file should already be set
+up with out any modification needed. From the project root directory, the file can be copied with:
+
+    ```shell
+    cp ./container/template/podman.env .
+    ```
 
 1. Run the following command in the project root directory to build the podman container from the
 Dockerfile:
