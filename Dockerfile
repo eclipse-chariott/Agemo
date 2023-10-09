@@ -12,9 +12,8 @@
 # Create a stage for building the application.
 
 ARG RUST_VERSION=1.72.1
-ARG APP_NAME=pub-sub-service
 FROM rust:${RUST_VERSION}-slim-bullseye AS build
-ARG APP_NAME
+ARG APP_NAME=pub-sub-service
 WORKDIR /app
 
 COPY ./ .
