@@ -19,14 +19,24 @@ WORKDIR /app
 COPY ./ .
 
 # Add Build dependencies.
-RUN apt update && apt upgrade -y
-RUN apt install -y cmake protobuf-compiler pkg-config libssl-dev
+RUN apt update && apt upgrade -y && apt install -y \
+    cmake \
+    libssl-dev \
+    pkg-config \
+    protobuf-compiler
+
+# Check that APP_NAME argument is valid.
+RUN sanitized=$(echo "${APP_NAME}" | tr -dc '^[a-zA-Z_0-9-]+$'); \
+[ "$sanitized" = "${APP_NAME}" ] || { \
+    echo "ARG 'APP_NAME' is invalid. APP_NAME='${APP_NAME}' sanitized='${sanitized}'"; \
+    exit 1; \
+}
 
 # Build the application with the 'containerize' feature.
-RUN cargo build --features containerize --release -p $APP_NAME
+RUN cargo build --features containerize --release -p "${APP_NAME}"
 
 # Copy the built application to working directory.
-RUN cp ./target/release/$APP_NAME /app/service
+RUN cp ./target/release/"${APP_NAME}" /app/service
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
