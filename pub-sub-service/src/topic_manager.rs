@@ -283,7 +283,7 @@ impl TopicManager {
     /// * `action` - The specific action to be taken on a topic.
     async fn manage_topic(
         action: TopicAction,
-    ) -> Result<TopicActionMetadata, Box<dyn std::error::Error>> {
+    ) -> Result<TopicActionMetadata, Box<dyn std::error::Error + Send + Sync>> {
         // Get action details
         let action_metadata = TopicActionMetadata::new(action);
         info!(
@@ -297,8 +297,8 @@ impl TopicManager {
         }
 
         // Get information from publisher client
-        let mut pub_client =
-            PublisherCallbackClient::connect(get_uri(&action_metadata.uri)).await?;
+        let uri = get_uri(&action_metadata.uri)?;
+        let mut pub_client = PublisherCallbackClient::connect(uri).await?;
 
         let request = Request::new(ManageTopicRequest {
             topic: action_metadata.topic.clone(),

@@ -39,7 +39,10 @@ impl MqttFiveBrokerConnector {
     /// * `client_id` - Id used when creating a new mqtt client.
     /// * `broker_uri` - The uri of the broker that the client is connecting to.
     fn new(client_id: String, broker_uri: String) -> Self {
-        let host = get_uri(&broker_uri);
+        let host = get_uri(&broker_uri).unwrap_or_else(|e| {
+            error!("Error creating the client: {e:?}");
+            process::exit(1); // TODO: gracefully handle with retry?
+        });
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
             .server_uri(host)
