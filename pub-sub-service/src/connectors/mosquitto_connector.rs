@@ -41,7 +41,7 @@ impl MqttFiveBrokerConnector {
     fn new(client_id: String, broker_uri: String) -> Self {
         let host = get_uri(&broker_uri).unwrap_or_else(|e| {
             error!("Error creating the client: {e:?}");
-            process::exit(1); // TODO: gracefully handle with retry?
+            process::exit(1);
         });
 
         let create_opts = mqtt::CreateOptionsBuilder::new()
@@ -51,7 +51,7 @@ impl MqttFiveBrokerConnector {
 
         let cli = mqtt::AsyncClient::new(create_opts).unwrap_or_else(|e| {
             error!("Error creating the client: {e:?}");
-            process::exit(1); // TODO: gracefully handle with retry?
+            process::exit(1);
         });
 
         MqttFiveBrokerConnector { client: cli }
