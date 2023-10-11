@@ -1,0 +1,18 @@
+.git
+.gitattributes
+.gitignore
+.dockerignore
+
+debug/
+target/
+
+# Allow configuration files
+!target/debug/*.yaml
+
+.devcontainer/
+.github/
+devops/
+docs/
+tools/
+
+Cargo.lock

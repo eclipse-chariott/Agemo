@@ -30,3 +30,4 @@ yaml-rust = { workspace = true, optional = true }
 [features]
 default = ["yaml"]
 yaml = ["yaml-rust"]
+containerize = []

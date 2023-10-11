@@ -13,6 +13,8 @@ use proto::{
     service_registry::v1::{RegisterRequest, ServiceMetadata},
 };
 
+use crate::load_config::get_uri;
+
 type ChariottClient = ServiceRegistryClient<Channel>;
 
 /// Object that contains the necessary information for identifying a specific service.
@@ -37,9 +39,10 @@ pub async fn connect_to_chariott_with_retry(
 ) -> Result<ChariottClient, Box<dyn std::error::Error + Send + Sync>> {
     let mut client_opt: Option<ChariottClient> = None;
     let mut reason = String::new();
+    let uri = get_uri(chariott_uri)?;
 
     while client_opt.is_none() {
-        client_opt = match ServiceRegistryClient::connect(chariott_uri.to_string()).await {
+        client_opt = match ServiceRegistryClient::connect(uri.clone()).await {
             Ok(client) => Some(client),
             Err(e) => {
                 let status = Status::from_error(Box::new(e));

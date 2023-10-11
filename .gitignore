@@ -11,3 +11,6 @@ Cargo.lock
 
 # Stops pushes of local vscode files.
 /.vscode/*
+
+# Do not include .env files for Docker.
+/*.env

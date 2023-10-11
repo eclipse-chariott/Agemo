@@ -13,7 +13,8 @@
 <p align="center">
   <a href="#getting-started">Getting Started</a> •
   <a href="#configuration-setup">Configuration Setup</a> •
-  <a href="#running-the-service">Running the Service</a>
+  <a href="#running-the-service">Running the Service</a> •
+  <a href="#running-in-a-container">Running in a Container</a>
 </p>
 
 </br>
@@ -263,6 +264,101 @@ These two methods are used by a publisher to dynamically manage a topic. Please 
 [documentation](./docs/README.md) for more information on how to the service is utilized. You can
 see more full featured examples in
 [Running the Simple Samples](./samples/README.md#running-the-simple-samples).
+
+## Running in a Container
+
+### Docker
+
+#### Prequisites
+
+[Install Docker](https://docs.docker.com/engine/install/)
+
+#### Running in Docker
+
+To run the service in a Docker container:
+
+1. Copy the [docker.env](./container/template/docker.env) template into the project root directory.
+The file sets two environment variables, 'HOST_GATEWAY' and 'LOCALHOST_ALIAS', where 'HOST_GATEWAY'
+is the DNS name used by the container to represent the localhost address and 'LOCALHOST_ALIAS' is
+the localhost address used in the service's configuration settings. This file should already be set
+up with out any modification needed. From the project root directory, the file can be copied with:
+
+    ```shell
+    cp ./container/template/docker.env .
+    ```
+
+1. Run the following command in the project root directory to build the docker container from the
+Dockerfile:
+
+    ```shell
+    docker build -t pub_sub_service -f Dockerfile .
+    ```
+
+1. Once the container has been built, start the container in interactive mode with the following
+command in the project root directory:
+
+    ```shell
+    docker run --name pub_sub_service -p 50051:50051 --env-file=docker.env --add-host=host.docker.internal:host-gateway -it --rm pub_sub_service
+    ```
+
+1. To detach from the container, enter:
+
+    <kbd>Ctrl</kbd> + <kbd>p</kbd>, <kbd>Ctrl</kbd> + <kbd>q</kbd>
+
+1. To stop the container, enter:
+
+    ```shell
+    docker stop pub_sub_service
+    ```
+
+### Podman
+
+#### Prequisites
+
+[Install Podman](https://podman.io/docs/installation)
+
+#### Running in Podman
+
+To run the service in a Podman container:
+
+1. Copy the [podman.env](./container/template/podman.env) template into the project root directory.
+The file sets two environment variables, 'HOST_GATEWAY' and 'LOCALHOST_ALIAS', where 'HOST_GATEWAY'
+is the DNS name used by the container to represent the localhost address and 'LOCALHOST_ALIAS' is
+the localhost address used in the service's configuration settings. This file should already be set
+up with out any modification needed. From the project root directory, the file can be copied with:
+
+    ```shell
+    cp ./container/template/podman.env .
+    ```
+
+1. Run the following command in the project root directory to build the podman container from the
+Dockerfile:
+
+    ```shell
+    podman build -t pub_sub_service:latest -f Dockerfile .
+    ```
+
+1. Once the container has been built, start the container with the following command in the project
+root directory:
+
+    ```shell
+    podman run -p 50051:50051 --env-file=podman.env --network=slirp4netns:allow_host_loopback=true localhost/pub_sub_service
+    ```
+
+1. To stop the container, run:
+
+    ```shell
+    podman ps -f ancestor=localhost/pub_sub_service:latest --format="{{.Names}}" | xargs podman stop
+    ```
+
+#### Notes
+
+1. By default, podman does not recognize docker images for dockerfile. To fix this, one can add the
+`docker.io` registry to `/etc/containers/registries.conf` by changing the following field:
+
+    ```conf
+    unqualified-search-registries = ["docker.io"]
+    ```
 
 ## Trademarks
 
