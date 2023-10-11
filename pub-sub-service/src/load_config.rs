@@ -29,9 +29,9 @@ pub fn get_uri(uri: &str) -> Result<String, Box<dyn std::error::Error + Send + S
 
         // Return an error if container env variables are not set.
         let host_gateway = env::var(HOST_GATEWAY_ENV_VAR)?;
-        let localhost_alias = env::var(LOCALHOST_ALIAS_ENV_VAR)?;
+        let localhost_alias = env::var(LOCALHOST_ALIAS_ENV_VAR)?; // DevSkim: ignore DS162092
 
-        uri.replace(&localhost_alias, &host_gateway)
+        uri.replace(&localhost_alias, &host_gateway) // DevSkim: ignore DS162092
     };
 
     Ok(uri.to_string())
