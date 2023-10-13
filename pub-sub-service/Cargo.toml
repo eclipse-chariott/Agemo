@@ -25,9 +25,7 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 tonic = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true, features = [ "v4", "fast-rng", "macro-diagnostics"] }
-yaml-rust = { workspace = true, optional = true }
+yaml-rust = { workspace = true }
 
 [features]
-default = ["yaml"]
-yaml = ["yaml-rust"]
 containerize = []

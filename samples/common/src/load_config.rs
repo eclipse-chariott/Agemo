@@ -4,8 +4,6 @@
 
 //! Loads configuration from external files.
 
-#![cfg(feature = "yaml")]
-
 use config::{Config, File, FileFormat};
 use log::error;
 use serde_derive::{Deserialize, Serialize};

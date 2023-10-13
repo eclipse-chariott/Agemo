@@ -4,8 +4,6 @@
 
 //! Loads configuration from external files.
 
-#![cfg(feature = "yaml")]
-
 use std::env;
 
 use config::{Config, File, FileFormat};
