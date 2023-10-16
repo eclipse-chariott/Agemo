@@ -205,6 +205,13 @@ enlistment's root in a terminal window:
 mosquitto -c ./pub-sub-service/src/connectors/mosquitto.conf
 ```
 
+To run the configuration file by default, copy the configuration file to the mosquitto config
+folder from the enlistment's root in a terminal window:
+
+```shell
+sudo cp ./pub-sub-service/src/connectors/mosquitto.conf /etc/mosquitto/conf.d/
+```
+
 ### Start the Pub Sub Service
 
 Then start up the Pub Sub Service project with the following command from the enlistment's root
@@ -359,6 +366,53 @@ root directory:
     ```conf
     unqualified-search-registries = ["docker.io"]
     ```
+
+## Running as Systemd Service
+
+### Setup Service for Systemd
+
+Included in this repo is the `agemo.service` file that is the configuration for systemd.
+
+1. Copy the service file to `/etc/systemd/system`:
+
+    ```shell
+    sudo cp agemo.service /etc/systemd/system/
+    ```
+
+1. Update the copied service file with the absolute path to the enlistment's root:
+
+    ```
+    WorkingDirectory={path to repo}
+    ex. WorkingDirectory=/home/user1/code/sdv/Agemo
+    ```
+
+1. Enable the service:
+
+    ```shell
+    sudo systemctl enable agemo.service
+    ```
+
+### Run the Service
+
+To start the service, run:
+
+```shell
+sudo systemctl start agemo
+```
+
+The service file is configured to restart the agemo service if it encounters any failure.
+
+To see the output of the service, run:
+
+```shell
+sudo journalctl -f -u agemo
+```
+
+To stop the service, run:
+
+```shell
+sudo systemctl stop agemo
+```
 
 ## Trademarks
 

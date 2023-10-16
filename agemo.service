@@ -1,0 +1,17 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+# SPDX-License-Identifier: MIT
+ 
+[Unit]
+Description=Pub Sub Topic Management Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=<<value>>
+ExecStart=<<value>>
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target # Will start service up on boot.
