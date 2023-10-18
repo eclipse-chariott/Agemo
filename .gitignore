@@ -14,3 +14,6 @@ Cargo.lock
 
 # Do not include .env files for Docker.
 /*.env
+
+# Ignore config files
+/config/

@@ -10,8 +10,8 @@ use config::{Config, File, FileFormat};
 use log::error;
 use serde_derive::{Deserialize, Serialize};
 
-const CONFIG_FILE: &str = "target/debug/pub_sub_service_settings";
-const CONSTANTS_FILE: &str = "target/debug/constants_settings";
+const CONFIG_FILE: &str = "./config/pub_sub_service_settings";
+const CONSTANTS_FILE: &str = "./config/constants_settings";
 
 /// If feature 'containerize' is set, will modify a localhost uri to point to container's localhost
 /// DNS alias. Otherwise, returns the uri as a String.
