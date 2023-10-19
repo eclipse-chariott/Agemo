@@ -12,7 +12,7 @@
 # Create a stage for building the application.
 
 ARG RUST_VERSION=1.72.1
-FROM rust:${RUST_VERSION}-slim-bullseye AS build
+FROM docker.io/library/rust:${RUST_VERSION}-slim-bullseye AS build
 ARG APP_NAME=pub-sub-service
 WORKDIR /app
 
@@ -49,7 +49,7 @@ RUN cp ./target/release/"${APP_NAME}" /app/service
 # most recent version of that tag when you build your Dockerfile. If
 # reproducability is important, consider using a digest
 # (e.g., debian@sha256:ac707220fbd7b67fc19b112cee8170b41a9e97f703f588b2cdbbcdcecdd8af57).
-FROM debian:bullseye-slim AS final
+FROM docker.io/library/debian:bullseye-slim AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
