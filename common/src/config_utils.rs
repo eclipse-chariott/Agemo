@@ -35,8 +35,7 @@ where
     let config_path = match env::var(AGEMO_HOME) {
         Ok(agemo_home) => {
             // The path below resolves to $AGEMO_HOME/config/
-            Path::new(&agemo_home)
-                .join(CONFIG_DIR)
+            Path::new(&agemo_home).join(CONFIG_DIR)
         }
         Err(_) => {
             // The path below resolves to $HOME/.agemo/config/
@@ -56,8 +55,7 @@ where
     let default_config_file_path = config_path.join(default_config_file);
 
     // The path below resolves to {current_dir}/{overrides_file}.
-    let current_dir_config_file_path = env::current_dir()?
-        .join(overrides_file.clone());
+    let current_dir_config_file_path = env::current_dir()?.join(overrides_file.clone());
 
     // The path below resolves to {config_path}/{overrides_file}
     let overrides_config_file_path = config_path.join(overrides_file);

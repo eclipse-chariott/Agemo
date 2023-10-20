@@ -93,8 +93,5 @@ pub fn load_settings<T>(
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    config_utils::read_from_files(
-        config_file_path,
-        config_utils::YAML_EXT,
-    )
+    config_utils::read_from_files(config_file_path, config_utils::YAML_EXT)
 }

@@ -75,10 +75,7 @@ pub fn load_config<T>(config_file_name: &str) -> Result<T, Box<dyn std::error::E
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    common::config_utils::read_from_files(
-        config_file_name,
-        config_utils::YAML_EXT,
-    )
+    config_utils::read_from_files(config_file_name, config_utils::YAML_EXT)
 }
 
 /// Load the settings.
