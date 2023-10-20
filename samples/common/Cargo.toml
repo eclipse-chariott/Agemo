@@ -13,6 +13,7 @@ async-std = { workspace = true }
 async-trait = { workspace = true }
 config = { workspace = true }
 ctrlc = { workspace = true }
+home = { workspace = true }
 log = { workspace = true }
 samples_proto = { path = "../proto-build" }
 sample-mqtt-connector = { path = "../connectors/mqtt-five" }

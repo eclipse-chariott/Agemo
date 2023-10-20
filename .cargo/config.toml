@@ -4,3 +4,4 @@
 
 [env]
 AGEMO_HOME = { value = ".agemo", relative = true }
+AGEMO_SAMPLES_HOME = { value = ".agemo-samples", relative = true }

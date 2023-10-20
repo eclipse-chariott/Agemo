@@ -22,3 +22,6 @@ not running the service with `cargo run`, this defaults to:
 Because the config is layered, the overrides can be partially defined and only specify the
 top-level configuration fields that should be overridden. Anything not specified in an override
 file will use the default value.
+
+Samples handles configuration in the same way, except it utilizes the `.agemo-samples` directory
+and the `$AGEMO_SAMPLES_HOME` env variable to point to that directory.

@@ -53,7 +53,7 @@ generated through the service. This removes the topic from the active topics lis
 deletion message to all subscribers of the topic, to inform those applications that there will not
 be any more messages over that topic.
 
-## Running with Chariott
+## Running the Pub Sub Service with Chariott
 
 The service can be run on its own or with
 [Eclipse Chariott](https://github.com/eclipse-chariott/chariott). The way the service interacts
@@ -61,7 +61,7 @@ with Chariott is through registering itself as a provider that can be discovered
 Chariott service. Publishers then communicate with Chariott to get connection information to the
 service and directly communicate.
 
-### Configure Service to use Chariott
+### Configure Pub Sub Service to use Chariott
 
 1. Copy the `pub_sub_service_settings.yaml` template to [.agemo/config](../.agemo/config/) if the
 file does not already exist. From the enlistment root, run:
@@ -89,7 +89,7 @@ file does not already exist. From the enlistment root, run:
     This will override the default configuration and tell the service to interact with Chariott.
     see [config overrides](../docs/config-overrides.md) for more information.
 
-### Run the Service with Chariott
+### Run the Pub Sub Service with Chariott
 
 One can see an example of a publisher and subscriber interacting with Chariott and the Pub Sub
 Service in the [Chariott Enabled Samples](../samples/README.md#for-chariott-enabled-samples), but
