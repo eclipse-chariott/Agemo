@@ -351,15 +351,6 @@ root directory:
     podman ps -f ancestor=localhost/pub_sub_service:latest --format="{{.Names}}" | xargs podman stop
     ```
 
-#### Notes
-
-1. By default, podman does not recognize docker images for dockerfile. To fix this, one can add the
-`docker.io` registry to `/etc/containers/registries.conf` by changing the following field:
-
-    ```conf
-    unqualified-search-registries = ["docker.io"]
-    ```
-
 ## Trademarks
 
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
