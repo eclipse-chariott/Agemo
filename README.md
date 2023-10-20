@@ -115,80 +115,10 @@ cargo test
 
 ## Configuration Setup
 
-There are two template files that must be created in `target/debug` and filled out before the
-service can be run. Below is the minimal set of configuration needed to start the service:
-
-### Constants Configuration File
-
-[constants_settings.yaml](./pub-sub-service/template/constants_settings.yaml)
-
-```yaml
-#
-# Constants Configuration
-#
-
-### Communication Constants
-
-# Pub Sub Service topic deletion message.
-topic_deletion_message: "TOPIC DELETED"
-
-# Constant for gRPC kind.
-grpc_kind: "grpc+proto"
-
-# Constant for mqtt kind.
-mqtt_v5_kind: "mqtt_v5"
-
-# Constant for the Pub Sub service API reference.
-pub_sub_reference: "pubsub.v1.pubsub.proto"
-
-# Retry interval for connections.
-retry_interval_secs: 5
-
-###
-```
-
->**NOTE**: For most use cases, this file doesn't need to be modified and can be copied as-is from
-           the `/template` directory to the `/target/debug` directory.
-
-### Pub Sub Service Configuration File
-
-[pub_sub_service_settings.yaml](./pub-sub-service/template/pub_sub_service_settings.yaml)
-
-```yaml
-#
-# Pub Sub Service Settings
-#
-
-# The IP address and port number that the Pub Sub Service listens on for requests.
-# Example: "0.0.0.0:80"
-pub_sub_authority: "0.0.0.0:50051"
-
-# The URI of the messaging service used to facilitate publish and subscribe functionality.
-# Example: "mqtt://0.0.0.0:1883"
-messaging_uri: "mqtt://0.0.0.0:1883"
-
-# The URI that the Chariott Service listens on for requests.
-# Example: "http://0.0.0.0:4243"
-# chariott_uri: <<value>>
-
-# The namespace of the Pub Sub Service.
-# Example: "sdv.pubsub"
-# namespace: <<value>>
-
-# The name of the Pub Sub Service.
-# Example: "dynamic.pubsub"
-# name: <<value>>
-
-# The version of the Pub Sub Service.
-# This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
-# Example: "0.1.0"
-# version: <<value>>
-```
-
-> **NOTE**: The commented out configuration settings enable Chariott communication within the
-            Pub Sub Service. See
-            [Running With Chariott](./pub-sub-service/README.md#running-with-chariott) for more
-            information.
+The service configuration is defined in [.agemo/config](.agemo/config/). The default configuration
+files will allow a user to run the service without any modification. Please read
+[config_overrides](./docs/config-overrides.md) for more information on how to modify the service's
+configuration.
 
 ## Running the Service
 
@@ -220,7 +150,7 @@ The service implements two gRPC methods defined in [pubsub.proto](./proto/pubsub
 To create a topic, execute the below command in another terminal window:
 
 ```shell
-grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/CreateTopic <<EOF
+grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ 0.0.0.0:50051 pubsub.PubSub/CreateTopic <<EOF
 {
   "publisherId": "simple_publisher_call",
   "managementCallback": "https://example_management.address",
@@ -245,7 +175,7 @@ An example of an expected response would look like:
 This created topic could then be deleted with the following command:
 
 ```shell
-grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ [::1]:50051 pubsub.PubSub/DeleteTopic <<EOF
+grpcurl -proto ./proto/pubsub/v1/pubsub.proto -plaintext -d @ 0.0.0.0:50051 pubsub.PubSub/DeleteTopic <<EOF
 {
   "topic": "09285f6c-9a86-49db-9159-0d91f8f4d3bb"
 }
@@ -266,6 +196,10 @@ see more full featured examples in
 [Running the Simple Samples](./samples/README.md#running-the-simple-samples).
 
 ## Running in a Container
+
+Below are the steps for running the service in a container. Note that the configuration files used
+by the containerized service are cloned from [.agemo/config](.agemo/config/) defined in the
+project's root.
 
 ### Docker
 

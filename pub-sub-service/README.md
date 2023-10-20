@@ -87,6 +87,7 @@ file does not already exist. From the enlistment root, run:
     ```
 
     This will override the default configuration and tell the service to interact with Chariott.
+    see [config overrides](../docs/config-overrides.md) for more information.
 
 ### Run the Service with Chariott
 
