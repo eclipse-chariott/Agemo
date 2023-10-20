@@ -15,5 +15,11 @@ Cargo.lock
 # Do not include .env files for Docker.
 /*.env
 
-# Ignore config files
-/config/
+# Ignore .agemo directory
+/.agemo/config/*
+
+# Allow template config files
+!/.agemo/config/template/*
+
+# Allow default config files
+!/.agemo/config/*.default.*

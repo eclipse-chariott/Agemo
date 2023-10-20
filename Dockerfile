@@ -14,7 +14,7 @@
 ARG RUST_VERSION=1.72.1
 FROM rust:${RUST_VERSION}-slim-bullseye AS build
 ARG APP_NAME=pub-sub-service
-WORKDIR /app
+WORKDIR /sdv
 
 COPY ./ .
 
@@ -36,7 +36,7 @@ RUN sanitized=$(echo "${APP_NAME}" | tr -dc '^[a-zA-Z_0-9-]+$'); \
 RUN cargo build --features containerize --release -p "${APP_NAME}"
 
 # Copy the built application to working directory.
-RUN cp ./target/release/"${APP_NAME}" /app/service
+RUN cp ./target/release/"${APP_NAME}" /sdv/service
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -66,9 +66,13 @@ USER appuser
 
 WORKDIR /sdv
 
+ENV AGEMO_HOME=/sdv/.agemo
+
 # Copy the executable from the "build" stage.
-COPY --from=build /app/service /sdv/
-COPY --from=build /app/target/debug/*.yaml /sdv/target/debug/
+COPY --from=build /sdv/service /sdv/
+
+# Conditionally copy override config if present.
+COPY --from=build /sdv/*.agemo/config/ /sdv/.agemo/config/
 
 # Expose the port that the application listens on.
 EXPOSE 50051

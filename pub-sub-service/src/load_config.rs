@@ -6,12 +6,12 @@
 
 use std::env;
 
-use config::{Config, File, FileFormat};
+use common::config_utils;
 use log::error;
 use serde_derive::{Deserialize, Serialize};
 
-const CONFIG_FILE: &str = "./config/pub_sub_service_settings";
-const CONSTANTS_FILE: &str = "./config/constants_settings";
+const CONFIG_FILE_NAME: &str = "pub_sub_service_settings";
+const CONSTANTS_FILE_NAME: &str = "constants";
 
 /// If feature 'containerize' is set, will modify a localhost uri to point to container's localhost
 /// DNS alias. Otherwise, returns the uri as a String.
@@ -67,23 +67,26 @@ pub struct Settings {
     pub version: Option<String>,
 }
 
+/// Load a configuration file.
+///
+/// # Arguments
+/// * `config_file_name` - Name of the config file to load settings from.
+pub fn load_config<T>(config_file_name: &str) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
+where
+    T: for<'de> serde::Deserialize<'de>,
+{
+    common::config_utils::read_from_files(
+        config_file_name,
+        config_utils::YAML_EXT,
+    )
+}
+
 /// Load the settings.
 ///
-/// Will attempt to load the settigns from the service configuration file. If the necessary config
+/// Will attempt to load the settings from the service configuration file. If the necessary config
 /// is set will run in Chariott enabled mode, otherwise the service will run in standalone mode.
 pub fn load_settings() -> Result<Settings, Box<dyn std::error::Error + Send + Sync>> {
-    let config = Config::builder()
-        .add_source(File::new(CONFIG_FILE, FileFormat::Yaml))
-        .build()
-        .map_err(|error| {
-            error!("Unable to load file `{CONFIG_FILE}`. Failed with error: {error}.");
-            error
-        })?;
-
-    let mut settings: Settings = config.try_deserialize().map_err(|error| {
-        error!("Deserialize settings from `{CONFIG_FILE}` failed with error: {error}.");
-        error
-    })?;
+    let mut settings: Settings = load_config(CONFIG_FILE_NAME)?;
 
     if settings.chariott_uri.is_some() {
         // Get version of the service for Chariott registration if not defined.
@@ -118,18 +121,5 @@ pub fn load_constants<T>() -> Result<T, Box<dyn std::error::Error + Send + Sync>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    let config = Config::builder()
-        .add_source(File::new(CONSTANTS_FILE, FileFormat::Yaml))
-        .build()
-        .map_err(|error| {
-            error!("Unable to load file `{CONSTANTS_FILE}`. Failed with error: {error}.");
-            error
-        })?;
-
-    let settings: T = config.try_deserialize().map_err(|error| {
-        error!("Deserialize settings from `{CONSTANTS_FILE}` failed with error: {error}.");
-        error
-    })?;
-
-    Ok(settings)
+    load_config(CONSTANTS_FILE_NAME)
 }
