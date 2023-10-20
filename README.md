@@ -13,7 +13,7 @@
 <p align="center">
   <a href="#getting-started">Getting Started</a> •
   <a href="#configuration-setup">Configuration Setup</a> •
-  <a href="#running-the-service">Running the Service</a> •
+  <a href="#running-the-pub-sub-service">Running the Pub Sub Service</a> •
   <a href="#running-in-a-container">Running in a Container</a>
 </p>
 
@@ -120,7 +120,7 @@ files will allow a user to run the service without any modification. Please read
 [config_overrides](./docs/config-overrides.md) for more information on how to modify the service's
 configuration.
 
-## Running the Service
+## Running the Pub Sub Service
 
 Below are the steps to run the Pub Sub Service in its most simple form. The service is gRPC based,
 and the quickest way to interact with the services is through the use of the
@@ -144,7 +144,7 @@ in a separate terminal window:
 cargo run -p pub-sub-service
 ```
 
-### Interacting with the service
+### Interacting with the Pub Sub Service
 
 The service implements two gRPC methods defined in [pubsub.proto](./proto/pubsub/v1/pubsub.proto).
 To create a topic, execute the below command in another terminal window:

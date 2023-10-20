@@ -6,7 +6,7 @@
 
 # The URI that the Pub Sub Service listens on for requests.
 # Example: "http://0.0.0.0:50051"
-pub_sub_uri: "http://0.0.0.0:50051"
+pub_sub_uri: "http://0.0.0.0:50051" # DevSkim: ignore DS137138
 
 ###
 
