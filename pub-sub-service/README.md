@@ -67,7 +67,7 @@ service and directly communicate.
 file does not already exist. From the enlistment root, run:
 
     ```shell
-    cp ./.agemo/template/pub_sub_service_settings.yaml ./.agemo/config/
+    cp ./.agemo/config/template/pub_sub_service_settings.yaml ./.agemo/config/
     ```
 
 2. Uncomment and set the following values:

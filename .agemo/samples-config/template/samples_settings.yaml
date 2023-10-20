@@ -7,7 +7,7 @@
 # The URI that the Chariott Service listens on for requests.
 # Needed for any Chariott enabled examples.
 # Example: "http://0.0.0.0:50000"
-chariott_uri: <<value>>
+# chariott_uri: <<value>>
 
 ###
 
@@ -15,12 +15,12 @@ chariott_uri: <<value>>
 
 # The URI that the Pub Sub Service listens on for requests.
 # Example: "http://0.0.0.0:50051"
-pub_sub_uri: <<value>>
+# pub_sub_uri: <<value>>
 
 # The namespace the Pub Sub Service registers under in Chariott.
 # Needed for any Chariott enabled examples.
 # Example: "sdv.pubsub"
-pub_sub_namespace: <<value>>
+# pub_sub_namespace: <<value>>
 
 ###
 
@@ -28,27 +28,27 @@ pub_sub_namespace: <<value>>
 
 # The IP address and port number that the service listens on for requests.
 # Example: "0.0.0.0:80"
-publisher_authority: <<value>>
+# publisher_authority: <<value>>
 
 # The service identifier for the publisher service used when registering
 # with Chariott.
 # Needed for any Chariott enabled examples.
-publisher_identifier:
+# publisher_identifier:
 
   # The namespace of the service.
   # Example: "sdv.publisher"
-  namespace: <<value>>
+  # namespace: <<value>>
 
   # The name of the service, which can be different from the namespace.
   # Example: "dynamic.publisher"
-  name: <<value>>
+  # name: <<value>>
 
   # The version of the service.
   # Example: "0.1.0"
-  version: <<value>>
+  # version: <<value>>
 
 # Constant for the publisher service API reference.
 # Example: "sample_publisher.v1.sample_publisher.proto"
-publisher_reference: <<value>>
+# publisher_reference: <<value>>
 
 ###
