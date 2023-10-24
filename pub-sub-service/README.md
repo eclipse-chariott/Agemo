@@ -74,7 +74,7 @@ file does not already exist. From the enlistment root, run:
 
     ```yaml
     # The URI that the Chariott service listens on for requests.
-    # Example: "http://0.0.0.0:4243"
+    # Example: "http://0.0.0.0:50000"
     chariott_uri: "http://0.0.0.0:50000"
 
     # The namespace of the Pub Sub service.

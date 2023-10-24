@@ -3,7 +3,7 @@
 #
 
 # The IP address and port number that the Pub Sub Service listens on for requests.
-# Example: "0.0.0.0:80"
+# Example: "0.0.0.0:50051"
 pub_sub_authority: "0.0.0.0:50051"
 
 # The URI of the messaging service used to facilitate publish and subscribe functionality.

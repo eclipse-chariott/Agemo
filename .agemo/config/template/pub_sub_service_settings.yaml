@@ -3,7 +3,7 @@
 #
 
 # The IP address and port number that the Pub Sub Service listens on for requests.
-# Example: "0.0.0.0:80"
+# Example: "0.0.0.0:50051"
 # pub_sub_authority: <<value>>
 
 # The URI of the messaging service used to facilitate publish and subscribe functionality.
@@ -11,7 +11,7 @@
 # messaging_uri: <<value>>
 
 # The URI that the Chariott Service listens on for requests.
-# Example: "http://0.0.0.0:4243"
+# Example: "http://0.0.0.0:50000"
 # chariott_uri: <<value>>
 
 # The namespace of the Pub Sub Service.

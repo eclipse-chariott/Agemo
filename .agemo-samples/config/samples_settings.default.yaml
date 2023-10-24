@@ -13,7 +13,7 @@ pub_sub_uri: "http://0.0.0.0:50051" # DevSkim: ignore DS137138
 ### Publisher Service Configuration
 
 # The IP address and port number that the service listens on for requests.
-# Example: "0.0.0.0:80"
+# Example: "0.0.0.0:50061"
 publisher_authority: "0.0.0.0:50061"
 
 # Constant for the publisher service API reference.
