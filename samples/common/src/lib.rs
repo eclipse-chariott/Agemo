@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 pub mod chariott_helper;
+pub mod config_utils;
 pub mod data_generator;
 pub mod load_config;
 pub mod pub_sub_service_helper;

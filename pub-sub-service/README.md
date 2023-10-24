@@ -53,7 +53,7 @@ generated through the service. This removes the topic from the active topics lis
 deletion message to all subscribers of the topic, to inform those applications that there will not
 be any more messages over that topic.
 
-## Running with Chariott
+## Running the Pub Sub Service with Chariott
 
 The service can be run on its own or with
 [Eclipse Chariott](https://github.com/eclipse-chariott/chariott). The way the service interacts
@@ -61,61 +61,40 @@ with Chariott is through registering itself as a provider that can be discovered
 Chariott service. Publishers then communicate with Chariott to get connection information to the
 service and directly communicate.
 
-There are several configuration settings that need to be populated if the service is to be run with
-Chariott. Specifically, the `pub_sub_service_settings.yaml` configuration file should have the
-following values set:
+### Configure Pub Sub Service to use Chariott
 
-```yaml
-# The URI that the Chariott service listens on for requests.
-# Example: "http://0.0.0.0:4243"
-chariott_uri: "http://0.0.0.0:50000"
+1. Copy the `pub_sub_service_settings.yaml` template to [.agemo/config](../.agemo/config/) if the
+file does not already exist. From the enlistment root, run:
 
-# The namespace of the Pub Sub service.
-# Example: "sdv.pubsub"
-namespace: "sdv.pubsub"
+    ```shell
+    cp ./.agemo/config/template/pub_sub_service_settings.yaml ./.agemo/config/
+    ```
 
-# The name of the Pub Sub service.
-# Example: "dynamic.pubsub"
-name: "dynamic.pubsub"
-```
+2. Uncomment and set the following values:
 
-The full yaml would then look something like this:
+    ```yaml
+    # The URI that the Chariott service listens on for requests.
+    # Example: "http://0.0.0.0:50000"
+    chariott_uri: "http://0.0.0.0:50000"
 
-```yaml
-#
-# Pub Sub Service Settings
-#
+    # The namespace of the Pub Sub service.
+    # Example: "sdv.pubsub"
+    namespace: "sdv.pubsub"
 
-# The IP address and port number that the Pub Sub Service listens on for requests.
-# Example: "0.0.0.0:80"
-pub_sub_authority: "0.0.0.0:50051"
+    # The name of the Pub Sub service.
+    # Example: "dynamic.pubsub"
+    name: "dynamic.pubsub"
+    ```
 
-# The URI of the messaging service used to facilitate publish and subscribe functionality.
-# Example: "mqtt://0.0.0.0:1883"
-messaging_uri: "mqtt://0.0.0.0:1883"
+    This will override the default configuration and tell the service to interact with Chariott.
+    see [config overrides](../docs/config-overrides.md) for more information.
 
-# The URI that the Chariott Service listens on for requests.
-# Example: "http://0.0.0.0:4243"
-chariott_uri: "http://0.0.0.0:50000"
-
-# The namespace of the Pub Sub Service.
-# Example: "sdv.pubsub"
-namespace: "sdv.pubsub"
-
-# The name of the Pub Sub Service.
-# Example: "dynamic.pubsub"
-name: "dynamic.pubsub"
-
-# The version of the Pub Sub Service.
-# This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
-# Example: "0.1.0"
-# version: <<value>>
-```
+### Run the Pub Sub Service with Chariott
 
 One can see an example of a publisher and subscriber interacting with Chariott and the Pub Sub
 Service in the [Chariott Enabled Samples](../samples/README.md#for-chariott-enabled-samples), but
 to simply run the service and have it attempt registration with Chariott, run the following command
-in the enlistment's root once the above configuration has been set under `target/debug`:
+in the enlistment's root once the above configuration has been set:
 
 ```shell
 cargo run -p pub-sub-service

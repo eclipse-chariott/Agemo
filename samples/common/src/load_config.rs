@@ -4,12 +4,12 @@
 
 //! Loads configuration from external files.
 
-use config::{Config, File, FileFormat};
-use log::error;
 use serde_derive::{Deserialize, Serialize};
 
-pub const CONFIG_FILE: &str = "target/debug/samples_settings";
-pub const CONSTANTS_FILE: &str = "target/debug/constants_settings";
+use crate::config_utils;
+
+pub const CONFIG_FILE: &str = "samples_settings";
+pub const CONSTANTS_FILE: &str = "constants";
 
 /// Object that contains the necessary information for identifying a specific service.
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -93,18 +93,5 @@ pub fn load_settings<T>(
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    let config = Config::builder()
-        .add_source(File::new(config_file_path, FileFormat::Yaml))
-        .build()
-        .map_err(|error| {
-            error!("Unable to load file `{config_file_path}`. Failed with error: {error}.");
-            error
-        })?;
-
-    let settings: T = config.try_deserialize().map_err(|error| {
-        error!("Deserialize settings from `{config_file_path}` failed with error: {error}.");
-        error
-    })?;
-
-    Ok(settings)
+    config_utils::read_from_files(config_file_path, config_utils::YAML_EXT)
 }

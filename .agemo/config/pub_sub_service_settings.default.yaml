@@ -1,0 +1,11 @@
+#
+# Pub Sub Service Settings
+#
+
+# The IP address and port number that the Pub Sub Service listens on for requests.
+# Example: "0.0.0.0:50051"
+pub_sub_authority: "0.0.0.0:50051"
+
+# The URI of the messaging service used to facilitate publish and subscribe functionality.
+# Example: "mqtt://0.0.0.0:1883"
+messaging_uri: "mqtt://0.0.0.0:1883"

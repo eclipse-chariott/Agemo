@@ -3,76 +3,72 @@ Service in a dynamic way.
 
 ## Setting Up Samples Configuration
 
-In addition to copying the
-[pub_sub_service_settings.yaml](../pub-sub-service/template/pub_sub_service_settings.yaml) and the
-[constants_settings.yaml](../pub-sub-service/template/constants_settings.yaml) to `target/debug`
-as described in the [Configuration Setup](../README.md#configuration-setup), the template
-[samples_settings.yaml](./template/samples_settings.yaml) will need to be copied to `target/debug`
-and filled out. Below is an example of how to fill out the template:
+The configuration files for samples are located in [.agemo-samples/config](../.agemo-samples/config/).
 
-```yaml
-#
-# Samples Configuration
-#
+### Simple Samples
 
-### Chariott Service Configuration
+The default configuration file is setup to run the simple samples without any further modification.
 
-# The URI that the Chariott Service listens on for requests.
-# Needed for any Chariott enabled examples.
-# Example: "http://0.0.0.0:50000"
-chariott_uri: "http://0.0.0.0:50000"
+### Chariott-enabled Samples
 
-###
+To be able to run the Chariott-enabled samples, follow the below setup steps:
 
-### Pub Sub Service Configuration
+1. Copy the `samples_settings.yaml` template to [.agemo-samples/config](../.agemo-samples/config/)
+if the file does not already exist. From the enlistment root, run:
 
-# The URI that the Pub Sub Service listens on for requests.
-# Example: "http://0.0.0.0:50051"
-pub_sub_uri: "http://0.0.0.0:50051"
+   ```shell
+   cp ./.agemo-samples/config/template/samples_settings.yaml ./.agemo-samples/config/
+   ```
 
-# The namespace the Pub Sub Service registers under in Chariott.
-# Needed for any Chariott enabled examples.
-# Example: "sdv.pubsub"
-pub_sub_namespace: "sdv.pubsub"
+2. Uncomment and set the following values:
 
-###
+   ```yaml
+   #
+   # Samples Configuration
+   #
 
-### Publisher Service Configuration
+   ### Chariott Service Configuration
 
-# The IP address and port number that the service listens on for requests.
-# Example: "0.0.0.0:80"
-publisher_authority: "0.0.0.0:50061"
+   # The URI that the Chariott Service listens on for requests.
+   # Needed for any Chariott enabled examples.
+   # Example: "http://0.0.0.0:50000"
+   chariott_uri: "http://0.0.0.0:50000"
 
-# The service identifier for the publisher service used when registering
-# with Chariott.
-# Needed for any Chariott enabled examples.
-publisher_identifier:
+   ###
 
-  # The namespace of the service.
-  # Example: "sdv.publisher"
-  namespace: "sdv.publisher"
+   ### Pub Sub Service Configuration
 
-  # The name of the service, which can be different from the namespace.
-  # Example: "dynamic.publisher"
-  name: "dynamic.publisher"
+   # The namespace the Pub Sub Service registers under in Chariott.
+   # Needed for any Chariott enabled examples.
+   # Example: "sdv.pubsub"
+   pub_sub_namespace: "sdv.pubsub"
 
-  # The version of the service.
-  # Example: "0.1.0"
-  version: "0.1.0"
+   ###
 
-# Constant for the publisher service API reference.
-# Example: "sample_publisher.v1.sample_publisher.proto"
-publisher_reference: "sample_publisher.v1.sample_publisher.proto"
+   ### Publisher Service Configuration
 
-###
-```
+   # The service identifier for the publisher service used when registering
+   # with Chariott.
+   # Needed for any Chariott enabled examples.
+   publisher_identifier:
 
-> **NOTE**: Ensure that configuration that pertains to the Pub Sub Service and Chariott Service match
-            their respective service configurations.
+      # The namespace of the service.
+      # Example: "sdv.publisher"
+      namespace: "sdv.publisher"
 
-<!-- Separates the quote blocks for md -->
-> **NOTE**: If only running the simple samples, any field marked with
-            `Needed for any Chariott enabled examples` is not needed.
+      # The name of the service, which can be different from the namespace.
+      # Example: "dynamic.publisher"
+      name: "dynamic.publisher"
+
+      # The version of the service.
+      # Example: "0.1.0"
+      version: "0.1.0"
+
+   ###
+   ```
+
+   This will override the default configuration and tell the service to interact with Chariott.
+   see [config overrides](../docs/config-overrides.md) for more information.
 
 ## Running the simple samples
 
@@ -97,9 +93,9 @@ You should see simulated data flowing to the subscriber(s).
 
 To run the Chariott samples, take the following steps.
 
-1. Start the [pub-sub-service](../README.md#running-the-service) in a terminal window. If the
-   service does not start trying to connect to Chariott, ensure the configuration is correctly set
-   in [Setting Up Samples Configuration](#setting-up-samples-configuration).
+1. Follow the steps at
+[Running the Pub Sub Service with Chariott](../pub-sub-service/README.md#running-the-pub-sub-service-with-chariott)
+before starting the service.
 
     ```shell
     cargo run -p pub-sub-service

@@ -1,0 +1,7 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+# SPDX-License-Identifier: MIT
+
+[env]
+AGEMO_HOME = { value = ".agemo", relative = true }
+AGEMO_SAMPLES_HOME = { value = ".agemo-samples", relative = true }

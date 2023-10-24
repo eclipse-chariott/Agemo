@@ -6,9 +6,6 @@
 debug/
 target/
 
-# Allow configuration files
-!target/debug/*.yaml
-
 .devcontainer/
 .github/
 devops/

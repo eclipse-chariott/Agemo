@@ -1,0 +1,17 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+config = { workspace = true }
+home = { workspace = true }
+log = { workspace = true }
+serde = { workspace = true }
+serde_derive = { workspace = true }
+tokio = { workspace = true }

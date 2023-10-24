@@ -1,0 +1,23 @@
+#
+# Samples Configuration
+#
+
+### Pub Sub Service Configuration
+
+# The URI that the Pub Sub Service listens on for requests.
+# Example: "http://0.0.0.0:50051"
+pub_sub_uri: "http://0.0.0.0:50051" # DevSkim: ignore DS137138
+
+###
+
+### Publisher Service Configuration
+
+# The IP address and port number that the service listens on for requests.
+# Example: "0.0.0.0:50061"
+publisher_authority: "0.0.0.0:50061"
+
+# Constant for the publisher service API reference.
+# Example: "sample_publisher.v1.sample_publisher.proto"
+publisher_reference: "sample_publisher.v1.sample_publisher.proto"
+
+###

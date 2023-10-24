@@ -5,6 +5,7 @@
 [workspace]
 resolver = "2"
 members = [
+  "common",
   "pub-sub-service",
   "samples/chariott-publisher",
   "samples/chariott-subscriber",
@@ -20,6 +21,7 @@ config = "0.13.3"
 ctrlc = { version = "3.0", features = ["termination"] }
 env_logger = "0.10"
 futures = "0.3"
+home = "0.5.5"
 log = "^0.4"
 paho-mqtt = "0.12"
 prost = "0.12"

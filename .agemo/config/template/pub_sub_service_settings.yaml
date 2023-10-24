@@ -3,24 +3,24 @@
 #
 
 # The IP address and port number that the Pub Sub Service listens on for requests.
-# Example: "0.0.0.0:80"
-pub_sub_authority: <<value>>
+# Example: "0.0.0.0:50051"
+# pub_sub_authority: <<value>>
 
 # The URI of the messaging service used to facilitate publish and subscribe functionality.
 # Example: "mqtt://0.0.0.0:1883"
-messaging_uri: <<value>>
+# messaging_uri: <<value>>
 
 # The URI that the Chariott Service listens on for requests.
-# Example: "http://0.0.0.0:4243"
-chariott_uri: <<value>>
+# Example: "http://0.0.0.0:50000"
+# chariott_uri: <<value>>
 
 # The namespace of the Pub Sub Service.
 # Example: "sdv.pubsub"
-namespace: <<value>>
+# namespace: <<value>>
 
 # The name of the Pub Sub Service.
 # Example: "dynamic.pubsub"
-name: <<value>>
+# name: <<value>>
 
 # The version of the Pub Sub Service.
 # This is gathered from the cargo.toml file, but can be overwritten here if uncommented.
