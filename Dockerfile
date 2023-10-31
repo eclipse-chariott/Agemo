@@ -62,6 +62,14 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
+# Create and add user ownership to config directory.
+RUN mkdir -p /sdv/.agemo/config
+RUN chown appuser /sdv/.agemo/config
+
+# Create mnt directory to copy override configs into.
+RUN mkdir -p /mnt/config
+
 USER appuser
 
 WORKDIR /sdv
@@ -71,11 +79,14 @@ ENV AGEMO_HOME=/sdv/.agemo
 # Copy the executable from the "build" stage.
 COPY --from=build /sdv/service /sdv/
 
-# Conditionally copy override config if present.
-COPY --from=build /sdv/*.agemo/config/ /sdv/.agemo/config/
+# Copy startup script. 
+COPY --from=build /sdv/container_startup.sh /sdv/container_startup.sh
+
+# Copy default configs.
+COPY --from=build /sdv/.agemo/config/ /sdv/.agemo/config/
 
 # Expose the port that the application listens on.
 EXPOSE 50051
 
 # What the container should run when it is started.
-CMD ["/sdv/service"]
+CMD ["/sdv/container_startup.sh"]

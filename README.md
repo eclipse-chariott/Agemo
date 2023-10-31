@@ -197,9 +197,9 @@ see more full featured examples in
 
 ## Running in a Container
 
-Below are the steps for running the service in a container. Note that the configuration files used
-by the containerized service are cloned from [.agemo/config](.agemo/config/) defined in the
-project's root.
+Below are the steps for running the service in a container. Note that the default configuration
+files used by the containerized service are cloned from [.agemo/config](.agemo/config/) defined in
+the project's root.
 
 ### Docker
 
@@ -243,6 +243,23 @@ command in the project root directory:
 
     ```shell
     docker stop pub_sub_service
+    ```
+
+#### Running in Docker with overrided configuration
+
+Follow the steps in [Running in Docker](#running-in-docker) to build the container.
+
+1. To run the container with overrided configuration, create your config files and set the path to
+the files to an environment variable called CONFIG_HOME:
+
+    ```shell
+    export CONFIG_HOME={path to directory containing config file}
+    ```
+
+1. Then run the container with the following command:
+
+    ```shell
+    docker -v ${CONFIG_HOME}:/mnt/config run --name pub_sub_service -p 50051:50051 --env-file=docker.env --add-host=host.docker.internal:host-gateway -it --rm pub_sub_service
     ```
 
 ### Podman
