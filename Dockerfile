@@ -79,7 +79,7 @@ ENV AGEMO_HOME=/sdv/.agemo
 # Copy the executable from the "build" stage.
 COPY --from=build /sdv/service /sdv/
 
-# Copy startup script. 
+# Copy startup script.
 COPY --from=build /sdv/container_startup.sh /sdv/container_startup.sh
 
 # Copy default configs.
