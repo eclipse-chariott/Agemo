@@ -245,11 +245,11 @@ command in the project root directory:
     docker stop pub_sub_service
     ```
 
-#### Running in Docker with overrided configuration
+#### Running in Docker with overriden configuration
 
 Follow the steps in [Running in Docker](#running-in-docker) to build the container.
 
-1. To run the container with overrided configuration, create your config file and set an
+1. To run the container with overriden configuration, create your config file and set an
 environment variable called CONFIG_HOME to the path to the config file:
 
     ```shell
@@ -302,11 +302,11 @@ root directory:
     podman ps -f ancestor=localhost/pub_sub_service:latest --format="{{.Names}}" | xargs podman stop
     ```
 
-#### Running in Podman with overrided configuration
+#### Running in Podman with overriden configuration
 
 Follow the steps in [Running in Podman](#running-in-podman) to build the container.
 
-1. To run the container with overrided configuration, create your config file and set an
+1. To run the container with overriden configuration, create your config file and set an
 environment variable called CONFIG_HOME to the path to the config file:
 
     ```shell
