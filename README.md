@@ -249,8 +249,8 @@ command in the project root directory:
 
 Follow the steps in [Running in Docker](#running-in-docker) to build the container.
 
-1. To run the container with overrided configuration, create your config files and set the path to
-the files to an environment variable called CONFIG_HOME:
+1. To run the container with overrided configuration, create your config file and set an
+environment variable called CONFIG_HOME to the path to the config file:
 
     ```shell
     export CONFIG_HOME={path to directory containing config file}
@@ -300,6 +300,23 @@ root directory:
 
     ```shell
     podman ps -f ancestor=localhost/pub_sub_service:latest --format="{{.Names}}" | xargs podman stop
+    ```
+
+#### Running in Podman with overrided configuration
+
+Follow the steps in [Running in Podman](#running-in-podman) to build the container.
+
+1. To run the container with overrided configuration, create your config file and set an
+environment variable called CONFIG_HOME to the path to the config file:
+
+    ```shell
+    export CONFIG_HOME={path to directory containing config file}
+    ```
+
+1. Then run the container with the following command:
+
+    ```shell
+    podman run --mount=type=bind,src=${CONFIG_HOME},dst=/mnt/config,ro=true -p 50051:50051 --env-file=podman.env --network=slirp4netns:allow_host_loopback=true localhost/pub_sub_service
     ```
 
 ## Trademarks
