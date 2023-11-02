@@ -259,7 +259,7 @@ environment variable called CONFIG_HOME to the path to the config file:
 1. Then run the container with the following command:
 
     ```shell
-    docker -v ${CONFIG_HOME}:/mnt/config run --name pub_sub_service -p 50051:50051 --env-file=docker.env --add-host=host.docker.internal:host-gateway -it --rm pub_sub_service
+    docker run -v ${CONFIG_HOME}:/mnt/config --name pub_sub_service -p 50051:50051 --env-file=docker.env --add-host=host.docker.internal:host-gateway -it --rm pub_sub_service
     ```
 
 ### Podman
