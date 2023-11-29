@@ -162,3 +162,14 @@ until the Pub Sub Service registers.
 
 All services will retry every 5 seconds when attempting connection to Chariott until the Chariott
 service is up and running.
+
+## Running the samples in a Container
+
+Please refer to [containers.md](../docs/containers.md) for instructions on how to build and run the
+sample applications. All the samples use the same Dockerfile so the build arg `APP_NAME` will need
+to be set when building the sample application image. For the Chariott-enabled samples, one may
+need to override the configuration. Please see
+[Running in Docker with Overridden Configuration](../docs/containers.md#running-in-docker-with-overridden-configuration)
+and
+[Running in Podman with Overridden Configuration](../docs/containers.md#running-in-podman-with-overridden-configuration)
+for more information.

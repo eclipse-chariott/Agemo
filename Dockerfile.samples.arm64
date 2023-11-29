@@ -13,7 +13,7 @@
 
 ARG RUST_VERSION=1.72.1
 FROM docker.io/library/rust:${RUST_VERSION}-slim-bullseye AS build
-ARG APP_NAME=pub-sub-service
+ARG APP_NAME=simple-publisher
 WORKDIR /sdv
 
 COPY ./ .
@@ -23,7 +23,8 @@ RUN apt update && apt upgrade -y && apt install -y \
     cmake \
     libssl-dev \
     pkg-config \
-    protobuf-compiler
+    protobuf-compiler \
+    gcc-aarch64-linux-gnu
 
 # Check that APP_NAME argument is valid.
 RUN sanitized=$(echo "${APP_NAME}" | tr -dc '^[a-zA-Z_0-9-]+$'); \
@@ -32,11 +33,13 @@ RUN sanitized=$(echo "${APP_NAME}" | tr -dc '^[a-zA-Z_0-9-]+$'); \
     exit 1; \
 }
 
+RUN rustup target add aarch64-unknown-linux-gnu
+
 # Build the application with the 'containerize' feature.
-RUN cargo build --release -p "${APP_NAME}"
+RUN cargo build --release --target=aarch64-unknown-linux-gnu -p "${APP_NAME}"
 
 # Copy the built application to working directory.
-RUN cp ./target/release/"${APP_NAME}" /sdv/service
+RUN cp ./target/aarch64-unknown-linux-gnu/release/"${APP_NAME}" /sdv/service
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -49,7 +52,7 @@ RUN cp ./target/release/"${APP_NAME}" /sdv/service
 # most recent version of that tag when you build your Dockerfile. If
 # reproducability is important, consider using a digest
 # (e.g., debian@sha256:ac707220fbd7b67fc19b112cee8170b41a9e97f703f588b2cdbbcdcecdd8af57).
-FROM docker.io/library/debian:bullseye-slim AS final
+FROM docker.io/arm64v8/debian:bullseye-slim AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
@@ -74,7 +77,7 @@ USER appuser
 
 WORKDIR /sdv
 
-ENV AGEMO_HOME=/sdv/.agemo
+ENV AGEMO_SAMPLES_HOME=/sdv/.agemo
 
 # Copy the executable from the "build" stage.
 COPY --from=build /sdv/service /sdv/
@@ -83,10 +86,7 @@ COPY --from=build /sdv/service /sdv/
 COPY --from=build /sdv/container_startup.sh /sdv/container_startup.sh
 
 # Copy default configs.
-COPY --from=build /sdv/.agemo/config/ /sdv/.agemo/config/
-
-# Expose the port that the application listens on.
-EXPOSE 50051
+COPY --from=build /sdv/.agemo-samples/config/ /sdv/.agemo/config/
 
 # What the container should run when it is started.
 CMD ["/sdv/container_startup.sh"]

@@ -28,5 +28,5 @@ url = { workspace = true }
 uuid = { workspace = true, features = [ "v4", "fast-rng", "macro-diagnostics"] }
 yaml-rust = { workspace = true }
 
-[features]
-containerize = []
+[target.'cfg(target_arch = "aarch64")'.dependencies]
+paho-mqtt = { workspace = true, features = ["vendored-ssl"] }
