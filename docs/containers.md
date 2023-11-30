@@ -1,12 +1,16 @@
 ## Containers
 
-### Dockerfiles
+This repository provides several Dockerfiles to enable building of OCI container images. This
+document has instructions for building and running the provided Dockerfiles in
+[Docker](#docker-containers) and [Podman](#podman-containers). Refer to the
+[Dockerfiles](#dockerfiles) section to select the appropriate Dockerfile.
 
-This repository currently provides the following Dockerfiles:
+### Dockerfiles
 
 #### Pub Sub Service
 
-- [Dockerfile](../Dockerfile) - Dockerfile used to build the `Pub Sub Service`.
+- [Dockerfile.amd64](../Dockerfile.amd64) - Dockerfile used to build the `Pub Sub Service` for the
+x86-64 architecture.
 - [Dockerfile.arm64](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for the
 aarch64 architecture.
 
@@ -15,15 +19,15 @@ in the project's root.
 
 #### Mosquitto MQTT Broker
 
-- [Dockerfile.mosquitto](../Dockerfile.mosquitto) - Dockerfile used to build the
-`Mosquitto MQTT Broker` with the appropriate configuration.
+- [Dockerfile.mosquitto.amd64](../Dockerfile.mosquitto.amd64) - Dockerfile used to build the
+`Mosquitto MQTT Broker` with the appropriate configuration for the x86-64 architecture.
 - [Dockerfile.mosquitto.arm64](../Dockerfile.mosquitto.arm64) - Dockerfile used to build the
 `Mosquitto MQTT Broker` with the appropriate configuration for the aarch64 architecture.
 
 #### Sample Applications
 
-- [Dockerfile.samples](../Dockerfile.samples) - Dockerfile used to build one of the sample
-applications.
+- [Dockerfile.samples.amd64](../Dockerfile.samples.amd64) - Dockerfile used to build one of the
+sample applications for the x86-64 architecture.
 - [Dockerfile.samples.arm64](../Dockerfile.samples.arm64) - Dockerfile used to build one of the
 sample applications for the aarch64 architecture.
 
@@ -50,7 +54,7 @@ Dockerfile:
     For example, to build an image for the `pub-sub-service` project:
 
     ```shell
-    docker build -t pub_sub_service -f Dockerfile .
+    docker build -t pub_sub_service -f Dockerfile.amd64 .
     ```
 
     Or to build an image for the `chariott-publisher` sample for aarch64:
@@ -136,7 +140,7 @@ Dockerfile:
     For example, to build an image for the `pub-sub-service` project:
 
     ```shell
-    podman build -t pub_sub_service -f Dockerfile .
+    podman build -t pub_sub_service -f Dockerfile.amd64 .
     ```
 
     Or to build an image for the `chariott-publisher` sample for aarch64:

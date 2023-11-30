@@ -8,6 +8,6 @@
 set -e
 
 # Copy any configuration files present to service configuration.
-cp -rn /mnt/config /sdv/.agemo
+cp -rf /mnt/config /sdv/.agemo
 
 /sdv/service

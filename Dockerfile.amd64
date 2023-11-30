@@ -12,11 +12,20 @@
 # Create a stage for building the application.
 
 ARG RUST_VERSION=1.72.1
-FROM docker.io/library/rust:${RUST_VERSION}-slim-bullseye AS build
 ARG APP_NAME=pub-sub-service
+ARG UID=10001
+
+FROM docker.io/library/rust:${RUST_VERSION}-slim-bullseye AS build
+ARG APP_NAME
 WORKDIR /sdv
 
 COPY ./ .
+
+# Check that APP_NAME argument is valid.
+RUN /sdv/container/scripts/argument_sanitizer.sh \
+    --arg-value "${APP_NAME}" \
+    --regex "^[a-zA-Z_0-9-]+$" || \
+    ( echo "Argument sanitizer failed for ARG 'APP_NAME'"; exit 1 )
 
 # Add Build dependencies.
 RUN apt update && apt upgrade -y && apt install -y \
@@ -25,14 +34,7 @@ RUN apt update && apt upgrade -y && apt install -y \
     pkg-config \
     protobuf-compiler
 
-# Check that APP_NAME argument is valid.
-RUN sanitized=$(echo "${APP_NAME}" | tr -dc '^[a-zA-Z_0-9-]+$'); \
-[ "$sanitized" = "${APP_NAME}" ] || { \
-    echo "ARG 'APP_NAME' is invalid. APP_NAME='${APP_NAME}' sanitized='${sanitized}'"; \
-    exit 1; \
-}
-
-# Build the application with the 'containerize' feature.
+# Build the application.
 RUN cargo build --release -p "${APP_NAME}"
 
 # Copy the built application to working directory.
@@ -50,10 +52,19 @@ RUN cp ./target/release/"${APP_NAME}" /sdv/service
 # reproducability is important, consider using a digest
 # (e.g., debian@sha256:ac707220fbd7b67fc19b112cee8170b41a9e97f703f588b2cdbbcdcecdd8af57).
 FROM docker.io/library/debian:bullseye-slim AS final
+ARG UID
+
+# Copy container scripts.
+COPY ./container/scripts/*.sh /sdv/scripts/
+
+# Check that UID argument is valid.
+RUN /sdv/scripts/argument_sanitizer.sh \
+    --arg-value "${UID}" \
+    --regex "^[0-9]+$" || \
+    ( echo "Argument sanitizer failed for ARG 'UID'"; exit 1 )
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
@@ -79,9 +90,6 @@ ENV AGEMO_HOME=/sdv/.agemo
 # Copy the executable from the "build" stage.
 COPY --from=build /sdv/service /sdv/
 
-# Copy startup script.
-COPY --from=build /sdv/container_startup.sh /sdv/container_startup.sh
-
 # Copy default configs.
 COPY --from=build /sdv/.agemo/config/ /sdv/.agemo/config/
 
@@ -89,4 +97,4 @@ COPY --from=build /sdv/.agemo/config/ /sdv/.agemo/config/
 EXPOSE 50051
 
 # What the container should run when it is started.
-CMD ["/sdv/container_startup.sh"]
+CMD ["/sdv/scripts/container_startup.sh"]
