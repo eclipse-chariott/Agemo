@@ -16,4 +16,5 @@ WORKDIR /mosquitto/config
 
 COPY ./pub-sub-service/src/connectors/mosquitto.conf ./mosquitto.conf
 
+# Expose the port that the mqtt broker listens on.
 EXPOSE 1883

@@ -21,18 +21,18 @@ WORKDIR /sdv
 
 COPY ./ .
 
+# Check that APP_NAME argument is valid.
+RUN /sdv/container/scripts/argument_sanitizer.sh \
+    --arg-value "${APP_NAME}" \
+    --regex "^[a-zA-Z_0-9-]+$" || \
+    ( echo "Argument sanitizer failed for ARG 'APP_NAME'"; exit 1 )
+
 # Add Build dependencies.
 RUN apt update && apt upgrade -y && apt install -y \
     cmake \
     libssl-dev \
     pkg-config \
     protobuf-compiler
-
-# Check that APP_NAME argument is valid.
-RUN /sdv/container/scripts/argument_sanitizer.sh \
-    --arg-value "${APP_NAME}" \
-    --regex "^[a-zA-Z_0-9-]+$" || \
-    ( echo "Argument sanitizer failed for ARG 'APP_NAME'"; exit 1 )
 
 # Build the application.
 RUN cargo build --release -p "${APP_NAME}"

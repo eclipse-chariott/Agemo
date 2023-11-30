@@ -21,6 +21,12 @@ WORKDIR /sdv
 
 COPY ./ .
 
+# Check that APP_NAME argument is valid.
+RUN /sdv/container/scripts/argument_sanitizer.sh \
+    --arg-value "${APP_NAME}" \
+    --regex "^[a-zA-Z_0-9-]+$" || \
+    ( echo "Argument sanitizer failed for ARG 'APP_NAME'"; exit 1 )
+
 # Add Build dependencies.
 RUN apt update && apt upgrade -y && apt install -y \
     cmake \
@@ -28,12 +34,6 @@ RUN apt update && apt upgrade -y && apt install -y \
     pkg-config \
     protobuf-compiler \
     gcc-aarch64-linux-gnu
-
-# Check that APP_NAME argument is valid.
-RUN /sdv/container/scripts/argument_sanitizer.sh \
-    --arg-value "${APP_NAME}" \
-    --regex "^[a-zA-Z_0-9-]+$" || \
-    ( echo "Argument sanitizer failed for ARG 'APP_NAME'"; exit 1 )
 
 RUN rustup target add aarch64-unknown-linux-gnu
 
