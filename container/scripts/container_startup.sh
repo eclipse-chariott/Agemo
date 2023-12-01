@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 # Exits immediately on failure.
-set -e
+set -eu
 
 # Copy any configuration files present to service configuration.
 cp -rf /mnt/config /sdv/.agemo

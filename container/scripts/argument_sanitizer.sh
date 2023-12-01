@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MIT
 
 # Exits immediately on failure.
-set -e
+set -eu
 
 # Function to display usage information
 usage() {
