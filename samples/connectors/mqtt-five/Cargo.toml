@@ -12,3 +12,6 @@ license = "MIT"
 async-trait = { workspace = true }
 log = { workspace = true }
 paho-mqtt = { workspace = true }
+
+[target.'cfg(target_arch = "aarch64")'.dependencies]
+paho-mqtt = { workspace = true, features = ["vendored-ssl"] }
