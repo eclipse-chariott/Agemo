@@ -802,14 +802,23 @@ PERFORMANCE OF THIS SOFTWARE.
 #### Used by
 
 - [windows-sys]( https://github.com/microsoft/windows-rs ) 0.48.0
+- [windows-sys]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows-targets]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows-targets]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_aarch64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_aarch64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_aarch64_msvc]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_aarch64_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_i686_gnu]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_i686_gnu]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_i686_msvc]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_i686_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_x86_64_gnu]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_x86_64_gnu]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_x86_64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_x86_64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.52.0
 - [windows_x86_64_msvc]( https://github.com/microsoft/windows-rs ) 0.48.5
+- [windows_x86_64_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
 
 #### License
 
@@ -1044,6 +1053,7 @@ DEALINGS IN THE SOFTWARE.
 - [cfg-if]( https://github.com/alexcrichton/cfg-if ) 1.0.0
 - [cmake]( https://github.com/rust-lang/cmake-rs ) 0.1.50
 - [js-sys]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/js-sys ) 0.3.66
+- [openssl-src]( https://github.com/alexcrichton/openssl-src-rs ) 300.1.6+3.1.4
 - [openssl-sys]( https://github.com/sfackler/rust-openssl ) 0.9.96
 - [pkg-config]( https://github.com/rust-lang/pkg-config-rs ) 0.3.27
 - [rustc-demangle]( https://github.com/alexcrichton/rustc-demangle ) 0.1.23
@@ -3388,15 +3398,6 @@ SOFTWARE.
 - [simple-subscriber]( https://crates.io/crates/simple-subscriber ) 0.1.0
 - [winapi-i686-pc-windows-gnu]( https://github.com/retep998/winapi-rs ) 0.4.0
 - [winapi-x86_64-pc-windows-gnu]( https://github.com/retep998/winapi-rs ) 0.4.0
-- [windows-sys]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows-targets]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_aarch64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_aarch64_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_i686_gnu]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_i686_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_x86_64_gnu]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_x86_64_gnullvm]( https://github.com/microsoft/windows-rs ) 0.52.0
-- [windows_x86_64_msvc]( https://github.com/microsoft/windows-rs ) 0.52.0
 
 #### License
 
