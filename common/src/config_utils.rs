@@ -4,15 +4,18 @@
 
 use std::{env, path::Path};
 
-use config::File;
+use config::{File, FileFormat};
 use home::home_dir;
 use serde::Deserialize;
+use include_dir::{include_dir, Dir};
 
 pub const YAML_EXT: &str = "yaml";
 
 const CONFIG_DIR: &str = "config";
 const DOT_AGEMO_DIR: &str = ".agemo";
 const AGEMO_HOME: &str = "AGEMO_HOME";
+
+const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../.agemo/default");
 
 /// Read config from layered configuration files.
 /// Searches for `{config_file_name}.default.{config_file_ext}` as the base configuration in `$AGEMO_HOME`,
@@ -29,7 +32,12 @@ pub fn read_from_files<T>(
 where
     T: for<'a> Deserialize<'a>,
 {
-    let default_config_file = format!("{config_file_name}.default.{config_file_ext}");
+    // Get default config.
+    let default_config_filename = format!("{config_file_name}.default.{config_file_ext}");
+    let default_config_file = DEFAULT_DIR.get_file(default_config_filename).unwrap();
+    let default_config_contents_str = default_config_file.contents_utf8().unwrap();
+
+    // Get override_files
     let overrides_file = format!("{config_file_name}.{config_file_ext}");
 
     let config_path = match env::var(AGEMO_HOME) {
@@ -52,7 +60,7 @@ where
     };
 
     // The path below resolves to {config_path}/{default_config_file}.
-    let default_config_file_path = config_path.join(default_config_file);
+    // let default_config_file_path = config_path.join(default_config_file);
 
     // The path below resolves to {current_dir}/{overrides_file}.
     let current_dir_config_file_path = env::current_dir()?.join(overrides_file.clone());
@@ -61,7 +69,8 @@ where
     let overrides_config_file_path = config_path.join(overrides_file);
 
     let config_store = config::Config::builder()
-        .add_source(File::from(default_config_file_path))
+        .add_source(File::from_str(default_config_contents_str, FileFormat::Yaml))
+        //.add_source(File::from(default_config_file_path))
         .add_source(File::from(current_dir_config_file_path).required(false))
         .add_source(File::from(overrides_config_file_path).required(false))
         .build()?;
