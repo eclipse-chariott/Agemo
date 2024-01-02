@@ -73,8 +73,8 @@ where
             default_config_contents_str,
             FileFormat::Yaml,
         ))
-        .add_source(File::from(current_dir_config_file_path).required(false))
-        .add_source(File::from(overrides_config_file_path).required(false));
+        .add_source(File::from(overrides_config_file_path).required(false))
+        .add_source(File::from(current_dir_config_file_path).required(false));
 
     // Adds command line arguments if there are any.
     if let Some(args) = args {
