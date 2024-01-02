@@ -6,6 +6,7 @@
 resolver = "2"
 members = [
   "common",
+  "proc-macros",
   "pub-sub-service",
   "samples/chariott-publisher",
   "samples/chariott-subscriber",
@@ -17,6 +18,7 @@ members = [
 [workspace.dependencies]
 async-std = "1"
 async-trait = "0.1.64"
+clap = { version = "4.4.11" }
 config = "0.13.3"
 ctrlc = { version = "3.0", features = ["termination"] }
 env_logger = "0.10"
@@ -25,13 +27,16 @@ home = "0.5.5"
 include_dir = "0.7.3"
 log = "^0.4"
 paho-mqtt = "0.12"
+proc-macro2 = "1.0.70"
 prost = "0.12"
 prost-types = "0.12"
+quote = "1.0.23"
 serde = "1.0.160"
 serde_derive = "1.0.163"
 serde_json = "^1.0"
 strum = "0.25"
 strum_macros = "0.25"
+syn = { version = "2.0.40", features = ["extra-traits", "full"] }
 tokio = { version = "1.18.0", features = ["time"] }
 tonic = "0.10"
 tonic-build = "0.10"

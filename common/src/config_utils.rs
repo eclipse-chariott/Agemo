@@ -4,18 +4,19 @@
 
 use std::{env, path::Path};
 
-use config::{File, FileFormat};
+use config::{File, FileFormat, Source};
 use home::home_dir;
-use serde::Deserialize;
 use include_dir::{include_dir, Dir};
+use serde::Deserialize;
 
 pub const YAML_EXT: &str = "yaml";
 
 const CONFIG_DIR: &str = "config";
+const DEFAULT_FILE_STEM: &str = "default";
 const DOT_AGEMO_DIR: &str = ".agemo";
 const AGEMO_HOME: &str = "AGEMO_HOME";
 
-const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../.agemo/default");
+const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/config");
 
 /// Read config from layered configuration files.
 /// Searches for `{config_file_name}.default.{config_file_ext}` as the base configuration in `$AGEMO_HOME`,
@@ -25,15 +26,17 @@ const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../.agemo/default");
 /// # Arguments
 /// - `config_file_name`: The config file name. This is used to construct the file names to search for.
 /// - `config_file_ext`: The config file extension. This is used to construct the file names to search for.
-pub fn read_from_files<T>(
+pub fn read_from_files<T, A>(
     config_file_name: &str,
     config_file_ext: &str,
+    args: Option<A>,
 ) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'a> Deserialize<'a>,
+    A: Source + Send + Sync + 'static + Clone,
 {
     // Get default config.
-    let default_config_filename = format!("{config_file_name}.default.{config_file_ext}");
+    let default_config_filename = format!("{DEFAULT_FILE_STEM}.{config_file_ext}");
     let default_config_file = DEFAULT_DIR.get_file(default_config_filename).unwrap();
     let default_config_contents_str = default_config_file.contents_utf8().unwrap();
 
@@ -59,21 +62,26 @@ where
         }
     };
 
-    // The path below resolves to {config_path}/{default_config_file}.
-    // let default_config_file_path = config_path.join(default_config_file);
-
     // The path below resolves to {current_dir}/{overrides_file}.
     let current_dir_config_file_path = env::current_dir()?.join(overrides_file.clone());
 
     // The path below resolves to {config_path}/{overrides_file}
     let overrides_config_file_path = config_path.join(overrides_file);
 
-    let config_store = config::Config::builder()
-        .add_source(File::from_str(default_config_contents_str, FileFormat::Yaml))
-        //.add_source(File::from(default_config_file_path))
+    let mut config_sources = config::Config::builder()
+        .add_source(File::from_str(
+            default_config_contents_str,
+            FileFormat::Yaml,
+        ))
         .add_source(File::from(current_dir_config_file_path).required(false))
-        .add_source(File::from(overrides_config_file_path).required(false))
-        .build()?;
+        .add_source(File::from(overrides_config_file_path).required(false));
+
+    // Adds command line arguments if there are any.
+    if let Some(args) = args {
+        config_sources = config_sources.add_source(args);
+    }
+
+    let config_store = config_sources.build()?;
 
     config_store.try_deserialize().map_err(|e| e.into())
 }
