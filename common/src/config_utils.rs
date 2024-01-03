@@ -12,11 +12,11 @@ use serde::Deserialize;
 pub const YAML_EXT: &str = "yaml";
 
 const CONFIG_DIR: &str = "config";
-const DEFAULT_FILE_STEM: &str = "default";
+const DEFAULT: &str = "default";
 const DOT_AGEMO_DIR: &str = ".agemo";
 const AGEMO_HOME: &str = "AGEMO_HOME";
 
-const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/config");
+const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../config");
 
 /// Read config from layered configuration files.
 /// Searches for `{config_file_name}.default.{config_file_ext}` as the base configuration in `$AGEMO_HOME`,
@@ -36,7 +36,7 @@ where
     A: Source + Send + Sync + 'static + Clone,
 {
     // Get default config.
-    let default_config_filename = format!("{DEFAULT_FILE_STEM}.{config_file_ext}");
+    let default_config_filename = format!("{config_file_name}.{DEFAULT}.{config_file_ext}");
     let default_config_file = DEFAULT_DIR.get_file(default_config_filename).unwrap();
     let default_config_contents_str = default_config_file.contents_utf8().unwrap();
 
