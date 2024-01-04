@@ -18,7 +18,7 @@ use proc_macro::TokenStream;
 ///
 /// Given a Struct:
 ///
-///     #[[derive(ConfigSource)]]
+///     #[derive(ConfigSource)]
 ///     pub struct CmdOptions {
 ///         pub endpoint: String,
 ///         pub log_level: Option<String>,
