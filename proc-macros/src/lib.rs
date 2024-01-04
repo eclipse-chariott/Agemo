@@ -55,5 +55,5 @@ use proc_macro::TokenStream;
 /// This allows for Structs to be used as a `Source` for configuration through the `config` crate.
 #[proc_macro_derive(ConfigSource)]
 pub fn config_source(ts: TokenStream) -> TokenStream {
-    config_source::config_source(ts).into()
+    config_source::config_source(ts)
 }

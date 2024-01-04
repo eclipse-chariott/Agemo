@@ -72,8 +72,5 @@ fn path_is_option(path: &Path) -> bool {
 /// # Arguments
 /// * `ty` - Struct field type to check.
 fn is_option(ty: &Type) -> bool {
-    match ty {
-        Type::Path(typepath) if typepath.qself.is_none() && path_is_option(&typepath.path) => true,
-        _ => false,
-    }
+    matches!(ty, Type::Path(typepath) if typepath.qself.is_none() && path_is_option(&typepath.path))
 }

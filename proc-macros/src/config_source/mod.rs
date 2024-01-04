@@ -10,9 +10,8 @@ use proc_macro::TokenStream;
 use syn::{parse_macro_input, DeriveInput};
 
 use generate::generate;
+use parse::parse_input;
 use process::process;
-
-use self::parse::parse_input;
 
 /// Implements the ConfigSource derive macro
 ///
