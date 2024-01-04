@@ -8,7 +8,7 @@ use std::env;
 
 use clap::Parser;
 use common::config_utils;
-use log::error;
+use log::{debug, error};
 use proc_macros::ConfigSource;
 use serde_derive::{Deserialize, Serialize};
 
@@ -80,6 +80,7 @@ pub struct Settings {
 ///
 /// # Arguments
 /// * `config_file_name` - Name of the config file to load settings from.
+/// * `args` - Optional commandline config arguments.
 pub fn load_config<T>(
     config_file_name: &str,
     args: Option<CmdConfigOptions>,
@@ -94,17 +95,20 @@ where
 ///
 /// Will attempt to load the settings from the service configuration file. If the necessary config
 /// is set will run in Chariott enabled mode, otherwise the service will run in standalone mode.
+///
+/// # Arguments
+/// * `args` - Commandline config arguments.
 pub fn load_settings(
     args: CmdConfigOptions,
 ) -> Result<Settings, Box<dyn std::error::Error + Send + Sync>> {
     let mut settings: Settings = load_config(CONFIG_FILE_NAME, Some(args))
         .map_err(|e| {
             format!(
-                "Failed to load required configuration settings with error: {e}. See --help for more details."
+                "Failed to load required configuration settings due to error: {e}. See --help for more details."
             )
         })?;
 
-    println!("after config: {:?}", settings);
+    debug!("settings config: {:?}", settings);
 
     if settings.chariott_uri.is_some() {
         // Get version of the service for Chariott registration if not defined.

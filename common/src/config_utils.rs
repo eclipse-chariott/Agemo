@@ -19,13 +19,14 @@ const AGEMO_HOME: &str = "AGEMO_HOME";
 const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../config");
 
 /// Read config from layered configuration files.
-/// Searches for `{config_file_name}.default.{config_file_ext}` as the base configuration in `$AGEMO_HOME`,
-/// then searches for overrides named `{config_file_name}.{config_file_ext}` in the current directory and `$AGEMO_HOME`.
+/// Searches for `{config_file_name}.default.{config_file_ext}` as the base configuration,
+/// then searches for overrides named `{config_file_name}.{config_file_ext}` in `$AGEMO_HOME`.
 /// If `$AGEMO_HOME` is not set, it defaults to `$HOME/.agemo`.
 ///
 /// # Arguments
-/// - `config_file_name`: The config file name. This is used to construct the file names to search for.
-/// - `config_file_ext`: The config file extension. This is used to construct the file names to search for.
+/// * `config_file_name` - The config file name. This is used to construct the file names to search for.
+/// * `config_file_ext` - The config file extension. This is used to construct the file names to search for.
+/// * `args` - Optional commandline arguments. Any values set will override values gathered from config files.
 pub fn read_from_files<T, A>(
     config_file_name: &str,
     config_file_ext: &str,
