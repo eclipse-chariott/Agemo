@@ -8,7 +8,6 @@ use std::env;
 
 use clap::Parser;
 use common::config_utils;
-use config::Value;
 use log::error;
 use proc_macros::ConfigSource;
 use serde_derive::{Deserialize, Serialize};
