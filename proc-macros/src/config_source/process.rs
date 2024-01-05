@@ -40,7 +40,7 @@ pub(crate) fn process(data: StructData) -> StructDataOutput {
         .map(|field| {
             let field_name = field.ident.unwrap();
             // Get the field name as a string. Will be used as a key in the code generation step.
-            let field_name_str = field_name.clone().to_string();
+            let field_name_str = field_name.to_string();
             // Determine if field is optional. Relevant for the code generation step.
             let is_optional = is_option(&field.ty);
 

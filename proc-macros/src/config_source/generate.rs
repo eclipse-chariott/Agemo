@@ -48,8 +48,7 @@ pub(crate) fn generate(struct_data: StructDataOutput) -> TokenStream {
                 let mut entries: config::Map::<String, Option<config::Value>> = config::Map::from([#(#entries)*]);
 
                 entries.retain(|_, v| v.is_some());
-                let entries_w_values = entries.clone();
-                let valid_entries: config::Map::<String, config::Value> = entries_w_values.iter().map(|(k, v)| (k.clone(), v.clone().unwrap())).collect();
+                let valid_entries: config::Map::<String, config::Value> = entries.iter().map(|(k, v)| (k.clone(), v.clone().unwrap())).collect();
 
                 Ok(valid_entries.clone())
             }
