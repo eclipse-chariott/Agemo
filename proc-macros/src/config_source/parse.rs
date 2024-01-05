@@ -55,8 +55,7 @@ mod config_source_parse_tests {
                 pub bar: String,
                 pub baz: Option<String>,
             }
-        }
-        .into();
+        };
 
         // Parses token stream into DeriveInput for test.
         let derive_input = syn::parse2::<DeriveInput>(struct_tok).unwrap();
@@ -74,8 +73,7 @@ mod config_source_parse_tests {
                 Bar(String),
                 Baz(Option<String>),
             }
-        }
-        .into();
+        };
 
         // Parses token stream into DeriveInput for test.
         let derive_input = syn::parse2::<DeriveInput>(enum_tok).unwrap();
@@ -88,8 +86,7 @@ mod config_source_parse_tests {
     fn parse_panics_with_non_named_fields() {
         let unit_struct_tok = quote! {
             pub struct Foo;
-        }
-        .into();
+        };
 
         // Parses token stream into DeriveInput for test.
         let derive_input = syn::parse2::<DeriveInput>(unit_struct_tok).unwrap();
