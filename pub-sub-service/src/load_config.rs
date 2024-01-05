@@ -16,6 +16,8 @@ const CONFIG_FILE_NAME: &str = "pub_sub_service_settings";
 const CONSTANTS_FILE_NAME: &str = "constants";
 
 /// Object containing commandline config options for the Pub Sub service.
+/// Non-optional fields must be passed in via the commandline and will override any values from
+/// configuration files.
 #[derive(Clone, Debug, Parser, Serialize, Deserialize, ConfigSource)]
 #[command(author, about, long_about = None)]
 pub struct CmdConfigOptions {
