@@ -7,7 +7,7 @@ suitable for basic scenarios or getting started quickly. The service includes th
 configuration files at build time. The service relies on the environment variable `$AGEMO_HOME` to
 find any override configuration files. This variable is set by default to point to
 `{path_to_project_root}/.agemo` when running the service with `cargo run`. Template configuration
-files to use to override can be found under [config\template](../config/template/). The default
+files to use to override can be found under [config/template](../config/template/). The default
 configuration files can be overridden at runtime using custom values. When loading configuration,
 the service will probe for and unify config in the following order, with values near the end of the
 list taking higher precedence:
