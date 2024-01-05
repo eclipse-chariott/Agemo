@@ -40,3 +40,61 @@ pub(crate) fn parse_input(input: DeriveInput) -> StructData {
         struct_generics,
     }
 }
+
+#[cfg(test)]
+mod config_source_parse_tests {
+    use quote::quote;
+    use std::panic::catch_unwind;
+
+    use super::*;
+
+    #[test]
+    fn can_parse_struct() {
+        let struct_tok = quote! {
+            pub struct Foo {
+                pub bar: String,
+                pub baz: Option<String>,
+            }
+        }
+        .into();
+
+        // Parses token stream into DeriveInput for test.
+        let derive_input = syn::parse2::<DeriveInput>(struct_tok).unwrap();
+
+        let output = parse_input(derive_input.clone());
+
+        assert_eq!(output.struct_name, derive_input.ident);
+        assert_eq!(output.struct_generics, derive_input.generics);
+    }
+
+    #[test]
+    fn parse_panics_with_non_struct_type() {
+        let enum_tok = quote! {
+            pub enum Foo {
+                Bar(String),
+                Baz(Option<String>),
+            }
+        }
+        .into();
+
+        // Parses token stream into DeriveInput for test.
+        let derive_input = syn::parse2::<DeriveInput>(enum_tok).unwrap();
+
+        let result = catch_unwind(|| parse_input(derive_input));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_panics_with_non_named_fields() {
+        let unit_struct_tok = quote! {
+            pub struct Foo;
+        }
+        .into();
+
+        // Parses token stream into DeriveInput for test.
+        let derive_input = syn::parse2::<DeriveInput>(unit_struct_tok).unwrap();
+
+        let result = catch_unwind(|| parse_input(derive_input));
+        assert!(result.is_err());
+    }
+}

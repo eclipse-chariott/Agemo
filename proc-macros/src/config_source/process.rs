@@ -74,3 +74,286 @@ fn path_is_option(path: &Path) -> bool {
 fn is_option(ty: &Type) -> bool {
     matches!(ty, Type::Path(typepath) if typepath.qself.is_none() && path_is_option(&typepath.path))
 }
+
+#[cfg(test)]
+mod config_source_process_tests {
+    use quote::format_ident;
+    use std::panic::catch_unwind;
+    use syn::{parse_quote, punctuated::Punctuated, token::Comma, Field, TypePath};
+
+    use crate::config_source::process::path_is_option;
+
+    use super::*;
+
+    #[test]
+    fn path_is_option_type() {
+        let option_string: TypePath = parse_quote!(Option<String>);
+        assert!(path_is_option(&option_string.path));
+
+        let option_u64: TypePath = parse_quote!(Option<u64>);
+        assert!(path_is_option(&option_u64.path));
+
+        let option_bool: TypePath = parse_quote!(Option<bool>);
+        assert!(path_is_option(&option_bool.path));
+    }
+
+    #[test]
+    fn path_is_not_option_type() {
+        let string_type: TypePath = parse_quote!(String);
+        assert!(!path_is_option(&string_type.path));
+
+        let u64_type: TypePath = parse_quote!(u64);
+        assert!(!path_is_option(&u64_type.path));
+
+        let bool_type: TypePath = parse_quote!(bool);
+        assert!(!path_is_option(&bool_type.path));
+    }
+
+    #[test]
+    fn type_is_option() {
+        let option_string_type: Type = parse_quote!(Option<String>);
+        assert!(is_option(&option_string_type));
+
+        let option_u64_type: Type = parse_quote!(Option<u64>);
+        assert!(is_option(&option_u64_type));
+
+        let option_bool_type: Type = parse_quote!(Option<bool>);
+        assert!(is_option(&option_bool_type));
+    }
+
+    #[test]
+    fn type_is_not_option() {
+        let string_type: Type = parse_quote!(String);
+        assert!(!is_option(&string_type));
+
+        let u64_type: Type = parse_quote!(u64);
+        assert!(!is_option(&u64_type));
+
+        let bool_type: Type = parse_quote!(bool);
+        assert!(!is_option(&bool_type));
+    }
+
+    #[test]
+    fn can_process_struct_data_with_optional_fields() {
+        let struct_name = format_ident!("Foo");
+        let struct_generics = Generics::default();
+
+        let field_a: Field = parse_quote!(field_a: Option<String>);
+        let field_b: Field = parse_quote!(field_b: Option<u64>);
+        let field_c: Field = parse_quote!(field_c: Option<bool>);
+
+        // Create Punctuated list for input data.
+        let mut fields = Punctuated::<Field, Comma>::new();
+        fields.push_value(field_a.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_b.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_c.clone());
+        fields.push_punct(Comma::default());
+
+        let struct_data = StructData {
+            struct_name: struct_name.clone(),
+            struct_fields: fields,
+            struct_generics: struct_generics.clone(),
+        };
+
+        let output = process(struct_data);
+
+        assert_eq!(output.struct_name, struct_name);
+        assert_eq!(output.struct_generics, struct_generics);
+        assert_eq!(output.struct_fields.len(), 3);
+
+        // Check that each of the fields is present.
+        let mut field_iter = output.struct_fields.into_iter();
+        let expected_field_a_name = field_a.ident.expect("Field_A ident should be present.");
+        let expected_field_b_name = field_b.ident.expect("Field_B ident should be present.");
+        let expected_field_c_name = field_c.ident.expect("Field_C ident should be present.");
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_a_name)
+                    && field.name_str.eq(&expected_field_a_name.to_string())
+                    && field.is_optional
+            }),
+            "expected Field_A did not match processed Field_A"
+        );
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_b_name)
+                    && field.name_str.eq(&expected_field_b_name.to_string())
+                    && field.is_optional
+            }),
+            "expected Field_B did not match processed Field_B"
+        );
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_c_name)
+                    && field.name_str.eq(&expected_field_c_name.to_string())
+                    && field.is_optional
+            }),
+            "expected Field_C did not match processed Field_C"
+        );
+    }
+
+    #[test]
+    fn can_process_struct_data_with_non_optional_fields() {
+        let struct_name = format_ident!("Foo");
+        let struct_generics = Generics::default();
+
+        let field_a: Field = parse_quote!(field_a: String);
+        let field_b: Field = parse_quote!(field_b: u64);
+        let field_c: Field = parse_quote!(field_c: bool);
+
+        // Create Punctuated list for input data.
+        let mut fields = Punctuated::<Field, Comma>::new();
+        fields.push_value(field_a.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_b.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_c.clone());
+        fields.push_punct(Comma::default());
+
+        let struct_data = StructData {
+            struct_name: struct_name.clone(),
+            struct_fields: fields,
+            struct_generics: struct_generics.clone(),
+        };
+
+        let output = process(struct_data);
+
+        assert_eq!(output.struct_name, struct_name);
+        assert_eq!(output.struct_generics, struct_generics);
+        assert_eq!(output.struct_fields.len(), 3);
+
+        // Check that each of the fields is present.
+        let mut field_iter = output.struct_fields.into_iter();
+        let expected_field_a_name = field_a.ident.expect("Field_A ident should be present.");
+        let expected_field_b_name = field_b.ident.expect("Field_B ident should be present.");
+        let expected_field_c_name = field_c.ident.expect("Field_C ident should be present.");
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_a_name)
+                    && field.name_str.eq(&expected_field_a_name.to_string())
+                    && !field.is_optional
+            }),
+            "expected Field_A did not match processed Field_A"
+        );
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_b_name)
+                    && field.name_str.eq(&expected_field_b_name.to_string())
+                    && !field.is_optional
+            }),
+            "expected Field_B did not match processed Field_B"
+        );
+
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_c_name)
+                    && field.name_str.eq(&expected_field_c_name.to_string())
+                    && !field.is_optional
+            }),
+            "expected Field_C did not match processed Field_C"
+        );
+    }
+
+    #[test]
+    fn can_process_struct_data_with_mixed_fields() {
+        let struct_name = format_ident!("Foo");
+        let struct_generics = Generics::default();
+
+        let field_a: Field = parse_quote!(field_a: String);
+        let field_b: Field = parse_quote!(field_b: Option<u64>);
+        let field_c: Field = parse_quote!(field_c: bool);
+
+        // Create Punctuated list for input data.
+        let mut fields = Punctuated::<Field, Comma>::new();
+        fields.push_value(field_a.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_b.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_c.clone());
+        fields.push_punct(Comma::default());
+
+        let struct_data = StructData {
+            struct_name: struct_name.clone(),
+            struct_fields: fields,
+            struct_generics: struct_generics.clone(),
+        };
+
+        let output = process(struct_data);
+
+        assert_eq!(output.struct_name, struct_name);
+        assert_eq!(output.struct_generics, struct_generics);
+        assert_eq!(output.struct_fields.len(), 3);
+
+        // Check that each of the fields is present.
+        let mut field_iter = output.struct_fields.into_iter();
+        let expected_field_a_name = field_a.ident.expect("Field_A ident should be present.");
+        let expected_field_b_name = field_b.ident.expect("Field_B ident should be present.");
+        let expected_field_c_name = field_c.ident.expect("Field_C ident should be present.");
+
+        // Is a non optional field.
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_a_name)
+                    && field.name_str.eq(&expected_field_a_name.to_string())
+                    && !field.is_optional
+            }),
+            "expected Field_A did not match processed Field_A"
+        );
+
+        // Is an optional field.
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_b_name)
+                    && field.name_str.eq(&expected_field_b_name.to_string())
+                    && field.is_optional
+            }),
+            "expected Field_B did not match processed Field_B"
+        );
+
+        // Is a non optional field.
+        assert!(
+            field_iter.any(|field| {
+                field.name.eq(&expected_field_c_name)
+                    && field.name_str.eq(&expected_field_c_name.to_string())
+                    && !field.is_optional
+            }),
+            "expected Field_C did not match processed Field_C"
+        );
+    }
+
+    #[test]
+    fn panic_with_malformed_field_data() {
+        let struct_name = format_ident!("Foo");
+        let struct_generics = Generics::default();
+
+        let field_a: Field = parse_quote!(field_a: String);
+        // Malformed Field entry with no name.
+        let field_b: Field = parse_quote!(Option<u64>);
+        let field_c: Field = parse_quote!(field_c: bool);
+
+        // Create Punctuated list for input data.
+        let mut fields = Punctuated::<Field, Comma>::new();
+        fields.push_value(field_a.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_b.clone());
+        fields.push_punct(Comma::default());
+        fields.push_value(field_c.clone());
+        fields.push_punct(Comma::default());
+
+        let struct_data = StructData {
+            struct_name: struct_name.clone(),
+            struct_fields: fields,
+            struct_generics: struct_generics.clone(),
+        };
+
+        let result = catch_unwind(|| process(struct_data));
+        assert!(result.is_err());
+    }
+}
