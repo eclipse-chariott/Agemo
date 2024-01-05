@@ -45,12 +45,15 @@ pub(crate) fn generate(struct_data: StructDataOutput) -> TokenStream {
             }
 
             fn collect(&self) -> Result<config::Map<String, config::Value>, config::ConfigError> {
-                let mut entries: config::Map::<String, Option<config::Value>> = config::Map::from([#(#entries)*]);
+                let entries: config::Map::<String, Option<config::Value>> = config::Map::from([#(#entries)*]);
 
-                entries.retain(|_, v| v.is_some());
-                let valid_entries: config::Map::<String, config::Value> = entries.iter().map(|(k, v)| (k.clone(), v.clone().unwrap())).collect();
+                // Filters out entries with value of None.
+                let valid_entries: config::Map::<String, config::Value> = entries
+                    .into_iter()
+                    .filter_map(|(k, v)| v.map(|val| (k, val)))
+                    .collect();
 
-                Ok(valid_entries.clone())
+                Ok(valid_entries)
             }
         }
     }
