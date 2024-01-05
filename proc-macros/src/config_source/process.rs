@@ -175,7 +175,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_a_name.to_string())
                     && field.is_optional
             }),
-            "expected Field_A did not match processed Field_A"
+            "Expected Field_A did not match processed Field_A"
         );
 
         assert!(
@@ -184,7 +184,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_b_name.to_string())
                     && field.is_optional
             }),
-            "expected Field_B did not match processed Field_B"
+            "Expected Field_B did not match processed Field_B"
         );
 
         assert!(
@@ -193,7 +193,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_c_name.to_string())
                     && field.is_optional
             }),
-            "expected Field_C did not match processed Field_C"
+            "Expected Field_C did not match processed Field_C"
         );
     }
 
@@ -239,7 +239,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_a_name.to_string())
                     && !field.is_optional
             }),
-            "expected Field_A did not match processed Field_A"
+            "Expected Field_A did not match processed Field_A"
         );
 
         assert!(
@@ -248,7 +248,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_b_name.to_string())
                     && !field.is_optional
             }),
-            "expected Field_B did not match processed Field_B"
+            "Expected Field_B did not match processed Field_B"
         );
 
         assert!(
@@ -257,7 +257,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_c_name.to_string())
                     && !field.is_optional
             }),
-            "expected Field_C did not match processed Field_C"
+            "Expected Field_C did not match processed Field_C"
         );
     }
 
@@ -304,7 +304,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_a_name.to_string())
                     && !field.is_optional
             }),
-            "expected Field_A did not match processed Field_A"
+            "Expected Field_A did not match processed Field_A"
         );
 
         // Is an optional field.
@@ -314,7 +314,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_b_name.to_string())
                     && field.is_optional
             }),
-            "expected Field_B did not match processed Field_B"
+            "Expected Field_B did not match processed Field_B"
         );
 
         // Is a non optional field.
@@ -324,7 +324,7 @@ mod config_source_process_tests {
                     && field.name_str.eq(&expected_field_c_name.to_string())
                     && !field.is_optional
             }),
-            "expected Field_C did not match processed Field_C"
+            "Expected Field_C did not match processed Field_C"
         );
     }
 

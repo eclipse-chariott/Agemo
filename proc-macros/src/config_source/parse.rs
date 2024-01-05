@@ -31,7 +31,7 @@ pub(crate) fn parse_input(input: DeriveInput) -> StructData {
             fields: Fields::Named(fields),
             ..
         }) => fields.named,
-        _ => panic!("this derive macro only works on structs with named fields"),
+        _ => panic!("This derive macro only works on structs with named fields"),
     };
 
     StructData {
