@@ -13,8 +13,9 @@
 // Tells cargo to warn if a doc comment is missing and should be provided.
 #![warn(missing_docs)]
 
-use std::sync::mpsc;
+use std::{str::FromStr, sync::mpsc};
 
+use clap::Parser;
 use env_logger::{Builder, Target};
 use log::{error, info, warn, LevelFilter};
 use pubsub_connector::PubSubConnector;
@@ -25,7 +26,7 @@ use proto::pubsub::v1::pub_sub_server::PubSubServer;
 
 use crate::{
     connectors::chariott_connector::{self, ServiceIdentifier},
-    load_config::CommunicationConstants,
+    load_config::{CmdConfigOptions, CommunicationConstants},
     pubsub_connector::MonitorMessage,
 };
 
@@ -37,14 +38,21 @@ pub mod topic_manager;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    // Load command line arguments if any.
+    let parsed_args = CmdConfigOptions::parse();
+
+    // Get log level. Defaults to info.
+    let log_level =
+        LevelFilter::from_str(&parsed_args.log_level).expect("Could not parse log level");
+
     // Setup logging.
     Builder::new()
-        .filter(None, LevelFilter::Info)
+        .filter(None, log_level)
         .target(Target::Stdout)
         .init();
 
     // Load settings in from config file.
-    let settings = load_config::load_settings()?;
+    let settings = load_config::load_settings(parsed_args)?;
     let communication_consts = load_config::load_constants::<CommunicationConstants>()?;
 
     // Initialize pub sub service

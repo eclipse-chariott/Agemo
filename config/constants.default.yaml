@@ -18,5 +18,3 @@ pub_sub_reference: "pubsub.v1.pubsub.proto"
 
 # Retry interval for connections.
 retry_interval_secs: 5
-
-###
