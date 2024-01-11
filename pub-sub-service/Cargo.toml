@@ -16,6 +16,7 @@ common = { path = "../common" }
 config = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
+include_dir = { workspace = true }
 log = { workspace = true }
 paho-mqtt = { workspace = true }
 proc-macros = { path = "../proc-macros"}

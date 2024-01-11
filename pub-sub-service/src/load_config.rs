@@ -8,12 +8,21 @@ use std::env;
 
 use clap::Parser;
 use common::config_utils;
+use include_dir::{include_dir, Dir};
 use log::{debug, error};
 use proc_macros::ConfigSource;
 use serde_derive::{Deserialize, Serialize};
 
 const CONFIG_FILE_NAME: &str = "pub_sub_service_settings";
 const CONSTANTS_FILE_NAME: &str = "constants";
+
+const YAML_EXT: &str = "yaml";
+const CONFIG_DIR: &str = "config";
+const DOT_AGEMO_DIR: &str = ".agemo";
+const AGEMO_HOME_ENV_VAR: &str = "AGEMO_HOME";
+const DEFAULT: &str = "default";
+
+const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../config");
 
 /// Object containing commandline config options for the Pub Sub service.
 /// Non-optional fields must be passed in via the commandline and will override any values from
@@ -78,19 +87,37 @@ pub struct Settings {
     pub version: Option<String>,
 }
 
-/// Load a configuration file.
+/// Load configuration given a file and commandline arguments.
 ///
 /// # Arguments
-/// * `config_file_name` - Name of the config file to load settings from.
+/// * `config_file_stem` - Name of the config file to load settings from.
 /// * `args` - Optional commandline config arguments.
 pub fn load_config<T>(
-    config_file_name: &str,
+    config_file_stem: &str,
     args: Option<CmdConfigOptions>,
 ) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    config_utils::read_from_files(config_file_name, config_utils::YAML_EXT, args)
+    let config_file_ext = YAML_EXT;
+    let default_file_stem = format!("{config_file_stem}.{DEFAULT}");
+
+    // Load default configuration for the given configuration file.
+    let default_source = config_utils::load_default_config_from_file(
+        &default_file_stem,
+        config_file_ext,
+        DEFAULT_DIR,
+    )?;
+
+    // Get configuration path from environment variable.
+    let config_path =
+        config_utils::get_config_home_path_from_env(AGEMO_HOME_ENV_VAR, DOT_AGEMO_DIR, CONFIG_DIR)?;
+
+    // Read configuration file for any overrides.
+    let file_source = config_utils::read_from_file(config_file_stem, config_file_ext, config_path)?;
+
+    // Build config object from gathered sources.
+    config_utils::build_config(default_source, file_source, args)
 }
 
 /// Load the settings.
