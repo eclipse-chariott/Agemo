@@ -53,6 +53,11 @@ pub struct ConfigFileMetadata {
 }
 
 impl ConfigFileMetadata {
+    /// Create a new instance of ConfigFileMetadata.
+    /// Will result in an error if provided file does not have a valid extension.
+    ///
+    /// # Arguments
+    /// * `file_name` - Name of the file including the extension.
     pub fn new(file_name: &str) -> Result<Self, Box<dyn std::error::Error + Send + Sync>> {
         let name = file_name.to_string();
         let mut split_name: Vec<&str> = file_name.split(FILE_SEPARATOR).collect();
