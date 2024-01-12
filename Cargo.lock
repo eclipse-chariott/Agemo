@@ -506,7 +506,6 @@ dependencies = [
  "config",
  "home",
  "include_dir",
- "lazy_static",
  "log",
  "serde",
  "serde_derive",

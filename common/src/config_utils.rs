@@ -3,33 +3,16 @@
 // SPDX-License-Identifier: MIT
 
 use std::{
-    collections::HashMap,
     env, io,
     path::{Path, PathBuf},
 };
 
-use config::{Config, File, FileFormat, FileStoredFormat, Map, Source};
+use config::{Config, File, FileFormat, FileStoredFormat, Source};
 use home::home_dir;
 use include_dir::Dir;
-use lazy_static::lazy_static;
 use serde::Deserialize;
 
-lazy_static! {
-    /// Creates a map between the file extensions as a str and FileFormat enum.
-    /// This is used to convert a string into a FileFormat enum.
-    static ref FILE_EXTS: HashMap<FileFormat, &'static [&'static str]> = {
-        let mut format_map = Map::<FileFormat, &'static [&'static str]>::default();
-
-        format_map.insert(FileFormat::Ini, FileFormat::Ini.file_extensions());
-        format_map.insert(FileFormat::Json, FileFormat::Json.file_extensions());
-        format_map.insert(FileFormat::Json5, FileFormat::Json5.file_extensions());
-        format_map.insert(FileFormat::Ron, FileFormat::Ron.file_extensions());
-        format_map.insert(FileFormat::Toml, FileFormat::Toml.file_extensions());
-        format_map.insert(FileFormat::Yaml, FileFormat::Yaml.file_extensions());
-
-        format_map
-    };
-}
+pub const FILE_SEPARATOR: &str = ".";
 
 /// Attempts to convert an extension in str format into a FileFormat enum.
 /// Throws an error if the extension is unknown.
@@ -37,43 +20,74 @@ lazy_static! {
 /// # Arguments
 /// * `ext` - extension str to convert.
 fn try_into_format(ext: &str) -> Result<FileFormat, Box<dyn std::error::Error + Send + Sync>> {
-    for (format, extensions) in FILE_EXTS.iter() {
-        if extensions.contains(&ext) {
-            return Ok(*format);
-        }
+    match ext {
+        ext if FileFormat::Ini.file_extensions().contains(&ext) => Ok(FileFormat::Ini),
+        ext if FileFormat::Json.file_extensions().contains(&ext) => Ok(FileFormat::Json),
+        ext if FileFormat::Json5.file_extensions().contains(&ext) => Ok(FileFormat::Json5),
+        ext if FileFormat::Ron.file_extensions().contains(&ext) => Ok(FileFormat::Ron),
+        ext if FileFormat::Toml.file_extensions().contains(&ext) => Ok(FileFormat::Toml),
+        ext if FileFormat::Yaml.file_extensions().contains(&ext) => Ok(FileFormat::Yaml),
+        _ => Err(Box::new(io::Error::new(
+            io::ErrorKind::NotFound,
+            "No Supported format found.",
+        ))),
     }
-
-    Err(Box::new(io::Error::new(
-        io::ErrorKind::NotFound,
-        "No Supported format found.",
-    )))
 }
 
-/// Loads default config for the given configuration file.
-/// Extracts configuration parameters from the provided directory object.
+/// Service's home directory metadata.
+pub struct SvcConfigHomeMetadata {
+    /// Name of the environment variable used to set the service's HOME dir.
+    pub home_env_var: String,
+    /// Default name for the service's HOME dir, used if `home_env_var` is not set.
+    pub home_dir: String,
+    /// Name of the config directory where configuration files should live.
+    pub config_dir: String,
+}
+
+/// Metadata for a config file.
+pub struct ConfigFileMetadata {
+    /// Config file name with extension.
+    pub name: String,
+    /// File extension.
+    pub ext: FileFormat,
+}
+
+impl ConfigFileMetadata {
+    pub fn new(file_name: &str) -> Result<Self, Box<dyn std::error::Error + Send + Sync>> {
+        let name = file_name.to_string();
+        let mut split_name: Vec<&str> = file_name.split(FILE_SEPARATOR).collect();
+
+        if split_name.len() <= 1 {
+            return Err(Box::new(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Invalid file name format. Expected an extension in name '{file_name}'."),
+            )));
+        }
+
+        let parsed_ext = split_name.pop().unwrap();
+        let ext = try_into_format(parsed_ext)?;
+
+        Ok(ConfigFileMetadata { name, ext })
+    }
+}
+
+/// Loads default config source for the given configuration file.
+/// Extracts configuration parameters from the provided directory object which pulled in default
+/// configuration files in at build time.
 ///
 /// # Arguments
-/// * `config_file_stem` - The default config file name without an extension. This is used to
-///                        construct the file name to search for.
-/// * `config_file_ext` - The config file extension. This is used to construct the file name to
-///                       search for.
+/// * `config_file` - The default config file to load.
 /// * `default_dir` - Object that represents directory to pull default config file from. Generated
 ///                   by the `include_dir!` macro.
 pub fn load_default_config_from_file(
-    config_file_stem: &str,
-    config_file_ext: &str,
-    default_dir: Dir,
-) -> Result<Config, Box<dyn std::error::Error + Send + Sync>> {
+    config_file: &ConfigFileMetadata,
+    default_dir: &Dir,
+) -> Result<Box<dyn Source + Send + Sync>, Box<dyn std::error::Error + Send + Sync>> {
     // Get appropriate default config.
-    let filename = format!("{config_file_stem}.{config_file_ext}");
-    let file = default_dir.get_file(filename).unwrap();
+    let file = default_dir.get_file(&config_file.name).unwrap();
     let file_contents = file.contents_utf8().unwrap();
-    let file_format = try_into_format(config_file_ext)?;
 
-    Config::builder()
-        .add_source(File::from_str(file_contents, file_format))
-        .build()
-        .map_err(|e| e.into())
+    Ok(File::from_str(file_contents, config_file.ext).clone_into_box())
 }
 
 /// Retrieve configuration home path from the service's HOME dir environment variable.
@@ -81,19 +95,14 @@ pub fn load_default_config_from_file(
 /// not set, it defaults a path under the $HOME directory.
 ///
 /// # Arguments
-/// * `svc_home_env_var` - Name of the environment variable used to set the service's HOME dir.
-/// * `svc_home_dir_name` - Default name for the service's HOME dir, used if `svc_home_env_var` is
-///                         not set.
-/// * `config_dir_name` - Name of the config directory where configuration files should live.
+/// * `svc_home_metadata` - Metadata related to the service's home and config directories.
 pub fn get_config_home_path_from_env(
-    svc_home_env_var: &str,
-    svc_home_dir_name: &str,
-    config_dir_name: &str,
+    svc_home_metadata: &SvcConfigHomeMetadata,
 ) -> Result<PathBuf, Box<dyn std::error::Error + Send + Sync>> {
-    let config_path = match env::var(svc_home_env_var) {
+    let config_path = match env::var(&svc_home_metadata.home_env_var) {
         Ok(agemo_home) => {
             // The path below resolves to $SVC_HOME/{config_dir_name}/
-            Path::new(&agemo_home).join(config_dir_name)
+            Path::new(&agemo_home).join(&svc_home_metadata.config_dir)
         }
         Err(_) => {
             // The path below resolves to $HOME/{svc_home_dir_name}/{config_dir_name}/
@@ -104,76 +113,98 @@ pub fn get_config_home_path_from_env(
                         "Could not retrieve home directory",
                     )
                 })?
-                .join(svc_home_dir_name)
-                .join(config_dir_name)
+                .join(&svc_home_metadata.home_dir)
+                .join(&svc_home_metadata.config_dir)
         }
     };
 
     Ok(config_path)
 }
 
-/// Read config from a configuration file located at the given config path.
+/// Read config from a configuration file located at the given config path at runtime.
 ///
 /// # Arguments
-/// * `config_file_stem` - The config file name without an extension. This is used to construct the
-///                        file name to search for.
-/// * `config_file_ext` - The config file extension. This is used to construct the file name to
-///                       search for.
+/// * `config_file` - The config file to read.
 /// * `config_path` - The path to the directory containing the config.
 pub fn read_from_file<TPath>(
-    config_file_stem: &str,
-    config_file_ext: &str,
+    config_file: &ConfigFileMetadata,
     config_path: TPath,
-) -> Result<Config, Box<dyn std::error::Error + Send + Sync>>
+) -> Result<Box<dyn Source + Send + Sync>, Box<dyn std::error::Error + Send + Sync>>
 where
     TPath: AsRef<Path>,
 {
-    let config_file_name = format!("{config_file_stem}.{config_file_ext}");
+    let config_file_path = config_path.as_ref().join(&config_file.name);
 
-    // The path below resolves to {config_path}/{config_file_name}
-    let config_file_path = config_path.as_ref().join(config_file_name);
-
-    Config::builder()
-        .add_source(File::from(config_file_path).required(false))
-        .build()
-        .map_err(|e| e.into())
+    Ok(File::from(config_file_path)
+        .required(false)
+        .clone_into_box())
 }
 
 /// Builds unified config from provided configuration sources.
+///
+/// # Arguments
+/// * `sources` - List of sources to build configuration from. Sources towards the end of the list
+///               take higher precedence over sources at the beginning of the list.
+pub fn build_config_from_sources<TConfig>(
+    sources: Vec<Box<dyn Source + Send + Sync>>,
+) -> Result<TConfig, Box<dyn std::error::Error + Send + Sync>>
+where
+    TConfig: for<'a> Deserialize<'a>,
+{
+    Config::builder()
+        .add_source(sources)
+        .build()?
+        .try_deserialize()
+        .map_err(|e| e.into())
+}
+
+/// Load a unified configuration given a file and commandline arguments.
 /// Config will be compiled in the following order, with values from sources near the end of the
 /// list taking higher precedence:
 ///
-/// - default source
-/// - file source
-/// - commandline source
+/// - default config file
+/// - config file
+/// - commandline args
 ///
 /// Since the configuration is layered, config can be partially defined. Any unspecified
 /// configuration will use the default value from the default config source.
 ///
 /// # Arguments
-/// * `default_source` - Config gathered from default configuration sources.
-/// * `file_source` - Config read in from configuration files.
-/// * `cmdline_source` - Optional config gathered from commandline parameters.
-pub fn build_config<TConfig, TSource>(
-    default_source: Config,
-    file_source: Config,
-    cmdline_source: Option<TSource>,
+/// * `config_file` - The config file to load configuration from.
+/// * `default_config_file` - The default config file to load default config from.
+/// * `default_dir` - Object that represents directory to pull default config file from. Generated
+///                   by the `include_dir!` macro.
+/// * `svc_home_metadata` - Metadata related to the service's home and config directories. Used to
+///                         get path to provided config file.
+/// * `cmdline_args` - Optional commandline config arguments.
+pub fn load_config<TConfig, TArgs>(
+    config_file: &ConfigFileMetadata,
+    default_config_file: &ConfigFileMetadata,
+    default_dir: &Dir,
+    svc_home_metadata: &SvcConfigHomeMetadata,
+    cmdline_args: Option<TArgs>,
 ) -> Result<TConfig, Box<dyn std::error::Error + Send + Sync>>
 where
-    TConfig: for<'a> Deserialize<'a>,
-    TSource: Source + Send + Sync + 'static,
+    TConfig: for<'de> serde::Deserialize<'de>,
+    TArgs: Source + Send + Sync,
 {
-    let mut config_sources = Config::builder()
-        .add_source(default_source)
-        .add_source(file_source);
+    // Load default configuration for the given configuration file.
+    let default_source = load_default_config_from_file(default_config_file, default_dir)?;
 
-    // Adds command line arguments if there are any.
-    if let Some(cmdline_args) = cmdline_source {
-        config_sources = config_sources.add_source(cmdline_args);
-    };
+    // Get configuration path from environment variable.
+    let config_path = get_config_home_path_from_env(svc_home_metadata)?;
 
-    config_sources
-        .build()?
-        .try_deserialize()
-        .map_err(|e| e.into())
+    // Read configuration file for any overrides.
+    let file_source = read_from_file(config_file, config_path)?;
+
+    // Create source list from lowest to highest priority.
+    let mut sources = vec![default_source, file_source];
+
+    // If commandline args are present, add them to the source list.
+    if let Some(args) = cmdline_args {
+        sources.push(args.clone_into_box());
+    }
+
+    // Build config from source list.
+    build_config_from_sources(sources)
 }
