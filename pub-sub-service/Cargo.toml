@@ -11,12 +11,14 @@ license = "MIT"
 [dependencies]
 async-std = { workspace = true }
 async-trait = { workspace = true }
+clap = { workspace = true, features = [ "derive" ] }
 common = { path = "../common" }
 config = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 log = { workspace = true }
 paho-mqtt = { workspace = true }
+proc-macros = { path = "../proc-macros"}
 proto = { path = "../proto-build" }
 serde = { workspace = true }
 serde_derive = { workspace = true }

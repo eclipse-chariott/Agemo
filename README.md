@@ -115,7 +115,7 @@ cargo test
 
 ## Configuration Setup
 
-The service configuration is defined in [.agemo/config](.agemo/config/). The default configuration
+The service configuration is defined in [config](config/). The default configuration
 files will allow a user to run the service without any modification. Please read
 [config_overrides](./docs/config-overrides.md) for more information on how to modify the service's
 configuration.

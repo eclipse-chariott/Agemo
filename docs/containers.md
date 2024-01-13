@@ -14,9 +14,6 @@ x86-64 architecture.
 - [Dockerfile.arm64](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for the
 aarch64 architecture.
 
->Note: The default configuration files are cloned from [.agemo/config](../.agemo/config/), defined
-in the project's root.
-
 #### Mosquitto MQTT Broker
 
 - [Dockerfile.mosquitto.amd64](../Dockerfile.mosquitto.amd64) - Dockerfile used to build the
