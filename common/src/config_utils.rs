@@ -153,7 +153,7 @@ pub fn get_config_home_path_from_env(
 /// # Arguments
 /// * `config_file` - The config file to read.
 /// * `config_path` - The path to the directory containing the config.
-pub fn read_from_file<TPath>(
+pub fn read_config_from_file<TPath>(
     config_file: &ConfigFileMetadata,
     config_path: TPath,
 ) -> Result<Box<dyn Source + Send + Sync>, Box<dyn std::error::Error + Send + Sync>>
@@ -215,24 +215,21 @@ where
     TConfig: for<'de> serde::Deserialize<'de>,
     TArgs: Source + Send + Sync,
 {
-    // Load default configuration for the given configuration file.
     let default_source = load_default_config_from_file(default_config_file, default_dir)?;
 
-    // Get configuration path from environment variable.
+    // Find and read configuration file for any overrides.
     let config_path = get_config_home_path_from_env(svc_home_metadata)?;
-
-    // Read configuration file for any overrides.
-    let file_source = read_from_file(config_file, config_path)?;
+    let file_source = read_config_from_file(config_file, config_path)?;
 
     // Create source list from lowest to highest priority.
     let mut sources = vec![default_source, file_source];
 
     // If commandline args are present, add them to the source list.
+    // Commandline args will override any config from file sources.
     if let Some(args) = cmdline_args {
         sources.push(args.clone_into_box());
     }
 
-    // Build config from source list.
     build_config_from_sources(sources)
 }
 
