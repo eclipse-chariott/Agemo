@@ -234,7 +234,7 @@ where
 }
 
 #[cfg(test)]
-mod pubsub_impl_tests {
+mod config_utils_tests {
     use config::Value;
     use include_dir::{DirEntry, File};
 
