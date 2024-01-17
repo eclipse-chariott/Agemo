@@ -29,7 +29,7 @@ fn try_into_format(ext: &str) -> Result<FileFormat, Box<dyn std::error::Error + 
         ext if FileFormat::Yaml.file_extensions().contains(&ext) => Ok(FileFormat::Yaml),
         _ => Err(Box::new(std::io::Error::new(
             std::io::ErrorKind::NotFound,
-            "No Supported format found.",
+            "No supported format found.",
         ))),
     }
 }
@@ -137,7 +137,7 @@ pub fn get_config_home_path_from_env(
                 .ok_or_else(|| {
                     std::io::Error::new(
                         std::io::ErrorKind::Other,
-                        "Could not retrieve home directory",
+                        "Could not retrieve home directory.",
                     )
                 })?
                 .join(&svc_home_metadata.home_dir)
