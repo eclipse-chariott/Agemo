@@ -97,7 +97,8 @@ pub struct Settings {
 /// Load configuration given a file and commandline arguments.
 ///
 /// # Arguments
-/// * `config_file_name` - Name of the config file to load settings from.
+/// * `config_file_name` - Name of the config file to load override settings from.
+/// * `default_file_name` - Name of default config file to load settings from.
 /// * `args` - Optional commandline config arguments.
 pub fn load_config<T>(
     config_file_name: &str,
