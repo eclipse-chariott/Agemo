@@ -19,7 +19,9 @@ pub const FILE_SEPARATOR: &str = ".";
 ///
 /// # Arguments
 /// * `ext` - extension str to convert.
-fn try_ext_into_file_format(ext: &str) -> Result<FileFormat, Box<dyn std::error::Error + Send + Sync>> {
+fn try_ext_into_file_format(
+    ext: &str,
+) -> Result<FileFormat, Box<dyn std::error::Error + Send + Sync>> {
     match ext {
         ext if FileFormat::Ini.file_extensions().contains(&ext) => Ok(FileFormat::Ini),
         ext if FileFormat::Json.file_extensions().contains(&ext) => Ok(FileFormat::Json),
