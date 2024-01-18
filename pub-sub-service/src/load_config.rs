@@ -7,13 +7,29 @@
 use std::env;
 
 use clap::Parser;
-use common::config_utils;
+use common::config_utils::{self, ConfigFileMetadata, SvcConfigHomeMetadata};
+use include_dir::{include_dir, Dir};
 use log::{debug, error};
 use proc_macros::ConfigSource;
 use serde_derive::{Deserialize, Serialize};
 
-const CONFIG_FILE_NAME: &str = "pub_sub_service_settings";
-const CONSTANTS_FILE_NAME: &str = "constants";
+// Config file stems
+const CONFIG_FILE_STEM: &str = "pub_sub_service_settings";
+const CONSTANTS_FILE_STEM: &str = "constants";
+
+// Config file extensions
+const YAML_EXT: &str = "yaml";
+
+// Default config file marker
+const DEFAULT: &str = "default";
+
+// Config directory consts
+const CONFIG_DIR: &str = "config";
+const DOT_AGEMO_DIR: &str = ".agemo";
+const AGEMO_HOME_ENV_VAR: &str = "AGEMO_HOME";
+
+// Default directory struct
+const DEFAULT_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../config");
 
 /// Object containing commandline config options for the Pub Sub service.
 /// Non-optional fields must be passed in via the commandline and will override any values from
@@ -78,19 +94,38 @@ pub struct Settings {
     pub version: Option<String>,
 }
 
-/// Load a configuration file.
+/// Load configuration given a file and commandline arguments.
 ///
 /// # Arguments
-/// * `config_file_name` - Name of the config file to load settings from.
+/// * `config_file_name` - Name of the config file to load override settings from.
+/// * `default_file_name` - Name of default config file to load settings from.
 /// * `args` - Optional commandline config arguments.
 pub fn load_config<T>(
     config_file_name: &str,
+    default_file_name: &str,
     args: Option<CmdConfigOptions>,
 ) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    config_utils::read_from_files(config_file_name, config_utils::YAML_EXT, args)
+    let config_file = ConfigFileMetadata::new(config_file_name)?;
+    let default_config_file = ConfigFileMetadata::new(default_file_name)?;
+
+    let default_dir = DEFAULT_DIR;
+
+    let svc_home_metadata = SvcConfigHomeMetadata {
+        home_env_var: AGEMO_HOME_ENV_VAR.to_string(),
+        home_dir: DOT_AGEMO_DIR.to_string(),
+        config_dir: CONFIG_DIR.to_string(),
+    };
+
+    config_utils::load_config(
+        &config_file,
+        &default_config_file,
+        &default_dir,
+        &svc_home_metadata,
+        args,
+    )
 }
 
 /// Load the settings.
@@ -103,7 +138,10 @@ where
 pub fn load_settings(
     args: CmdConfigOptions,
 ) -> Result<Settings, Box<dyn std::error::Error + Send + Sync>> {
-    let mut settings: Settings = load_config(CONFIG_FILE_NAME, Some(args))
+    let file_name = format!("{CONFIG_FILE_STEM}.{YAML_EXT}");
+    let default_file_name = format!("{CONFIG_FILE_STEM}.{DEFAULT}.{YAML_EXT}");
+
+    let mut settings: Settings = load_config(&file_name, &default_file_name, Some(args))
         .map_err(|e| {
             format!(
                 "Failed to load required configuration settings due to error: {e}. See --help for more details."
@@ -145,5 +183,8 @@ pub fn load_constants<T>() -> Result<T, Box<dyn std::error::Error + Send + Sync>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    load_config(CONSTANTS_FILE_NAME, None)
+    let file_name = format!("{CONSTANTS_FILE_STEM}.{YAML_EXT}");
+    let default_file_name = format!("{CONSTANTS_FILE_STEM}.{DEFAULT}.{YAML_EXT}");
+
+    load_config(&file_name, &default_file_name, None)
 }
