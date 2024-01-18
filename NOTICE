@@ -3091,7 +3091,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [tokio]( https://github.com/tokio-rs/tokio ) 1.35.0
+- [tokio]( https://github.com/tokio-rs/tokio ) 1.35.1
 - [tokio-stream]( https://github.com/tokio-rs/tokio ) 0.1.14
 - [tokio-util]( https://github.com/tokio-rs/tokio ) 0.7.10
 
@@ -3557,11 +3557,11 @@ MIT OR Apache-2.0
 - [async-lock]( https://github.com/smol-rs/async-lock ) 3.1.2
 - [async-std]( https://github.com/async-rs/async-std ) 1.12.0
 - [async-task]( https://github.com/smol-rs/async-task ) 4.5.0
-- [async-trait]( https://github.com/dtolnay/async-trait ) 0.1.74
+- [async-trait]( https://github.com/dtolnay/async-trait ) 0.1.76
 - [atomic-waker]( https://github.com/smol-rs/atomic-waker ) 1.1.2
 - [blocking]( https://github.com/smol-rs/blocking ) 1.5.1
 - [concurrent-queue]( https://github.com/smol-rs/concurrent-queue ) 2.3.0
-- [ctrlc]( https://github.com/Detegr/rust-ctrlc.git ) 3.4.1
+- [ctrlc]( https://github.com/Detegr/rust-ctrlc.git ) 3.4.2
 - [event-listener]( https://github.com/smol-rs/event-listener ) 2.5.3
 - [event-listener]( https://github.com/smol-rs/event-listener ) 4.0.0
 - [event-listener-strategy]( https://github.com/smol-rs/event-listener ) 0.4.0
@@ -3597,7 +3597,7 @@ MIT OR Apache-2.0
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
 - [serde]( https://github.com/serde-rs/serde ) 1.0.193
 - [serde_derive]( https://github.com/serde-rs/serde ) 1.0.193
-- [serde_json]( https://github.com/serde-rs/json ) 1.0.108
+- [serde_json]( https://github.com/serde-rs/json ) 1.0.109
 - [syn]( https://github.com/dtolnay/syn ) 2.0.39
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.50
 - [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.50
