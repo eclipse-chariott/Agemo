@@ -19,7 +19,7 @@ pub const FILE_SEPARATOR: &str = ".";
 ///
 /// # Arguments
 /// * `ext` - extension str to convert.
-fn try_into_format(ext: &str) -> Result<FileFormat, Box<dyn std::error::Error + Send + Sync>> {
+fn try_ext_into_file_format(ext: &str) -> Result<FileFormat, Box<dyn std::error::Error + Send + Sync>> {
     match ext {
         ext if FileFormat::Ini.file_extensions().contains(&ext) => Ok(FileFormat::Ini),
         ext if FileFormat::Json.file_extensions().contains(&ext) => Ok(FileFormat::Json),
@@ -71,7 +71,7 @@ impl ConfigFileMetadata {
         }
 
         let parsed_ext = split_name.pop().unwrap();
-        let ext = try_into_format(parsed_ext)?;
+        let ext = try_ext_into_file_format(parsed_ext)?;
 
         if split_name.join(FILE_SEPARATOR).is_empty() {
             return Err(Box::new(std::io::Error::new(
@@ -244,51 +244,51 @@ mod config_utils_tests {
     fn try_into_format_success() {
         // Ini format
         let ini_ext = "ini";
-        let ini_format = try_into_format(ini_ext).unwrap();
+        let ini_format = try_ext_into_file_format(ini_ext).unwrap();
         assert_eq!(ini_format, FileFormat::Ini);
 
         // Json format
         let json_ext = "json";
-        let json_format = try_into_format(json_ext).unwrap();
+        let json_format = try_ext_into_file_format(json_ext).unwrap();
         assert_eq!(json_format, FileFormat::Json);
 
         // Json5 format
         let json5_ext = "json5";
-        let json5_format = try_into_format(json5_ext).unwrap();
+        let json5_format = try_ext_into_file_format(json5_ext).unwrap();
         assert_eq!(json5_format, FileFormat::Json5);
 
         // Ron format
         let ron_ext = "ron";
-        let ron_format = try_into_format(ron_ext).unwrap();
+        let ron_format = try_ext_into_file_format(ron_ext).unwrap();
         assert_eq!(ron_format, FileFormat::Ron);
 
         // Toml format
         let toml_ext = "toml";
-        let toml_format = try_into_format(toml_ext).unwrap();
+        let toml_format = try_ext_into_file_format(toml_ext).unwrap();
         assert_eq!(toml_format, FileFormat::Toml);
 
         // Yaml format
         let yaml_ext = "yaml";
-        let yaml_format = try_into_format(yaml_ext).unwrap();
+        let yaml_format = try_ext_into_file_format(yaml_ext).unwrap();
         assert_eq!(yaml_format, FileFormat::Yaml);
 
         let yaml_ext_2 = "yml";
-        let yaml_format_2 = try_into_format(yaml_ext_2).unwrap();
+        let yaml_format_2 = try_ext_into_file_format(yaml_ext_2).unwrap();
         assert_eq!(yaml_format_2, FileFormat::Yaml);
     }
 
     #[test]
     fn try_into_format_invalid_err() {
         let ext_1 = "invalid";
-        let result_1 = try_into_format(ext_1);
+        let result_1 = try_ext_into_file_format(ext_1);
         assert!(result_1.is_err());
 
         let ext_2 = "";
-        let result_2 = try_into_format(ext_2);
+        let result_2 = try_ext_into_file_format(ext_2);
         assert!(result_2.is_err());
 
         let ext_3 = "123@";
-        let result_3 = try_into_format(ext_3);
+        let result_3 = try_ext_into_file_format(ext_3);
         assert!(result_3.is_err());
     }
 
