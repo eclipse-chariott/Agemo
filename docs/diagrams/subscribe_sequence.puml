@@ -24,5 +24,6 @@ deactivate PS_Service
 activate Publisher
 Publisher -> Broker : data
 Broker -> Subscriber : data
+Broker -> Subscriber : data
 
 @enduml
