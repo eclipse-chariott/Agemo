@@ -1326,7 +1326,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [uuid]( https://github.com/uuid-rs/uuid ) 1.6.1
+- [uuid]( https://github.com/uuid-rs/uuid ) 1.7.0
 
 #### License
 
@@ -3197,7 +3197,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [uuid-macro-internal]( https://crates.io/crates/uuid-macro-internal ) 1.6.1
+- [uuid-macro-internal]( https://crates.io/crates/uuid-macro-internal ) 1.7.0
 
 #### License
 
@@ -3770,14 +3770,14 @@ MIT OR Apache-2.0
 - [piper]( https://github.com/notgull/piper ) 0.2.1
 - [polling]( https://github.com/smol-rs/polling ) 3.3.2
 - [prettyplease]( https://github.com/dtolnay/prettyplease ) 0.2.16
-- [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.76
+- [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.78
 - [quote]( https://github.com/dtolnay/quote ) 1.0.35
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.27
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.30
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
-- [serde]( https://github.com/serde-rs/serde ) 1.0.195
-- [serde_derive]( https://github.com/serde-rs/serde ) 1.0.195
-- [serde_json]( https://github.com/serde-rs/json ) 1.0.111
+- [serde]( https://github.com/serde-rs/serde ) 1.0.196
+- [serde_derive]( https://github.com/serde-rs/serde ) 1.0.196
+- [serde_json]( https://github.com/serde-rs/json ) 1.0.112
 - [syn]( https://github.com/dtolnay/syn ) 2.0.48
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.56
 - [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.56
@@ -4368,6 +4368,7 @@ SOFTWARE.
 
 - [aho-corasick]( https://github.com/BurntSushi/aho-corasick ) 1.1.2
 - [memchr]( https://github.com/BurntSushi/memchr ) 2.7.1
+- [termcolor]( https://github.com/BurntSushi/termcolor ) 1.4.1
 - [winapi-util]( https://github.com/BurntSushi/winapi-util ) 0.1.6
 
 #### License
