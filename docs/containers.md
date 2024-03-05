@@ -13,6 +13,16 @@ document has instructions for building and running the provided Dockerfiles in
 x86-64 architecture.
 - [Dockerfile.arm64](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for the
 aarch64 architecture.
+- [Dockerfile_integrated.amd64](../Dockerfile_integrated.amd64) - Dockerfile used to build the
+`Pub Sub Service` using
+[Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
+with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for the
+x86-64 architecture.
+- [Dockerfile_integrated.arm64](../Dockerfile_integrated.arm64) - Dockerfile used to build the
+`Pub Sub Service` using
+[Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
+with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for the
+aarch64 architecture.
 
 #### Mosquitto MQTT Broker
 
