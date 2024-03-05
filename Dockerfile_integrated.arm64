@@ -96,7 +96,7 @@ COPY --from=build /sdv/service /sdv/
 # Copy the "integrated" config to the override config folder and rename it to what agemo expects
 COPY --from=build /sdv/config/pub_sub_service_settings.integrated.yaml /sdv/.agemo/config/pub_sub_service_settings.yaml
 
-# Expose the port that the application listens on.
+# Expose the port that the pub sub service listens on.
 EXPOSE 50051
 
 # What the container should run when it is started.
