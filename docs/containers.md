@@ -13,7 +13,7 @@ document has instructions for building and running the provided Dockerfiles in
 x86-64 architecture.
 - [Dockerfile.arm64](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for the
 aarch64 architecture.
-- [Dockerfile.multi](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for
+- [Dockerfile.multi](../Dockerfile.multi) - Dockerfile used to build the `Pub Sub Service` for
 multiple architectures based on the TARGETARCH argument.
 - [Dockerfile_integrated.amd64](../Dockerfile_integrated.amd64) - Dockerfile used to build the
 `Pub Sub Service` using
@@ -25,7 +25,7 @@ x86-64 architecture.
 [Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
 with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for the
 aarch64 architecture.
-- [Dockerfile_integrated.multi](../Dockerfile_integrated.arm64) - Dockerfile used to build the
+- [Dockerfile_integrated.multi](../Dockerfile_integrated.multi) - Dockerfile used to build the
 `Pub Sub Service` using
 [Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
 with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for
@@ -37,7 +37,7 @@ multiple architectures based on the TARGETARCH argument.
 `Mosquitto MQTT Broker` with the appropriate configuration for the x86-64 architecture.
 - [Dockerfile.mosquitto.arm64](../Dockerfile.mosquitto.arm64) - Dockerfile used to build the
 `Mosquitto MQTT Broker` with the appropriate configuration for the aarch64 architecture.
-- [Dockerfile.mosquitto.multi](../Dockerfile.mosquitto.arm64) - Dockerfile used to build the
+- [Dockerfile.mosquitto.multi](../Dockerfile.mosquitto.multi) - Dockerfile used to build the
 `Mosquitto MQTT Broker` with the appropriate configuration for multiple architectures based on the
 TARGETARCH argument.
 
