@@ -13,6 +13,8 @@ document has instructions for building and running the provided Dockerfiles in
 x86-64 architecture.
 - [Dockerfile.arm64](../Dockerfile.arm64) - Dockerfile used to build the `Pub Sub Service` for the
 aarch64 architecture.
+- [Dockerfile.multi](../Dockerfile.multi) - Dockerfile used to build the `Pub Sub Service` for
+multiple architectures based on the TARGETARCH argument.
 - [Dockerfile_integrated.amd64](../Dockerfile_integrated.amd64) - Dockerfile used to build the
 `Pub Sub Service` using
 [Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
@@ -23,6 +25,11 @@ x86-64 architecture.
 [Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
 with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for the
 aarch64 architecture.
+- [Dockerfile_integrated.multi](../Dockerfile_integrated.multi) - Dockerfile used to build the
+`Pub Sub Service` using
+[Chariott Service Discovery](https://github.com/eclipse-chariott/chariott/blob/main/service_discovery/README.md)
+with the [integrated configuration](../config/pub_sub_service_settings.integrated.yaml) for
+multiple architectures based on the TARGETARCH argument.
 
 #### Mosquitto MQTT Broker
 
@@ -30,6 +37,9 @@ aarch64 architecture.
 `Mosquitto MQTT Broker` with the appropriate configuration for the x86-64 architecture.
 - [Dockerfile.mosquitto.arm64](../Dockerfile.mosquitto.arm64) - Dockerfile used to build the
 `Mosquitto MQTT Broker` with the appropriate configuration for the aarch64 architecture.
+- [Dockerfile.mosquitto.multi](../Dockerfile.mosquitto.multi) - Dockerfile used to build the
+`Mosquitto MQTT Broker` with the appropriate configuration for multiple architectures based on the
+TARGETARCH argument.
 
 #### Sample Applications
 
@@ -72,6 +82,17 @@ Dockerfile:
 
     >Note: The build arg `APP_NAME` needs to be passed in for all sample applications to build the
     correct sample.
+
+    Or to build a multi-platform image for `pub-sub-service` project and push it to a container
+    registry:
+    You must first create a new builder using the docker-container driver, which gives you access
+    to more complex features like multi-platform build. See more information here:
+    [multi-platform builds.](https://docs.docker.com/build/building/multi-platform/#cross-compilation)
+
+    ```shell
+    docker buildx create --name multibuilder --driver docker-container --use
+    docker buildx build --platform=linux/amd64,linux/arm64 -f Dockerfile.multi -t <container_registry>/pub_sub_service_multi --push .
+    ```
 
 1. Once the container has been built, start the container in interactive mode with the following
 command in the project root directory:

@@ -11,7 +11,7 @@
 ################################################################################
 # Create a stage for building the application.
 
-ARG RUST_VERSION=1.72.1
+ARG RUST_VERSION=1.74
 ARG APP_NAME=pub-sub-service
 ARG UID=10001
 
