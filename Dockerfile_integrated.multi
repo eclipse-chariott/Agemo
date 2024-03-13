@@ -25,6 +25,8 @@ WORKDIR /sdv
 
 COPY ./ .
 
+COPY ./container/cargo/config.toml ./.cargo/config.toml
+
 # Check that APP_NAME argument is valid.
 RUN /sdv/container/scripts/argument_sanitizer.sh \
     --arg-value "${APP_NAME}" \
