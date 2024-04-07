@@ -4,7 +4,7 @@ This page lists the licenses of the projects used in cargo-about.
 
 ## Overview of licenses
 
-- MIT License (258)
+- MIT License (259)
 - Apache License 2.0 (6)
 - BSD 3-Clause "New" or "Revised" License (2)
 - Eclipse Public License 1.0 (2)
@@ -1289,7 +1289,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [uuid]( https://github.com/uuid-rs/uuid ) 1.7.0
+- [uuid]( https://github.com/uuid-rs/uuid ) 1.8.0
 
 #### License
 
@@ -1605,6 +1605,7 @@ DEALINGS IN THE SOFTWARE.
 
 - [gimli]( https://github.com/gimli-rs/gimli ) 0.28.1
 - [heck]( https://github.com/withoutboats/heck ) 0.4.1
+- [heck]( https://github.com/withoutboats/heck ) 0.5.0
 - [linked-hash-map]( https://github.com/contain-rs/linked-hash-map ) 0.5.6
 - [unicode-bidi]( https://github.com/servo/unicode-bidi ) 0.3.15
 - [unicode-normalization]( https://github.com/unicode-rs/unicode-normalization ) 0.1.23
@@ -3126,7 +3127,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [uuid-macro-internal]( https://crates.io/crates/uuid-macro-internal ) 1.7.0
+- [uuid-macro-internal]( https://crates.io/crates/uuid-macro-internal ) 1.8.0
 
 #### License
 
@@ -3194,7 +3195,7 @@ SOFTWARE.
 
 #### Used by
 
-- [tokio]( https://github.com/tokio-rs/tokio ) 1.36.0
+- [tokio]( https://github.com/tokio-rs/tokio ) 1.37.0
 - [tokio-stream]( https://github.com/tokio-rs/tokio ) 0.1.14
 - [tokio-util]( https://github.com/tokio-rs/tokio ) 0.7.10
 
@@ -3294,7 +3295,7 @@ SOFTWARE.
 
 - [anstream]( https://github.com/rust-cli/anstyle.git ) 0.6.13
 - [anstyle-query]( https://github.com/rust-cli/anstyle ) 1.0.2
-- [clap]( https://github.com/clap-rs/clap ) 4.5.2
+- [clap]( https://github.com/clap-rs/clap ) 4.5.4
 - [colorchoice]( https://github.com/rust-cli/anstyle ) 1.0.0
 - [env_logger]( https://github.com/rust-cli/env_logger ) 0.10.2
 
@@ -3687,7 +3688,7 @@ MIT OR Apache-2.0
 - [async-lock]( https://github.com/smol-rs/async-lock ) 3.3.0
 - [async-std]( https://github.com/async-rs/async-std ) 1.12.0
 - [async-task]( https://github.com/smol-rs/async-task ) 4.7.0
-- [async-trait]( https://github.com/dtolnay/async-trait ) 0.1.77
+- [async-trait]( https://github.com/dtolnay/async-trait ) 0.1.79
 - [atomic-waker]( https://github.com/smol-rs/atomic-waker ) 1.1.2
 - [blocking]( https://github.com/smol-rs/blocking ) 1.5.1
 - [concurrent-queue]( https://github.com/smol-rs/concurrent-queue ) 2.4.0
@@ -3722,15 +3723,15 @@ MIT OR Apache-2.0
 - [piper]( https://github.com/notgull/piper ) 0.2.1
 - [polling]( https://github.com/smol-rs/polling ) 3.5.0
 - [prettyplease]( https://github.com/dtolnay/prettyplease ) 0.2.16
-- [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.78
+- [proc-macro2]( https://github.com/dtolnay/proc-macro2 ) 1.0.79
 - [quote]( https://github.com/dtolnay/quote ) 1.0.35
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.27
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.31
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
 - [serde]( https://github.com/serde-rs/serde ) 1.0.197
 - [serde_derive]( https://github.com/serde-rs/serde ) 1.0.197
-- [serde_json]( https://github.com/serde-rs/json ) 1.0.114
-- [syn]( https://github.com/dtolnay/syn ) 2.0.52
+- [serde_json]( https://github.com/serde-rs/json ) 1.0.115
+- [syn]( https://github.com/dtolnay/syn ) 2.0.57
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.57
 - [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.57
 - [unicode-ident]( https://github.com/dtolnay/unicode-ident ) 1.0.12
@@ -4081,7 +4082,7 @@ SOFTWARE.
 #### Used by
 
 - [clap_builder]( https://github.com/clap-rs/clap ) 4.5.2
-- [clap_derive]( https://github.com/clap-rs/clap/tree/master/clap_derive ) 4.5.0
+- [clap_derive]( https://github.com/clap-rs/clap/tree/master/clap_derive ) 4.5.4
 - [clap_lex]( https://github.com/clap-rs/clap/tree/master/clap_lex ) 0.7.0
 
 #### License
