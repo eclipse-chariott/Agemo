@@ -394,10 +394,10 @@ END OF TERMS AND CONDITIONS
 
 #### Used by
 
-- [prost]( https://github.com/tokio-rs/prost ) 0.12.3
+- [prost]( https://github.com/tokio-rs/prost ) 0.12.4
 - [prost-build]( https://github.com/tokio-rs/prost ) 0.12.3
-- [prost-derive]( https://github.com/tokio-rs/prost ) 0.12.3
-- [prost-types]( https://github.com/tokio-rs/prost ) 0.12.3
+- [prost-derive]( https://github.com/tokio-rs/prost ) 0.12.4
+- [prost-types]( https://github.com/tokio-rs/prost ) 0.12.4
 
 #### License
 
@@ -2369,7 +2369,7 @@ SOFTWARE.
 
 #### Used by
 
-- [h2]( https://github.com/hyperium/h2 ) 0.3.24
+- [h2]( https://github.com/hyperium/h2 ) 0.3.26
 
 #### License
 
@@ -3731,7 +3731,7 @@ MIT OR Apache-2.0
 - [serde]( https://github.com/serde-rs/serde ) 1.0.197
 - [serde_derive]( https://github.com/serde-rs/serde ) 1.0.197
 - [serde_json]( https://github.com/serde-rs/json ) 1.0.115
-- [syn]( https://github.com/dtolnay/syn ) 2.0.57
+- [syn]( https://github.com/dtolnay/syn ) 2.0.58
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.57
 - [thiserror-impl]( https://github.com/dtolnay/thiserror ) 1.0.57
 - [unicode-ident]( https://github.com/dtolnay/unicode-ident ) 1.0.12
