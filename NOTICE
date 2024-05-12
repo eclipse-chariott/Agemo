@@ -3728,8 +3728,8 @@ MIT OR Apache-2.0
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.37.27
 - [rustix]( https://github.com/bytecodealliance/rustix ) 0.38.31
 - [rustversion]( https://github.com/dtolnay/rustversion ) 1.0.14
-- [serde]( https://github.com/serde-rs/serde ) 1.0.199
-- [serde_derive]( https://github.com/serde-rs/serde ) 1.0.199
+- [serde]( https://github.com/serde-rs/serde ) 1.0.200
+- [serde_derive]( https://github.com/serde-rs/serde ) 1.0.200
 - [serde_json]( https://github.com/serde-rs/json ) 1.0.116
 - [syn]( https://github.com/dtolnay/syn ) 2.0.60
 - [thiserror]( https://github.com/dtolnay/thiserror ) 1.0.57
